@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="VI2-WY-DSC" customClass="HeaderViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view autoresizesSubviews="NO" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="stX-dZ-aV5" userLabel="Divider">
+                    <rect key="frame" x="20" y="0.0" width="374" height="1"/>
+                    <color key="backgroundColor" name="divider"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="mR7-VD-jCC"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BDb-uk-Skt" customClass="UIStylableLabel">
+                    <rect key="frame" x="24" y="16.5" width="48.5" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="text_gray_light"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" name="foreground"/>
+            <constraints>
+                <constraint firstItem="BDb-uk-Skt" firstAttribute="leading" secondItem="VI2-WY-DSC" secondAttribute="leading" constant="24" id="AcJ-fp-fIZ"/>
+                <constraint firstAttribute="trailing" secondItem="stX-dZ-aV5" secondAttribute="trailing" constant="20" id="Crz-r0-N6r"/>
+                <constraint firstItem="stX-dZ-aV5" firstAttribute="top" secondItem="VI2-WY-DSC" secondAttribute="top" id="ZqI-VF-YLj"/>
+                <constraint firstItem="stX-dZ-aV5" firstAttribute="leading" secondItem="VI2-WY-DSC" secondAttribute="leading" constant="20" id="ddN-oS-DZD"/>
+                <constraint firstItem="BDb-uk-Skt" firstAttribute="top" secondItem="stX-dZ-aV5" secondAttribute="bottom" constant="15.5" id="gWH-ep-BXk"/>
+                <constraint firstAttribute="bottom" secondItem="BDb-uk-Skt" secondAttribute="bottom" constant="16.5" id="oZI-Uf-LF9"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="caption" destination="BDb-uk-Skt" id="2NM-sT-nm3"/>
+                <outlet property="divider" destination="stX-dZ-aV5" id="f8O-Cr-F8I"/>
+            </connections>
+            <point key="canvasLocation" x="62" y="90"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="divider">
+            <color red="0.9137254901960784" green="0.92941176470588238" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="foreground">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="text_gray_light">
+            <color red="0.6588235294117647" green="0.69019607843137254" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

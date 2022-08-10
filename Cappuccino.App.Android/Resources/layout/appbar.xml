@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="@dimen/appbar_default_height"
+                                                   android:gravity="center_vertical"
+                                                   app:layout_scrollFlags="scroll|enterAlways">
+
+    <ImageButton style="@style/Button.Action"
+                 android:id="@+id/backAction"
+                 android:layout_marginStart="@dimen/content_margin"
+                 app:srcCompat="@drawable/ic_arrow_left"
+                 app:layout_constraintTop_toTopOf="parent"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView style="@style/Text.Title"
+              android:id="@+id/title"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="32dp"
+              android:layout_marginEnd="@dimen/content_margin"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintStart_toEndOf="@id/backAction"
+              app:layout_constraintEnd_toStartOf="@id/subAction"/>
+
+    <ImageButton style="@style/Button.Action"
+                 android:id="@+id/subAction"
+                 android:visibility="gone"
+                 android:layout_marginEnd="@dimen/content_margin"
+                 app:layout_constraintTop_toTopOf="parent"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintEnd_toStartOf="@id/mainAction"/>
+
+    <ImageButton style="@style/Button.Action"
+                 android:id="@+id/mainAction"
+                 android:visibility="gone"
+                 android:layout_marginEnd="@dimen/content_margin"
+                 app:layout_constraintTop_toTopOf="parent"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

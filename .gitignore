@@ -1,0 +1,7 @@
+/Binaries/
+.vs/
+/**/.vs/
+.idea/
+/**/.idea/
+/**/.DS_Store
+/tools

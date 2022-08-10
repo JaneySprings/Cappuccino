@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/navigation_router"
+            app:startDestination="@id/chats">
+
+    <!-- Mark: Bottom Navigation -->
+    <fragment
+        android:id="@+id/contacts"
+        android:name="cappuccino.app.android.ui.ContactsFragment">
+        <action
+            android:id="@+id/action_contacts_to_search"
+            app:destination="@id/searchContacts" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chats"
+        android:name="cappuccino.app.android.ui.ChatsFragment"/>
+
+    <fragment
+        android:id="@+id/profile"
+        android:name="cappuccino.app.android.ui.ProfileFragment"/>
+    <!-- Mark: Bottom Navigation end -->
+
+    <fragment
+        android:id="@+id/searchContacts"
+        android:name="cappuccino.app.android.ui.ContactsSearchFragment"/>
+
+</navigation>

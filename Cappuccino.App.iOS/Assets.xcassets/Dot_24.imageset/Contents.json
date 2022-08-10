@@ -1,0 +1,11 @@
+{
+  "images" : [
+    {
+      "filename" : "dot_24.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

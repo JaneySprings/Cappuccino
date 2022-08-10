@@ -1,0 +1,22 @@
+﻿<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="content_margin">16dp</dimen>
+    <dimen name="extra_content_margin">32dp</dimen>
+    <dimen name="page_margin">24dp</dimen>
+
+
+    <!-- Mark: Font size -->
+    <dimen name="font_text">15sp</dimen>
+    <dimen name="font_caption">14sp</dimen>
+    <dimen name="font_light">12sp</dimen>
+    <dimen name="font_title">22sp</dimen>
+
+
+    <!-- Mark: Elements size -->
+    <dimen name="bottom_navigation_icon_size">30dp</dimen>
+    <dimen name="appbar_default_height">54dp</dimen>
+    <dimen name="action_icons_size">30dp</dimen>
+    <dimen name="sub_icons_size">20dp</dimen>
+    <dimen name="photo_list_size">42dp</dimen>
+    <dimen name="photo_chat_size">54dp</dimen>
+</resources>

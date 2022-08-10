@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView style="@style/DefaultRecyclerView"
+                                               android:id="@+id/recyclerView"/>
+
+    <com.google.android.material.appbar.AppBarLayout style="@style/ContentPage.AppBar">
+        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+                                                           android:layout_height="@dimen/appbar_default_height"
+                                                           android:gravity="center_vertical"
+                                                           app:layout_scrollFlags="scroll|enterAlways">
+            <ImageButton style="@style/Button.Action"
+                         android:id="@+id/backAction"
+                         android:layout_marginStart="@dimen/content_margin"
+                         app:srcCompat="@drawable/ic_arrow_left"
+                         app:layout_constraintTop_toTopOf="parent"
+                         app:layout_constraintBottom_toBottomOf="parent"
+                         app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText style="@style/Search"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/search"
+                      android:inputType="textPersonName"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintStart_toEndOf="@id/backAction"
+                      app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View style="@style/Divider"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

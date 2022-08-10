@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              style="@style/ContentPage.RecycleItem"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?attr/selectableItemBackground"
+              android:gravity="center"
+              android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/content_margin">
+
+        <com.google.android.material.imageview.ShapeableImageView android:id="@+id/photo"
+                                                                  android:layout_width="@dimen/photo_list_size"
+                                                                  android:layout_height="@dimen/photo_list_size"
+                                                                  app:shapeAppearanceOverlay="@style/CircleImageShape"/>
+
+        <View android:id="@+id/online"
+              android:layout_width="18dp"
+              android:layout_height="18dp"
+              android:layout_gravity="end|bottom"
+              android:background="@drawable/ic_online_20dp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView style="@style/Text.Bold"
+                  android:id="@+id/name"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  tools:text="@tools:sample/full_names"/>
+
+        <TextView style="@style/Text.Gray"
+                  android:id="@+id/caption"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  tools:text="@tools:sample/cities"/>
+    </LinearLayout>
+</LinearLayout>

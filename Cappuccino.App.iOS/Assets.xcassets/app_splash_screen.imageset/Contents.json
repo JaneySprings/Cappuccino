@@ -1,0 +1,11 @@
+{
+  "images" : [
+    {
+      "filename" : "app_splash_screen.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
+}

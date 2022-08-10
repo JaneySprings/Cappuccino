@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- UI Elements -->
+    <attr name="ForegroundColor" format="color" />
+    <attr name="BackgroundColor" format="color" />
+    <attr name="DividerColor" format="color" />
+
+    <!-- Message color -->
+    <attr name="MessageBoxInColor" format="color" />
+    <attr name="MessageBoxOutColor" format="color" />
+
+    <!-- Colors -->
+    <attr name="AccentColor" format="color" />
+    <attr name="AccentColor2" format="color" />
+    <attr name="AccentColor3" format="color" />
+    <attr name="AccentColor4" format="color" />
+    <attr name="AccentColor5" format="color" />
+    <attr name="AccentColor6" format="color" />
+
+    <!-- Text appearance -->
+    <attr name="TextDefaultColor" format="color" />
+    <attr name="TextGrayLightColor" format="color" />
+    <attr name="TextGrayColor" format="color" />
+</resources>
