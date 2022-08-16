@@ -54,9 +54,9 @@
             </tableViewCellContentView>
             <color key="backgroundColor" name="foreground"/>
             <connections>
-                <outlet property="caption" destination="3cs-ue-8H1" id="geM-lI-cz7"/>
-                <outlet property="name" destination="rre-sN-owA" id="GOk-Lo-IzE"/>
-                <outlet property="photo" destination="sJV-hL-KPm" id="rgL-ap-Brg"/>
+                <outlet property="caption" destination="3cs-ue-8H1" id="SXc-Ch-JmF"/>
+                <outlet property="name" destination="rre-sN-owA" id="OJe-D8-Gc5"/>
+                <outlet property="photo" destination="sJV-hL-KPm" id="1eB-1M-K4w"/>
             </connections>
             <point key="canvasLocation" x="-246.37681159420291" y="49.553571428571423"/>
         </tableViewCell>

@@ -11,12 +11,6 @@ namespace Cappuccino.App.iOS.UI {
 
         public override void ViewDidLoad() {
             base.ViewDidLoad();
-            LongPollExecutor.StartExecution();
-        }
-
-        public override void ViewDidUnload() {
-            base.ViewDidUnload();
-            LongPollExecutor.StopExecution();
         }
 
         public override void DidReceiveMemoryWarning() {

@@ -25,7 +25,6 @@
                         </tabBarAppearance>
                     </tabBar>
                     <connections>
-                        <outlet property="tabBar" destination="W28-zg-YXA" id="vI3-wu-dB3"/>
                         <segue destination="dHK-pc-r2l" kind="relationship" relationship="viewControllers" id="QdR-xa-TFC"/>
                         <segue destination="p6b-UT-zha" kind="relationship" relationship="viewControllers" id="8Pj-vH-Rtp"/>
                         <segue destination="3he-aF-c0R" kind="relationship" relationship="viewControllers" id="rLT-oq-Dxn"/>
@@ -71,7 +70,7 @@
                     <navigationItem key="navigationItem" id="XN5-4Y-eCx"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="tableView" destination="SIq-yc-NCh" id="gW6-CG-hWx"/>
+                        <outlet property="tableView" destination="SIq-yc-NCh" id="uQG-wV-x3i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ezU-K5-bDq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -133,7 +132,7 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="navigationItem" destination="f5s-tW-H5r" id="ABi-qT-D9U"/>
-                        <outlet property="tableView" destination="3RZ-eL-1bY" id="J7T-5Q-Sem"/>
+                        <outlet property="tableView" destination="3RZ-eL-1bY" id="p6r-aE-EVy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zqE-My-AGi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

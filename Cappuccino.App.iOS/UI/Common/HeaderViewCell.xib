@@ -39,8 +39,8 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="caption" destination="BDb-uk-Skt" id="2NM-sT-nm3"/>
-                <outlet property="divider" destination="stX-dZ-aV5" id="f8O-Cr-F8I"/>
+                <outlet property="caption" destination="BDb-uk-Skt" id="LT1-XL-AYQ"/>
+                <outlet property="divider" destination="stX-dZ-aV5" id="Jdo-am-XHB"/>
             </connections>
             <point key="canvasLocation" x="62" y="90"/>
         </view>

@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchViewController">
             <connections>
-                <outlet property="tableView" destination="dNg-kx-cma" id="dAB-Hh-4Ke"/>
+                <outlet property="tableView" destination="dNg-kx-cma" id="ggF-oz-KkB"/>
                 <outlet property="view" destination="2" id="RRd-Eg-VrN"/>
             </connections>
         </placeholder>
