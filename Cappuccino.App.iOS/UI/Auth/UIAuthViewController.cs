@@ -5,9 +5,6 @@ namespace Cappuccino.App.iOS.UI.Auth {
     public partial class AuthViewController {
         private WebKit.WKWebView? webView;
 
-        public AuthViewController(IntPtr handle) : base(handle) { }
-        public AuthViewController() { }
-
         public override void ViewDidLoad() {
             base.ViewDidLoad();
 
@@ -17,6 +14,8 @@ namespace Cappuccino.App.iOS.UI.Auth {
             SetNeedsStatusBarAppearanceUpdate();
         }
 
+        public override UIStatusBarStyle PreferredStatusBarStyle() => UIStatusBarStyle.DarkContent;
+        
         public override void ViewDidUnload() {
             base.ViewDidUnload();
 
@@ -24,10 +23,6 @@ namespace Cappuccino.App.iOS.UI.Auth {
                 webView.Dispose();
                 webView = null;
             }
-        }
-
-        public override UIStatusBarStyle PreferredStatusBarStyle() {
-            return UIStatusBarStyle.DarkContent;
         }
     }
 }

@@ -12,21 +12,21 @@ using Cappuccino.App.iOS.UI.Search;
 
 namespace Cappuccino.App.iOS.UI.Contacts {
 
-    [Register("ContactsViewController")]
+    
     public partial class ContactsViewController : UIViewController {
         private readonly UsersAdapterDelegate adapter = new UsersAdapterDelegate();
 
-        public ContactsViewController(IntPtr handle) : base (handle) { }
 
-        public override void ViewDidLoad() {
-            base.ViewDidLoad();
+
+        public override void ViewDidAppear(bool animated) {
+            base.ViewDidAppear(animated);
 
             new NavigationBarBuilder()
-                .WithDefaultStyle(NavigationController.NavigationBar)
-                .WithElement(NavigationItem)
-                .WithTitle("Contacts")
-                .WithMainAction("search_outline_28", BarButtonClicked)
-                .Apply();
+                    .WithDefaultStyle(NavigationController!.NavigationBar)
+                    .WithElement(NavigationItem)
+                    .WithTitle("Contacts")
+                    .WithMainAction("search_outline_28", BarButtonClicked)
+                    .Apply();
 
             tableView.RegisterNibForCellReuseEx<UserViewCell>();
             tableView.RegisterNibForCellHeaderReuseEx<HeaderViewCell>();

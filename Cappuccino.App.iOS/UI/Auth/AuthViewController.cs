@@ -4,7 +4,7 @@ using Foundation;
 using UIKit;
 
 namespace Cappuccino.App.iOS.UI.Auth {
-    [Register("AuthViewController")]
+
     public partial class AuthViewController : UIViewController {
         private readonly AuthManager authManager = new AuthManager();
 
@@ -12,8 +12,8 @@ namespace Cappuccino.App.iOS.UI.Auth {
             base.ViewDidAppear(animated);
 
             this.authManager.Authorized += (sender, args) => {
-                SceneDelegate? sceneDelegate = View?.Window.WindowScene?.Delegate as SceneDelegate;
-                sceneDelegate?.ChangeViewControllerForHosting();
+                AppDelegate? appDelegate = UIApplication.SharedApplication.Delegate as AppDelegate;
+                appDelegate?.ChangeRootViewController(new RootViewController());
             };
             NSUrl url = NSUrl.FromString(this.authManager.BuildAuthorizationUri())!;
             NSUrlRequest request = NSUrlRequest.FromUrl(url);

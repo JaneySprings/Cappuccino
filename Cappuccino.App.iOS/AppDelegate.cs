@@ -3,6 +3,9 @@ using Cappuccino.Core.Network.Config;
 using Scope = Cappuccino.Core.Network.Auth.Permissions;
 using Foundation;
 using UIKit;
+using Cappuccino.App.iOS.UI.Auth;
+using Cappuccino.Core.Network.Handlers;
+using Cappuccino.App.iOS.UI;
 
 namespace Cappuccino.App.iOS {
 
@@ -14,33 +17,28 @@ namespace Cappuccino.App.iOS {
 
         [Export ("application:didFinishLaunchingWithOptions:")]
         public bool FinishedLaunching (UIApplication application, NSDictionary launchOptions) {
+            Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
             ApiConfiguration config = new ApiConfiguration.Builder()
                 .SetApiLanguage("en")
                 .SetApiVersion("5.131")
                 .SetLongPollVersion(3)
                 .SetTokenStorageHandler(new KeychainProvider())
-                .SetPermissions(new List<int> {Scope.Friends, Scope.Messages})
+                .SetPermissions(new List<int> { Scope.Friends, Scope.Messages })
                 .Build();
 
             CredentialsManager.ApplyConfiguration(config);
+            TokenExpiredHandler.Expired += (sender, args) => ChangeRootViewController(new RootViewController());
+
+            ChangeRootViewController(CredentialsManager.IsInternalTokenValid() ?
+                new RootViewController() : new AuthViewController());
 
             return true;
         }
 
-
-        // UISceneSession Lifecycle
-        [Export ("application:configurationForConnectingSceneSession:options:")]
-        public UISceneConfiguration GetConfiguration (UIApplication application, UISceneSession connectingSceneSession, UISceneConnectionOptions options) {
-            // Called when a new scene session is being created.
-            // Use this method to select a configuration to create the new scene with.
-            return UISceneConfiguration.Create ("Default Configuration", connectingSceneSession.Role);
-        }
-
-        [Export ("application:didDiscardSceneSessions:")]
-        public void DidDiscardSceneSessions (UIApplication application, NSSet<UISceneSession> sceneSessions) {
-            // Called when the user discards a scene session.
-            // If any sessions were discarded while the application was not running, this will be called shortly after `FinishedLaunching`.
-            // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+        public void ChangeRootViewController(UIViewController controller) {
+            Window!.RootViewController = controller;
+            Window.MakeKeyAndVisible();
         }
     }
 }

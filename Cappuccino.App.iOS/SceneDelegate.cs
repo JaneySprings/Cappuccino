@@ -12,12 +12,9 @@ namespace Cappuccino.App.iOS {
 		[Export ("window")]
 		public UIWindow? Window { get; set; }
 
+
 		[Export ("scene:willConnectToSession:options:")]
 		public void WillConnect (UIScene scene, UISceneSession session, UISceneConnectionOptions connectionOptions) {
-            if (!CredentialsManager.IsInternalTokenValid())
-               ChangeViewControllerForAuth();
-
-            TokenExpiredHandler.Expired += (sender, args) => ChangeViewControllerForAuth();
         }
 
 		[Export ("sceneDidDisconnect:")]
@@ -52,18 +49,6 @@ namespace Cappuccino.App.iOS {
 			// Use this method to save data, release shared resources, and store enough scene-specific state information
 			// to restore the scene back to its current state.
 		}
-
-
-        public void ChangeViewControllerForAuth() {
-            Window!.RootViewController = new AuthViewController();
-            Window.MakeKeyAndVisible();
-        }
-
-        public void ChangeViewControllerForHosting() {
-            UIStoryboard mainBoard = UIStoryboard.FromName("Main", null);
-            Window!.RootViewController = mainBoard.InstantiateViewController(nameof(RootController));
-            Window.MakeKeyAndVisible();
-        }
 	}
 }
 
