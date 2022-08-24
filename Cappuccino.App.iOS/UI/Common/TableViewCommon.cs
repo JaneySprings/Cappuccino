@@ -5,6 +5,14 @@ using Foundation;
 using UIKit;
 
 namespace Cappuccino.App.iOS.UI.Common {
+    public abstract class TableViewCellBase<TItem> : UITableViewCell {
+        public TableViewCellBase(IntPtr handle) : base(handle) { Initialize(); }
+        public TableViewCellBase() : base() { Initialize(); }
+
+        protected abstract void Initialize();
+        public abstract void Bind(TItem item);
+    }
+
     public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem> {
         protected readonly List<List<TItem>> sections = new List<List<TItem>>();
         public int ItemLimit { get; set; } = 0;
@@ -12,12 +20,11 @@ namespace Cappuccino.App.iOS.UI.Common {
         public Action<TItem>? OnItemLongClicked;
         public Action<int>? OnLastItemBind;
 
-        protected TableViewAdapterBase() {
-            InitializeSections(1);
-        }
+        private string? cellIdentifier;
+        private string? headerCellIdentifier;
 
-        protected virtual void InitializeSections(int count) {
-            for (int i = 0; i < count; i++) {
+        public TableViewAdapterBase(int sections) {
+            for (int i = 0; i < sections; i++) {
                 this.sections.Add(new List<TItem>());
             }
         }
@@ -30,7 +37,7 @@ namespace Cappuccino.App.iOS.UI.Common {
             return this.sections.Count;
         }
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath) {
-            UITableViewCell view = tableView.DequeueReusableCellEx<TCell>(indexPath);
+            UITableViewCell view = tableView.DequeueReusableCell(typeof(TCell).Name)!;
             TCell? cell = view as TCell;
 
             cell?.Bind(this.sections[indexPath.Section][indexPath.Row]);
@@ -40,6 +47,13 @@ namespace Cappuccino.App.iOS.UI.Common {
                     this.OnLastItemBind?.Invoke(indexPath.Row);
 
             return cell!;
+        }
+
+        [Export("tableView:heightForRowAtIndexPath:")]
+        public nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) {
+            UITableViewCell view = tableView.DequeueReusableCell(typeof(TCell).Name)!;
+            view.LayoutSubviews();
+            return view.ContentView.Frame.Height;
         }
 
 

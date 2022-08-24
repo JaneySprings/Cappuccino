@@ -12,24 +12,15 @@ using Cappuccino.App.iOS.UI.Search;
 
 namespace Cappuccino.App.iOS.UI.Contacts {
 
-    
     public partial class ContactsViewController : UIViewController {
-        private readonly UsersAdapterDelegate adapter = new UsersAdapterDelegate();
-
+        private readonly UsersAdapterDelegate adapter = new UsersAdapterDelegate(2);
 
 
         public override void ViewDidAppear(bool animated) {
             base.ViewDidAppear(animated);
 
-            new NavigationBarBuilder()
-                    .WithDefaultStyle(NavigationController!.NavigationBar)
-                    .WithElement(NavigationItem)
-                    .WithTitle("Contacts")
-                    .WithMainAction("search_outline_28", BarButtonClicked)
-                    .Apply();
-
-            tableView.RegisterNibForCellReuseEx<UserViewCell>();
-            tableView.RegisterNibForCellHeaderReuseEx<HeaderViewCell>();
+            tableView!.RegisterClassForCellReuse(typeof(UserViewCell), nameof(UserViewCell));
+            tableView.RegisterClassForHeaderFooterViewReuse(typeof(HeaderViewCell), nameof(HeaderViewCell));
             tableView.DataSource = this.adapter;
             tableView.Delegate = this.adapter;
 
@@ -47,6 +38,7 @@ namespace Cappuccino.App.iOS.UI.Contacts {
 
             NavigationController.PushViewController(new SearchViewController(), true);
         }
+
 
         private void RequestUsers(int offset) {
             Api.Get(new Friends.Get(UserFields.Default, Friends.Order.name, offset), new ApiCallback<Models.Friends.GetResponse>()

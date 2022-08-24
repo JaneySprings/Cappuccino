@@ -27,9 +27,10 @@ namespace Cappuccino.App.iOS.UI {
 
 
             for (int i = 0; i < 3; i++) {
-                var navController = new UINavigationController();
+                var navController = new UINavigationController(); 
                 navController.TabBarItem = new UITabBarItem("", UIImage.FromBundle(tabIcons[i]), i);
                 navController.ViewControllers = new UIViewController[] { rootControllers[i] };
+                navController.NavigationBar.ApplyDefaultAppearance();
                 navControllers.Add(navController);
             }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Cappuccino.App.iOS.UI.Styles;
 using UIKit;
 
 namespace Cappuccino.App.iOS.UI.Common {
@@ -14,40 +13,10 @@ namespace Cappuccino.App.iOS.UI.Common {
             return this;
         }
 
-        public NavigationBarBuilder WithDefaultStyle(UINavigationBar bar) {      
-            var attributes = new UIStringAttributes();
-            attributes.Font = UIFont.FromName(
-                AppStyle.Instance.TextHeading1Font.Name,
-                AppStyle.Instance.TextHeading1Font.Size
-            );
-            attributes.ForegroundColor = UIColor.FromName(
-                AppStyle.Instance.TextHeading1Font.Color
-            );
-
-            var appearance = new UINavigationBarAppearance();
-            appearance.BackgroundColor = UIColor.FromName(
-                AppStyle.Instance.ForegroundColorName
-            );
-            appearance.TitleTextAttributes = attributes;
-            appearance.ShadowColor = UIColor.Clear;
-
-            var mock = new UIBarButtonItem {
-                TintColor = UIColor.FromName(AppStyle.Instance.AccentColorName)
-            };
-            bar.Items[0].BackBarButtonItem = mock;
-
-            bar.StandardAppearance = appearance;
-            bar.ScrollEdgeAppearance = appearance;
-            bar.CompactAppearance = appearance;
-            
-
-            return this;
-        }
-
         public NavigationBarBuilder WithMainAction(string image, EventHandler clicked) {
             this.actionMain = new UIBarButtonItem {
                 Image = UIImage.FromBundle(image),
-                TintColor = UIColor.FromName(AppStyle.Instance.AccentColorName)
+                TintColor = UIColor.FromName("accent")
             };
 
             this.actionMain.Clicked += clicked;
@@ -59,7 +28,7 @@ namespace Cappuccino.App.iOS.UI.Common {
         public NavigationBarBuilder WithSubAction(string image, EventHandler clicked) {
             this.actionSub = new UIBarButtonItem {
                 Image = UIImage.FromBundle(image),
-                TintColor = UIColor.FromName(AppStyle.Instance.AccentColorName)
+                TintColor = UIColor.FromName("accent")
             };
 
             this.actionSub.Clicked += clicked;
@@ -95,8 +64,6 @@ namespace Cappuccino.App.iOS.UI.Common {
 
             return this;
         }
-
-
 
         public void Apply() {
             this.actionMain = null;
