@@ -23,15 +23,6 @@ namespace Cappuccino.App.iOS.UI.Contacts {
 
             this.View!.AddSubview(tableView);
         }
-
-        public override void ViewDidUnload() {
-            base.ViewDidUnload();
-
-            if (this.tableView != null) {
-                this.tableView.Dispose();
-                this.tableView = null;
-            }
-        }
     }
 }
 

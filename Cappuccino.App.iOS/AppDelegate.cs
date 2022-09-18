@@ -7,40 +7,39 @@ using Cappuccino.App.iOS.UI.Auth;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.App.iOS.UI;
 
-namespace Cappuccino.App.iOS {
 
-    [Register ("AppDelegate")]
-    public class AppDelegate : UIResponder, IUIApplicationDelegate {
+namespace Cappuccino.App.iOS;
 
-        [Export("window")]
-        public UIWindow? Window { get; set; }
+[Register ("AppDelegate")]
+public class AppDelegate : UIResponder, IUIApplicationDelegate {
 
-        [Export ("application:didFinishLaunchingWithOptions:")]
-        public bool FinishedLaunching (UIApplication application, NSDictionary launchOptions) {
-            Window = new UIWindow(UIScreen.MainScreen.Bounds);
+    [Export("window")]
+    public UIWindow? Window { get; set; }
 
-            ApiConfiguration config = new ApiConfiguration.Builder()
-                .SetApiLanguage("en")
-                .SetApiVersion("5.131")
-                .SetLongPollVersion(3)
-                .SetTokenStorageHandler(new KeychainProvider())
-                .SetPermissions(new List<int> { Scope.Friends, Scope.Messages })
-                .Build();
+    [Export ("application:didFinishLaunchingWithOptions:")]
+    public bool FinishedLaunching (UIApplication application, NSDictionary launchOptions) {
+        Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
-            CredentialsManager.ApplyConfiguration(config);
-            TokenExpiredHandler.Expired += (sender, args) => ChangeRootViewController(new RootViewController());
+        ApiConfiguration config = new ApiConfiguration.Builder()
+            .SetApiLanguage("en")
+            .SetAppId(7317599)
+            .SetApiVersion("5.131")
+            .SetLongPollVersion(3)
+            .SetTokenStorageHandler(new KeychainProvider())
+            .SetPermissions(new List<int> { Scope.Friends, Scope.Messages })
+            .Build();
 
-            ChangeRootViewController(CredentialsManager.IsInternalTokenValid() ?
-                new RootViewController() : new AuthViewController());
+        CredentialsManager.ApplyConfiguration(config);
+        TokenExpiredHandler.Expired += (sender, args) => ChangeRootViewController(new AuthViewController());
 
-            return true;
-        }
+        ChangeRootViewController(CredentialsManager.IsInternalTokenValid() ?
+            new RootViewController() : new AuthViewController());
 
-        public void ChangeRootViewController(UIViewController controller) {
-            Window!.RootViewController = controller;
-            Window.MakeKeyAndVisible();
-        }
+        return true;
+    }
+
+    public void ChangeRootViewController(UIViewController controller) {
+        Window!.RootViewController = controller;
+        Window.MakeKeyAndVisible();
     }
 }
-
-

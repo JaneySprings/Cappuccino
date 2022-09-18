@@ -1,85 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{BC98642D-2245-4116-9A31-DA687E58649C}</ProjectGuid>
-    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TemplateGuid>{f1d599d5-32e4-4ac3-bfce-fa91478e30e4}</TemplateGuid>
+    <TargetFramework>net6.0-ios</TargetFramework>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Cappuccino.App.iOS</RootNamespace>
-    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Cappuccino.App.iOS</AssemblyName>
-    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
-    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\iPhoneSimulator</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchArch>x86_64</MtouchArch>
-    <MtouchLink>None</MtouchLink>
-    <MtouchDebug>true</MtouchDebug>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchArch>ARM64</MtouchArch>
-    <MtouchDebug>true</MtouchDebug>
-    <MtouchLink>SdkOnly</MtouchLink>
-    <OutputPath>..\Binaries\iOS\Debug</OutputPath>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
-    <Optimize>true</Optimize>
-    <MtouchArch>ARM64</MtouchArch>
-    <MtouchLink>SdkOnly</MtouchLink>
-    <OutputPath>..\Binaries\iOS\Release</OutputPath>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>13.2</SupportedOSPlatformVersion>
+    <OutputPath>..\Artifacts\iOS</OutputPath>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-
   <ItemGroup>
-    <Folder Include="**\" Exclude="bin\;obj\" />
-    <Compile Include="**\*.cs" Exclude="bin\**\*.*;obj\**\*.*" />
-    <InterfaceDefinition Include="**\*.xib" Exclude="bin\**\*.*;obj\**\*.*" />
-    <InterfaceDefinition Include="**\*.storyboard" Exclude="bin\**\*.*;obj\**\*.*" />
-    <ImageAsset Include="Assets.xcassets\**\*.png" />
-    <ImageAsset Include="Assets.xcassets\**\*.json" />
-    <ImageAsset Include="Assets.xcassets\**\*.pdf" />
-    <ImageAsset Include="Assets.xcassets\**\*.svg" />
-
-    <None Include="Info.plist" />
-    <Content Include="Entitlements.plist" />
-    <BundleResource Include="Resources\*.ttf" />
-    <Compile Include="UI\Search\SearchAdapterDelegate.cs" />
+    <Reference Include="Cappuccino.Core.Network" HintPath="..\Artifacts\Common\Cappuccino.Core.Network.dll" />
+    <PackageReference Include="SDWebImage.iOS" Version="1.*" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
-    <Reference Include="Cappuccino.Core.Network" HintPath="..\Binaries\Common\Cappuccino.Core.Network.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Ricardo.SDWebImage.iOS" Version="4.2.2.1" />
-    <PackageReference Include="System.Text.Json" Version="6.0.1" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
-  </ItemGroup>
-
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

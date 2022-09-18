@@ -36,12 +36,12 @@ namespace Cappuccino.App.iOS.UI.Contacts {
             this.photo.ApplyRoundedAppearance();
 
             var textSpacing = 14;
-            var textEndOffset = this.ContentView.Frame.Width - (48 + photoSize);
+            var textWidth = this.ContentView.Frame.Width - (48 + photoSize);
             var textHeight = (this.ContentView.Frame.Height / 2) - textSpacing;
-            this.name!.Frame = new CGRect(32 + photoSize, textSpacing, textEndOffset, textHeight);
+            this.name!.Frame = new CGRect(32 + photoSize, textSpacing, textWidth, textHeight);
 
             var frameHalf = this.ContentView.Frame.Height / 2;
-            this.caption!.Frame = new CGRect(32 + photoSize, frameHalf, textEndOffset, textHeight);
+            this.caption!.Frame = new CGRect(32 + photoSize, frameHalf, textWidth, textHeight);
         }
     }
 }

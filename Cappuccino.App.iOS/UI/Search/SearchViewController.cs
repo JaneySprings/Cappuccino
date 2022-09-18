@@ -10,48 +10,37 @@ using Users = Cappuccino.Core.Network.Methods.Users;
 using Foundation;
 using UIKit;
 
-namespace Cappuccino.App.iOS.UI.Search {
+namespace Cappuccino.App.iOS.UI.Search;
 
- 
-    public partial class SearchViewController : UIViewController {
-        private readonly SearchAdapterDelegate adapter = new SearchAdapterDelegate();
+public partial class SearchViewController : UIViewController {
+    private readonly UsersAdapterDelegate adapter = new UsersAdapterDelegate();
+    private readonly SingleRequestManager<Models.Users.SearchResponse> requestManager = new();
 
-
-        public override void ViewDidAppear(bool animated) {
-            base.ViewDidAppear(animated);
+    public override void ViewDidAppear(bool animated) {
+        base.ViewDidAppear(animated);
             
-            tableView!.RegisterClassForCellReuse(typeof(UserViewCell), nameof(UserViewCell));
-            tableView.DataSource = this.adapter;
-            tableView.Delegate = this.adapter;
-        }
+        tableView!.RegisterClassForCellReuse(typeof(UserViewCell), nameof(UserViewCell));
+        tableView.DataSource = this.adapter;
+        tableView.Delegate = this.adapter;
 
-
-        private void SearchTextChanged(object sender, UISearchBarTextChangedEventArgs args) {
-            if (!args.SearchText.Equals(String.Empty)) {
-                SearchUsers(args.SearchText);
-            } else {
-                this.adapter.ClearAll();
+        this.requestManager.RequestCallback = new ApiCallback<Models.Users.SearchResponse>()
+            .OnSuccess(result => {
+                this.adapter.ReplaceItems(result.InnerResponse?.Items!);
                 tableView!.ReloadData();
-            }
-        }
+            })
+            .OnError(reason => { });
+    }
 
-        private void SearchIconClicked(object sender, EventArgs args) {    
-        }
-
-
-
-        private void SearchUsers(string q) {
-            Api.Get(new Users.Search(q, 0, 0, 100, UserFields.Default), new ApiCallback<Models.Users.SearchResponse>()
-                .OnSuccess(result => {
-                    this.adapter.Replace(result.InnerResponse?.Items!);
-                    tableView!.ReloadData();
-                })
-                .OnError(reason => {
-                    Console.WriteLine(reason);
-                }), RequestPriority.Single
-            );
+    private void SearchTextChanged(object sender, UISearchBarTextChangedEventArgs args) {
+        if (!args.SearchText.Equals(String.Empty)) {
+            SearchUsers(args.SearchText);
         }
     }
+
+    private void SearchIconClicked(object sender, EventArgs args) {}
+
+
+    private void SearchUsers(string q) {
+        requestManager.AddRequest(new Users.Search(q, 0, 0, 100, UserFields.Default));
+    }
 }
-
-

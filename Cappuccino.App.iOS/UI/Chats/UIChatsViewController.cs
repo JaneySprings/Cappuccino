@@ -1,12 +1,11 @@
 ﻿using System;
 using Cappuccino.App.iOS.UI.Common;
-using Foundation;
 using UIKit;
 
 
-namespace Cappuccino.App.iOS.UI.Search;
+namespace Cappuccino.App.iOS.UI.Chats;
 
-public partial class SearchViewController {
+public partial class ChatsViewController {
     private UITableView? tableView;
 
     public override void ViewDidLoad() {
@@ -14,9 +13,7 @@ public partial class SearchViewController {
 
         new NavigationBarBuilder()
             .WithElement(NavigationItem)
-            .WithTitle("Global Search")
-            .WithSearch(SearchTextChanged)
-            .WithSearchIcon("sliders_outline_28", SearchIconClicked)
+            .WithTitle("Chats")
             .Apply();
 
         this.tableView = new UITableView(this.View!.Frame, UITableViewStyle.Grouped);

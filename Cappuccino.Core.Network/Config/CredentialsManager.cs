@@ -18,21 +18,15 @@ namespace Cappuccino.Core.Network.Config {
         }
 
         public static bool IsInternalTokenValid(IValidationCallback? callback = null) {
-            if (ApiManager.AccessToken != null)
-                return IsTokenValid(ApiManager.AccessToken, callback);
-
             if (ApiManager.TokenStorageHandler == null) {
                 callback?.OnValidationFail($"Implementation of {nameof(ITokenStorageHandler)} does not find");
                 return false;
             }
 
-            AccessToken? token = ApiManager.TokenStorageHandler?.OnTokenRequested();
+            if (ApiManager.AccessToken != null)
+                return IsTokenValid(ApiManager.AccessToken, callback);
 
-            if (!IsTokenValid(token, callback))
-                return false;
-
-            ApiManager.UpdateAccessToken(token!);
-            return true;
+            return false;
         }
 
         
@@ -50,11 +44,6 @@ namespace Cappuccino.Core.Network.Config {
 
             if (token.Token.Equals(string.Empty)) {
                 callback?.OnValidationFail("Access token is empty");
-                return false;
-            }
-
-            if (token.UserId < 0) {
-                callback?.OnValidationFail("User ID for token is negative");
                 return false;
             }
 

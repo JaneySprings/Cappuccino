@@ -15,15 +15,6 @@ namespace Cappuccino.App.iOS.UI.Auth {
         }
 
         public override UIStatusBarStyle PreferredStatusBarStyle() => UIStatusBarStyle.DarkContent;
-        
-        public override void ViewDidUnload() {
-            base.ViewDidUnload();
-
-            if (webView != null) {
-                webView.Dispose();
-                webView = null;
-            }
-        }
     }
 }
 

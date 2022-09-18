@@ -1,11 +1,12 @@
 using System;
+using System.Threading.Tasks;
 using Foundation;
-using Ricardo.SDWebImage.iOS;
+using SDWebImageLib;
 using UIKit;
 
 namespace Cappuccino.App.iOS.Extensions {
 
-    public static class WebImageExtensions {
+    public static class ImageExtensions {
         public static void Load(this UIImageView imageView, string? path) {
             if (path == null) return;
             if (path == String.Empty) return;

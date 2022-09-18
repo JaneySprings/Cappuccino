@@ -1,7 +1,9 @@
-/Binaries/
+/Artifacts/
 .vs/
 /**/.vs/
 .idea/
 /**/.idea/
 /**/.DS_Store
 /tools
+/.vscode
+*.log

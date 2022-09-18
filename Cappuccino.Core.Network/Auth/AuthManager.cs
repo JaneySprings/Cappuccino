@@ -46,8 +46,7 @@ namespace Cappuccino.Core.Network.Auth {
                 return;
 
             ApiManager.UpdateAccessToken(token);
-            ApiManager.TokenStorageHandler?.OnTokenReceived(token);
-            
+        
             this.Authorized?.Invoke(this, EventArgs.Empty);
         }
     }

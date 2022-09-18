@@ -1,46 +1,53 @@
 #addin nuget:?package=Cake.FileHelpers&version=5.0.0
-#addin nuget:?package=Cake.Xamarin&version=4.0.0
+#load "env.cake"
 
-string target = Argument("target", "BuildAll");
+string target = Argument("target", "Clean");
+string version = Argument("cp-version", "1.0");
 string configuration = Argument("configuration", "debug");
-string version = "1.0";
-string root = ".";
+//Debug
+string device = Argument("device", "");
 
 
-Task("Prepare")
+Task("Clean")
     .Does(() => {
-        Information("Cleaning binaries folder ...");
-        CleanDirectory($"{root}/Binaries");
-
-        Information($"Updating versions to {version} ...");
-        ReplaceTextInFiles("./**/*", "{" + "CP_VERSION" + "}", version);
+        CleanDirectories("./**/bin");
+        CleanDirectories("./**/obj");
+        CleanDirectory(ArtifactsDirectory);
     });
 
-Task("BuildNetwork")
-    .IsDependentOn("Prepare")
+Task("Network")
+    .IsDependentOn("Clean")
     .Does(() => {
-        DotNetBuild($"{root}/Cappuccino.Core.Network/Cappuccino.Core.Network.csproj", new DotNetBuildSettings {
-            Configuration = configuration
-        });
+        var settings = new DotNetBuildSettings { 
+            Configuration = configuration,
+            Verbosity = DotNetVerbosity.Quiet 
+        };
+        DotNetBuild("./Cappuccino.Core.Network", settings);
     });
 
-Task("BuildIOS")
-    .IsDependentOn("BuildNetwork")
+Task("iOS")
+//    .IsDependentOn("Clean")
     .Does(() => {
-        NuGetRestore($"{root}/Cappuccino.App.iOS/Cappuccino.App.iOS.csproj");
-        BuildiOSIpa($"{root}/Cappuccino.App.iOS/Cappuccino.App.iOS.csproj", configuration);
-        Zip($"{root}/Binaries/iOS/Cappuccino.App.iOS.app", $"{root}/Binaries/Cappuccino-iOS.ipa");
+        var settings = new DotNetPublishSettings { 
+            Framework = "net6.0-ios",
+            Configuration = configuration,
+            Verbosity = DotNetVerbosity.Quiet 
+        };
+        DotNetPublish("./Cappuccino.App.iOS", settings);
     });
 
-Task("BuildAndroid")
-    .IsDependentOn("BuildNetwork")
-    .Does(() => {
-        
-    });
 
-Task("BuildAll")
-    .IsDependentOn("BuildIOS")
-    .IsDependentOn("BuildAndroid");
+
+Task("iOS_Run")
+    .IsDependentOn("iOS")
+    .Does(() => {
+        StartProcess("dotnet", "xharness apple install"
+            + $" --app {iOSBundlePath}" 
+            + $" --device {device}"
+            + $" --output-directory {ArtifactsDirectory}"
+            + " --target ios-device"
+        );
+    });
 
 
 RunTarget(target);

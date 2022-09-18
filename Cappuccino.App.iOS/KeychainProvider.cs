@@ -5,47 +5,48 @@ using Cappuccino.Core.Network.Handlers;
 using Foundation;
 using Security;
 
-namespace Cappuccino.App.iOS {
-    public class KeychainProvider: ITokenStorageHandler {
-        private const string Alias = "Cappuccino.KeychainProvider";
+namespace Cappuccino.App.iOS;
 
-        public AccessToken? OnTokenRequested() {
-            SecRecord record = new SecRecord (SecKind.Key) { Label = Alias };
-            NSData[]? data = SecKeyChain.QueryAsData(record, 1);
 
-            if (data == null)
-                return null;
+public class KeychainProvider: ITokenStorageHandler {
+    private const string Alias = "Cappuccino.KeychainProvider";
 
-            string valueData = data[0].ToString();
-            string[] tokens = valueData.Split('&');
+    public AccessToken? OnTokenRequested() {
+        SecRecord record = new SecRecord (SecKind.Key) { Label = Alias };
+        NSData[]? data = SecKeyChain.QueryAsData(record, 1);
 
-            if (tokens.Length != 3)
-                return null;
+        if (data == null)
+            return null;
 
-            return new AccessToken(
-                token: tokens[0],
-                expired: Int64.Parse(tokens[1]),
-                id: Int32.Parse(tokens[2])
-            );
-        }
+        string valueData = data[0].ToString();
+        string[] tokens = valueData.Split('&');
 
-        public void OnTokenReceived(AccessToken token) {
-            SecRecord record = new SecRecord (SecKind.Key) { Label = Alias };
-            SecKeyChain.Remove(record);
+        if (tokens.Length != 3)
+            return null;
 
-            IEnumerable<string> items = new List<string>() {
-                token.Token,
-                token.ExpiresIn.ToString(),
-                token.UserId.ToString()
-            };
+        return new AccessToken(
+            token: tokens[0],
+            expired: Int64.Parse(tokens[1]),
+            id: Int32.Parse(tokens[2])
+        );
+    }
 
-            string data = String.Join('&', items);
-            record = new SecRecord (SecKind.Key) {
-                Label = Alias,
-                ValueData = NSData.FromString(data, NSStringEncoding.UTF8)
-            };
+    public void OnTokenReceived(AccessToken token) {
+        SecRecord record = new SecRecord (SecKind.Key) { Label = Alias };
+        SecKeyChain.Remove(record);
 
-            SecKeyChain.Add(record);
-        }
+        IEnumerable<string> items = new List<string>() {
+            token.Token,
+            token.ExpiresIn.ToString(),
+            token.UserId.ToString()
+        };
+
+        string data = String.Join('&', items);
+        record = new SecRecord (SecKind.Key) {
+            Label = Alias,
+            ValueData = NSData.FromString(data, NSStringEncoding.UTF8)
+        };
+
+        SecKeyChain.Add(record);
     }
 }
