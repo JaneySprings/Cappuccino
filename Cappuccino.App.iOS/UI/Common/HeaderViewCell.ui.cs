@@ -1,10 +1,5 @@
-﻿using System;
-using Foundation;
-using UIKit;
-using CoreGraphics;
+﻿namespace Cappuccino.App.iOS.UI.Common;
 
-
-namespace Cappuccino.App.iOS.UI.Common;
 
 public partial class HeaderViewCell: UITableViewHeaderFooterView {
     private UILabel? header;

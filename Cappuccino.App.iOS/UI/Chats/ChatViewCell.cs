@@ -1,10 +1,10 @@
-﻿using System;
-using Cappuccino.App.iOS.Extensions;
+﻿using Cappuccino.App.iOS.Extensions;
 using Cappuccino.App.iOS.UI.Common;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Users;
 
 namespace Cappuccino.App.iOS.UI.Chats;
+
 
 public partial class ChatViewCell : TableViewCellBase<ChatItem> {
     public override void Bind(ChatItem item) {
@@ -12,33 +12,29 @@ public partial class ChatViewCell : TableViewCellBase<ChatItem> {
             case "user":
                 if (item.RelativeItem is User user) {
                     title!.Text = $"{user.FirstName} {user.LastName}";
-                    //online.Hidden = user.Online != 1;
+                    online!.Hidden = user.Online != 1;
                     photo!.Load(user.Photo100);
                 }
                 break;
             case "group":
                 if (item.RelativeItem is Group group) {
                     title!.Text = group.Name;
-                    //online.Hidden = true;
+                    online!.Hidden = true;
                     photo!.Load(group.Photo100);
                 }
                 break;
             case "chat":
                 title!.Text = item.InnerResponse.Conversation?.chatSettings?.Title;
                 photo!.Load(item.InnerResponse.Conversation?.chatSettings?.Photo?.Photo100);
-                //online.Hidden = true;
+                online!.Hidden = true;
                 break;
         }
 
-        //unread.Text = $"  {item.InnerResponse.Conversation?.UnreadCount}  ";
-        //unread.Hidden = item.InnerResponse.Conversation?.UnreadCount == 0;
-        //isRead.Hidden = item.InnerResponse.LastMessage?.Id == item.InnerResponse.Conversation?.OutRead;
-        //date.Text = " • " + item.InnerResponse.LastMessage?.Date.ParseShortDate();
-        //contentConstraint.Priority = (unread.Hidden && isRead.Hidden) ? 1000 : 1;
-
         var sender = "";
+        var trailing = "";
+
         if (item.InnerResponse.LastMessage?.Out == 1) {
-            sender = "You: ";
+            sender = "You:";
         } else if (item.InnerResponse.Conversation?.peer?.Type == "chat") {
             if (item.InnerResponse.LastMessage?.FromId > 0) {
                 if (item.RelativeItemFromMessage is User user)
@@ -49,6 +45,19 @@ public partial class ChatViewCell : TableViewCellBase<ChatItem> {
             }
         }
 
-        message!.Text = sender + item.InnerResponse.LastMessage?.Text?.Replace("\n", " ");
+        if (item.InnerResponse.LastMessage?.FwdMessages?.Count != 0)
+            trailing = "[Messages]";
+        if (item.InnerResponse.LastMessage?.Attachments?.Count != 0)
+            trailing = "[Attachments]";
+
+        message!.Text = sender 
+            + (sender.Equals(string.Empty) ? "" : " ") 
+            + item.InnerResponse.LastMessage?.Text?.Replace("\n", " ")
+            + (item.InnerResponse.LastMessage?.Text?.Equals(string.Empty) == true ? "" : " ") 
+            + trailing;
+
+        unread!.Text = item.InnerResponse.Conversation?.UnreadCount.ToString();
+        unread.Hidden = item.InnerResponse.Conversation?.UnreadCount == 0;
+        read!.Hidden = item.InnerResponse.LastMessage?.Id == item.InnerResponse.Conversation?.OutRead;
     }
 }

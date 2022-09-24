@@ -1,12 +1,5 @@
-﻿using System;
-using UIKit;
-using Foundation;
-using Cappuccino.Core.Network;
-using System.Collections.Generic;
-using Cappuccino.App.iOS.UI.Common;
+﻿namespace Cappuccino.App.iOS.UI;
 
-
-namespace Cappuccino.App.iOS.UI;
 
 public class RootViewController : UITabBarController {
     public override void ViewDidLoad() {
@@ -27,7 +20,7 @@ public class RootViewController : UITabBarController {
 
         for (int i = 0; i < 3; i++) {
             var navController = new UINavigationController(); 
-            navController.TabBarItem = new UITabBarItem("", UIImage.FromBundle(tabIcons[i]), i);
+            navController.TabBarItem = new UITabBarItem("", UIImage.FromBundle(tabIcons[i]), IntPtr.Zero);
             navController.ViewControllers = new UIViewController[] { rootControllers[i] };
             navController.NavigationBar.ApplyDefaultAppearance();
             navControllers.Add(navController);

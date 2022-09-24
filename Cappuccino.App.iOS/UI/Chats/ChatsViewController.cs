@@ -1,17 +1,11 @@
-﻿using System;
-using UIKit;
-using Foundation;
-using Cappuccino.Core.Network;
+﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Methods;
 using Cappuccino.Core.Network.Handlers;
-using Cappuccino.App.iOS.Extensions;
 using _Messages = Cappuccino.Core.Network.Methods.Messages;
 using Models = Cappuccino.Core.Network.Models;
-using Cappuccino.App.iOS.UI.Common;
-using Cappuccino.App.iOS.UI.Contacts;
-
 
 namespace Cappuccino.App.iOS.UI.Chats;
+
 
 public partial class ChatsViewController : UIViewController {
     private readonly ChatsAdapterDelegate adapter = new ChatsAdapterDelegate();

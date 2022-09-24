@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Cappuccino.Core.Network.Models.Users;
+﻿using Cappuccino.Core.Network.Models.Users;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Messages;
 

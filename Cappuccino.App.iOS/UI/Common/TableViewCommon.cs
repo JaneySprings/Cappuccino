@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Cappuccino.App.iOS.Extensions;
-using Foundation;
-using UIKit;
+﻿namespace Cappuccino.App.iOS.UI.Common;
 
-
-namespace Cappuccino.App.iOS.UI.Common;
 
 public abstract class TableViewCellBase<TItem> : UITableViewCell {
     public TableViewCellBase(IntPtr handle) : base(handle) { Initialize(); }
@@ -16,12 +10,14 @@ public abstract class TableViewCellBase<TItem> : UITableViewCell {
 }
 
 
-public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem> {
-    protected readonly List<TItem> items = new List<TItem>();
-    public int ItemLimit { get; set; } = 0;
-    public Action<TItem>? OnItemClicked;
-    public Action<TItem>? OnItemLongClicked;
-    public Action<int>? OnLastItemBind;
+public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem>, new() {
+    private readonly List<TItem> items = new List<TItem>();
+    private readonly TCell mockCell = new TCell();
+
+    public int ItemLimit { get; set; }
+    public Action<TItem>? OnItemClicked { get; set; }
+    public Action<TItem>? OnItemLongClicked { get; set; }
+    public Action<int>? OnLastItemBind { get; set; }
 
     public override nint RowsInSection(UITableView tableView, nint section) => GetItemCount();
    
@@ -39,9 +35,8 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
 
     [Export("tableView:heightForRowAtIndexPath:")]
     public nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) {
-        UITableViewCell view = tableView.DequeueReusableCell(typeof(TCell).Name)!;
-        view.LayoutSubviews();
-        return view.ContentView.Frame.Height;
+        mockCell.Bind(this.items[indexPath.Row]);
+        return mockCell.SizeThatFits(CGSize.Empty).Height;
     }
 
 

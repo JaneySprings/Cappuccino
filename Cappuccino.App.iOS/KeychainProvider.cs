@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Cappuccino.Core.Network.Auth;
 using Cappuccino.Core.Network.Handlers;
-using Foundation;
 using Security;
 
 namespace Cappuccino.App.iOS;

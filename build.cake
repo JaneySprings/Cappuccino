@@ -2,7 +2,7 @@
 #load "env.cake"
 
 string target = Argument("target", "Clean");
-string version = Argument("cp-version", "1.0");
+string version = Argument("compile-version", "1.0");
 string configuration = Argument("configuration", "debug");
 //Debug
 string device = Argument("device", "");
@@ -20,20 +20,20 @@ Task("Network")
     .Does(() => {
         var settings = new DotNetBuildSettings { 
             Configuration = configuration,
-            Verbosity = DotNetVerbosity.Quiet 
+            Verbosity = DotNetVerbosity.Minimal 
         };
-        DotNetBuild("./Cappuccino.Core.Network", settings);
+        DotNetBuild(CoreProjectPath, settings);
     });
 
 Task("iOS")
 //    .IsDependentOn("Clean")
     .Does(() => {
         var settings = new DotNetPublishSettings { 
-            Framework = "net6.0-ios",
+            Framework = "net7-ios",
             Configuration = configuration,
-            Verbosity = DotNetVerbosity.Quiet 
+            Verbosity = DotNetVerbosity.Minimal 
         };
-        DotNetPublish("./Cappuccino.App.iOS", settings);
+        DotNetPublish(iOSProjectPath, settings);
     });
 
 

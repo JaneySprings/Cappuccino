@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Internal;
 using Cappuccino.Core.Network.Models;
-namespace Cappuccino.Core.Network {
+
+namespace Cappuccino.Core.Network.Polling {
     public static class LongPollExecutor {
         private static Models.Messages.GetLongPollServerResponse? _serverInfo;
         public static EventHandler? HistoryUpdated;

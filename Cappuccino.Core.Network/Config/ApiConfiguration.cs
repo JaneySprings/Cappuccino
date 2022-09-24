@@ -5,12 +5,12 @@ using Cappuccino.Core.Network.Internal;
 namespace Cappuccino.Core.Network.Config {
 
     public class ApiConfiguration {
-        public readonly IEnumerable<int> Permissions;
-        public readonly int ApplicationId;
-        public readonly int DeviceId;
-        public readonly int LpVersion;
-        public readonly string? ApiLanguage;
-        public readonly string? ApiVersion;
+        public IEnumerable<int> Permissions { get; private set; }
+        public int ApplicationId { get; private set; }
+        public int DeviceId { get; private set; }
+        public int LpVersion { get; private set; }
+        public string? ApiLanguage { get; private set; }
+        public string? ApiVersion { get; private set; }
 
         public ApiConfiguration(Builder builder) {
             this.ApplicationId = builder.AppId;

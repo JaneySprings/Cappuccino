@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Users;
+using Cappuccino.Core.Network.Models;
 
 namespace Cappuccino.Core.Network.Models.Messages {
     /* 
@@ -75,12 +76,6 @@ namespace Cappuccino.Core.Network.Models.Messages {
             [JsonPropertyName("active_ids")] public List<int>? ActiveIds { get; set; }
             [JsonPropertyName("is_group_channel")] public bool IsGroupChannel { get; set; }
         }
-
-        public class Photo {
-            [JsonPropertyName("photo_200")] public string? Photo200 { get; set; }
-            [JsonPropertyName("photo_100")] public string? Photo100 { get; set; }
-            [JsonPropertyName("photo_50")] public string? Photo50 { get; set; }
-        }
     }
 
     public class Message {
@@ -88,17 +83,61 @@ namespace Cappuccino.Core.Network.Models.Messages {
         [JsonPropertyName("from_id")] public int FromId { get; set; }
         [JsonPropertyName("id")] public int Id { get; set; }
         [JsonPropertyName("out")] public int Out { get; set; }
-        [JsonPropertyName("attachment")] public List<Attachment>? Attachments { get; set; }
+        [JsonPropertyName("attachments")] public List<Attachment>? Attachments { get; set; }
         [JsonPropertyName("conversation_message_id")] public int ConversationMessageId { get; set; }
         [JsonPropertyName("fwd_messages")] public List<Message>? FwdMessages { get; set; }
+        [JsonPropertyName("reply_message")] public Message? ReplyMessage { get; set; }
         [JsonPropertyName("important")] public bool Important { get; set; }
         [JsonPropertyName("is_hidden")] public bool IsHidden { get; set; }
         [JsonPropertyName("peer_id")] public int PeerId { get; set; }
         [JsonPropertyName("random_id")] public int RandomId { get; set; }
         [JsonPropertyName("text")] public string? Text { get; set; }
+        [JsonPropertyName("action")] public Action? action { get; set; }
+        [JsonPropertyName("admin_author_id")] public int AdminAuthorId { get; set; }
+        [JsonPropertyName("is_cropped")] public bool IsCroped { get; set; }
+        [JsonPropertyName("members_count")] public int MembersCount { get; set; }
+        [JsonPropertyName("update_time")] public int UpdateTime { get; set; }
+        [JsonPropertyName("was_listened")] public bool WasListened { get; set; }
+        [JsonPropertyName("pinned_at")] public int PinnedAt { get; set; }
+        [JsonPropertyName("message_tag")] public string? MessageTag { get; set; }
 
         public class Attachment {
+            [JsonPropertyName("type")] public string? Type { get; set; }
+            [JsonPropertyName("photo")] public Photo? photo { get; set; }
+            [JsonPropertyName("video")] public Video? video { get; set; }
+            [JsonPropertyName("audio")] public Audio? audio { get; set; }
+            [JsonPropertyName("doc")] public Document? Doc { get; set; }
+            [JsonPropertyName("link")] public Link? link { get; set; }
+            [JsonPropertyName("sticker")] public Sticker? sticker { get; set; }
+            [JsonPropertyName("graffiti")] public Graffiti? graffiti { get; set; }
+            [JsonPropertyName("audio_message")] public AudioMessage? audioMessage { get; set; }
+            [JsonPropertyName("wall")] public Wall? wall { get; set; }
 
+            public class Photo {}
+
+            public class Video {}
+
+            public class Audio {}
+
+            public class Document {}
+
+            public class Link {}
+
+            public class Sticker {}
+
+            public class Graffiti {}
+
+            public class AudioMessage {}
+
+            public class Wall {}
+        }
+
+        public class Action {
+            [JsonPropertyName("type")] public string? Type { get; set; }
+            [JsonPropertyName("member_id")] public int MemberId { get; set; }
+            [JsonPropertyName("text")] public string? Text { get; set; }
+            [JsonPropertyName("email")] public string? Email { get; set; }
+            [JsonPropertyName("photo")] public Photo? Photo { get; set; }
         }
     }
 }

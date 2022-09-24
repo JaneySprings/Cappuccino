@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using Cappuccino.Core.Network.Config;
+﻿using Cappuccino.Core.Network.Config;
 using Scope = Cappuccino.Core.Network.Auth.Permissions;
-using Foundation;
-using UIKit;
 using Cappuccino.App.iOS.UI.Auth;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.App.iOS.UI;
 
-
 namespace Cappuccino.App.iOS;
+
 
 [Register ("AppDelegate")]
 public class AppDelegate : UIResponder, IUIApplicationDelegate {
@@ -32,8 +29,9 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
         CredentialsManager.ApplyConfiguration(config);
         TokenExpiredHandler.Expired += (sender, args) => ChangeRootViewController(new AuthViewController());
 
-        ChangeRootViewController(CredentialsManager.IsInternalTokenValid() ?
-            new RootViewController() : new AuthViewController());
+        ChangeRootViewController(
+            CredentialsManager.IsInternalTokenValid() ? new RootViewController() : new AuthViewController()
+        );
 
         return true;
     }

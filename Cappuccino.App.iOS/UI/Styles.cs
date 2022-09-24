@@ -1,11 +1,12 @@
-﻿using System;
-using UIKit;
-
-namespace Cappuccino.App.iOS.UI;
+﻿namespace Cappuccino.App.iOS.UI;
 
 
 public static class UITabBarStyles {
     public static void ApplyDefaultAppearance(this UITabBar tabBar) {
+        var appearance = new UITabBarAppearance();
+        appearance.StackedItemPositioning = UITabBarItemPositioning.Centered;
+
+        tabBar.StandardAppearance = appearance;
         tabBar.TintColor = UIColor.FromName("accent");
         tabBar.UnselectedItemTintColor = UIColor.FromName("text_gray_light");
         tabBar.BackgroundColor = UIColor.FromName("foreground");
@@ -32,7 +33,7 @@ public static class UINavigationBarStyles {
             TintColor = UIColor.FromName("accent")
         };
 
-        attributes.Font = UIFont.FromName("VKSansDisplay-Bold", 21f);
+        attributes.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
         attributes.ForegroundColor = UIColor.FromName("text");
 
         appearance.BackgroundColor = UIColor.FromName("foreground");
@@ -45,17 +46,17 @@ public static class UINavigationBarStyles {
         navigationBar.CompactAppearance = appearance;
     }
 }
-
+ 
 public static class UILabelStyles {
     //todo
     public static void ApplyHeader1Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(19f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text_gray_light");
+        label.TextColor = UIColor.FromName("text_gray");
     }
 
     public static void ApplyHeader2Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(19f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text_gray_light");
+        label.TextColor = UIColor.FromName("text_gray");
     }
 
     public static void ApplyCaption1Appearance(this UILabel label) {
@@ -65,12 +66,23 @@ public static class UILabelStyles {
 
     public static void ApplyCaption2Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text_gray_light");
+        label.TextColor = UIColor.FromName("text_gray");
     }
 
     public static void ApplyDefaultAppearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(16f, UIFontWeight.Regular);
         label.TextColor = UIColor.FromName("text");
+    }
+
+    public static void ApplyBadgeAppearance(this UILabel label) {
+        label.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Medium);
+        label.TextAlignment = UITextAlignment.Center;
+        label.TextColor = UIColor.White;
+    }
+
+    public static void ApplyRoundedAppearance(this UILabel label) {
+        label.Layer.CornerRadius = label.Bounds.Height / 2;
+        label.Layer.MasksToBounds = true;
     }
 }
 

@@ -1,11 +1,4 @@
-﻿using Cappuccino.App.iOS.UI;
-using Cappuccino.App.iOS.UI.Auth;
-using Cappuccino.Core.Network.Config;
-using Cappuccino.Core.Network.Handlers;
-using Foundation;
-using UIKit;
-
-namespace Cappuccino.App.iOS;
+﻿namespace Cappuccino.App.iOS;
 
 
 [Register ("SceneDelegate")]

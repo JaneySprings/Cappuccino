@@ -1,9 +1,7 @@
-﻿using System;
-using Cappuccino.App.iOS.UI.Common;
-using UIKit;
-
+﻿using Cappuccino.App.iOS.UI.Common;
 
 namespace Cappuccino.App.iOS.UI.Chats;
+
 
 public partial class ChatsViewController {
     private UITableView? tableView;
@@ -16,9 +14,9 @@ public partial class ChatsViewController {
             .WithTitle("Chats")
             .Apply();
 
-        this.tableView = new UITableView(this.View!.Frame, UITableViewStyle.Grouped);
+        this.tableView = new UITableView(View!.Frame, UITableViewStyle.Plain);
         this.tableView.ApplyDefaultAppearance();
 
-        this.View!.AddSubview(tableView);
+        this.View.AddSubview(tableView);
     }
 }

@@ -1,9 +1,9 @@
 namespace Cappuccino.Core.Network.Auth {
 
     public class AccessToken {
-        public readonly string Token;
-        public readonly long ExpiresIn;
-        public readonly int UserId;
+        public string Token { get; private set; }
+        public long ExpiresIn { get; private set; }
+        public int UserId { get; private set; }
 
         public AccessToken(string token, long expired, int id) {
             this.UserId = id;

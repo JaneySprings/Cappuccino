@@ -1,8 +1,5 @@
-﻿using System;
-using UIKit;
+﻿namespace Cappuccino.App.iOS.UI.Common;
 
-
-namespace Cappuccino.App.iOS.UI.Common;
 
 public class NavigationBarBuilder {
     private UIBarButtonItem? actionMain;
@@ -51,7 +48,7 @@ public class NavigationBarBuilder {
         controller.SearchBar.TextChanged += textChanged;
         controller.Active = true;
             
-        this.navigationItem!.HidesSearchBarWhenScrolling = false;
+        this.navigationItem!.HidesSearchBarWhenScrolling = true;
         this.navigationItem!.SearchController = controller;
 
         return this;

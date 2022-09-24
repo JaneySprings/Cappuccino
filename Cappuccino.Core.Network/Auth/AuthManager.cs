@@ -8,7 +8,7 @@ using Cappuccino.Core.Network.Utils;
 namespace Cappuccino.Core.Network.Auth {
 
     public class AuthManager {
-        public EventHandler? Authorized;
+        public EventHandler? Authorized { get; set; }
 
 
         public string BuildAuthorizationUri() {
