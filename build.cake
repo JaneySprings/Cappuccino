@@ -4,8 +4,8 @@
 string target           =  Argument("target"        , "clean");
 string configuration    =  Argument("configuration" , "debug");
 string version          =  Argument("up-version"    , "1.0");
-string sign             =  Argument("sign"          , "false");
-string apikey           =  Argument("apikey"        , "");
+string signkey          =  Argument("signkey"       , "null");
+string apikey           =  Argument("apikey"        , "null");
 string device           =  Argument("device"        , "");
 
 

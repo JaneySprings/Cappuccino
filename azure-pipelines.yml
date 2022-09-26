@@ -25,11 +25,16 @@ stages:
               value: '1.0'
           - group: Tokens
         steps:
+          - task: DownloadSecureFile@1
+            name: strongKey
+            displayName: 'Download Strong Key'
+            inputs:
+              secureFile: 'key.snk'
           - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
             displayName: 'Install .NET 7.0.1xx Preview'
           - script: dotnet tool restore
             displayName: 'DotNet Restore'
-          - script: dotnet cake --target=network-build --configuration=release --up-version=$(version)
+          - script: dotnet cake --target=network-build --configuration=release --up-version=$(version) --signkey=$(strongKey.secureFilePath)
             displayName: 'Network Build' 
           - script: dotnet cake --target=network-test --configuration=release
             displayName: 'Network Test'

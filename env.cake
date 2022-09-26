@@ -21,8 +21,8 @@ public string TestsResultPath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.
 
 public DotNetPublishSettings DotNetPublishSettings(string output) {
     var settings = new DotNetMSBuildSettings();
-    settings.WithProperty("SignAssembly", sign);
-    settings.WithProperty("AssemblyOriginatorKeyFile", $"{RootDirectory}/key.snk");
+    settings.WithProperty("SignAssembly", signkey.Equals("null") ? "false" : "true");
+    settings.WithProperty("AssemblyOriginatorKeyFile", signkey);
 
     return new DotNetPublishSettings {  
         MSBuildSettings = settings,
