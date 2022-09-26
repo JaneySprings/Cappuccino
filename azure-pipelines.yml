@@ -13,7 +13,7 @@ stages:
   - stage: CoreTests
     dependsOn: []
     jobs:
-      - job: build
+      - job: Build
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
@@ -32,7 +32,7 @@ stages:
               testResultsFormat: 'VSTest'
               testResultsFiles: 'Artifacts/*.trx'
               failTaskOnFailedTests: true
-          - publish: '$(System.ArtifactStagingDirectory)/Artifacts'
+          - publish: 'Artifacts'
             displayName: 'Publish Artifacts'
             artifact: Artifacts
 
@@ -41,7 +41,7 @@ stages:
     condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/core_')
     dependsOn: CoreTests
     jobs:
-      - job: publish
+      - job: Publish
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
