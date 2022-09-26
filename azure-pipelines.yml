@@ -18,6 +18,8 @@ stages:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
         steps:
+          - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
+            displayName: 'Install .NET 7.0.1xx Preview'
           - script: dotnet tool restore
             displayName: 'DotNet Restore'
           - script: dotnet cake --target=network-build --configuration=release
