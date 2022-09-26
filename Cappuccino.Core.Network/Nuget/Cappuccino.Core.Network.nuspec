@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Cappuccino.Core.Network</id>
+    <version>1.0</version>
+    <title>Cappuccino Request Library for VK</title>
+    <authors>Nikita Romanov</authors>
+    <licenseUrl>https://raw.githubusercontent.com/JaneySprings/Cappuccino/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/JaneySprings/Cappuccino/tree/master/Cappuccino.Core.Network</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/JaneySprings/Cappuccino/master/Cappuccino.Core.Network/Nuget/PackageIcon.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>todo</description>
+    <copyright>Copyright (C) 2022</copyright>
+
+    <dependencies>
+        <group targetFramework="netstandard2.1">
+            <dependency id="System.Text.Json" version="6.0.1" />
+        </group>
+    </dependencies>
+
+    <references>
+      <group targetFramework="netstandard2.1">
+        <reference file="Cappuccino.Core.Network.dll" />
+      </group>
+    </references>
+  </metadata>
+  <files>
+    <file src=".\..\..\Artifacts\Common\Cappuccino.Core.Network.dll" target="lib\netstandard2.1"/>
+  </files>
+</package>

@@ -18,7 +18,7 @@ namespace Cappuccino.Core.Network.Config {
         }
 
         public static bool IsInternalTokenValid(IValidationCallback? callback = null) {
-            if (ApiManager.TokenStorageHandler == null) {
+            if (ApiManager.ApiConfig?.TokenStorageHandler == null) {
                 callback?.OnValidationFail($"Implementation of {nameof(ITokenStorageHandler)} does not find");
                 return false;
             }

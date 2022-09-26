@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Cappuccino.Core.Network.Auth {
 
     /* Mark: documentation[https://vk.com/dev/permissions] */
@@ -19,10 +16,5 @@ namespace Cappuccino.Core.Network.Auth {
         public const int Docs = 131072;
         public const int Groups =  262144;
         public const int Notifications = 52428;
-        
-        public static int ToPermissionsMask(this IEnumerable<int> permissions) {
-            return permissions.Sum();
-        }
     }
-
 }

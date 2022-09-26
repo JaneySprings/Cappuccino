@@ -1,19 +1,58 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
 
-pool:
-  vmImage: macos-latest
+pr:
+  branches:
+    include:
+    - master
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: Core Tests
+    dependsOn: []
+    jobs:
+      - job: network-build-test
+        pool:
+          vmImage: 'macos-latest'
+        timeoutInMinutes: 5
+        steps:
+          - script: dotnet tool restore
+            displayName: 'DotNet Restore'
+          - script: dotnet cake --target=network-build --configuration=release
+            displayName: 'Network Build' 
+          - script: dotnet cake --target=network-test --configuration=release
+            displayName: 'Network Test'
+          - task: PublishTestResults@2
+            continueOnError: true
+            inputs:
+              testResultsFormat: 'VSTest'
+              testResultsFiles: 'Artifacts/*.trx'
+              failTaskOnFailedTests: true
+          - publish: '$(System.ArtifactStagingDirectory)/Artifacts'
+            displayName: 'Publish Artifacts'
+            artifact: Artifacts
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+
+  - stage: Core Publish
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/core_')
+    dependsOn: 'Core Tests'
+    jobs:
+      - job: network-build-publish
+        pool:
+          vmImage: 'macos-latest'
+        timeoutInMinutes: 5
+        variables:
+          - name : tagName
+            value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/core_', '') ] 
+          - group: Tokens
+        steps:
+          - download: current
+            displayName: 'Download Artifacts'
+            artifact: Artifacts
+          - script: dotnet tool restore
+            displayName: 'DotNet Restore'
+          - script: dotnet cake --target=network-publish --apikey=$(NUGET_API_KEY)
+            displayName: 'Network Publish'
+            

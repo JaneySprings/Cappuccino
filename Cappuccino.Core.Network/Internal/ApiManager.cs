@@ -6,10 +6,9 @@ namespace Cappuccino.Core.Network.Internal {
 
     internal static class ApiManager {
         public static ApiConfiguration? ApiConfig { get; private set; }
-        public static ITokenStorageHandler? TokenStorageHandler { get; private set; }
         public static AccessToken? AccessToken {
-            get => TokenStorageHandler?.OnTokenRequested();
-            private set => TokenStorageHandler?.OnTokenReceived(value!);
+            get => ApiConfig?.TokenStorageHandler?.OnTokenRequested();
+            private set => ApiConfig?.TokenStorageHandler?.OnTokenReceived(value!);
         }
 
         internal static void UpdateApiConfiguration(ApiConfiguration config) {
@@ -18,10 +17,6 @@ namespace Cappuccino.Core.Network.Internal {
 
         internal static void UpdateAccessToken(AccessToken token) {
             AccessToken = token;
-        }
-        
-        internal static void UpdateStorageHandler(ITokenStorageHandler handler) {
-            TokenStorageHandler = handler;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Cappuccino.Core.Network.Config;
 using Cappuccino.Core.Network.Handlers;
@@ -18,7 +19,7 @@ namespace Cappuccino.Core.Network.Auth {
             string[] uriParams = {
                 "client_id=" + ApiManager.ApiConfig.ApplicationId,
                 "redirect_uri=" + EndPoints.RedirectUri,
-                "scope=" + ApiManager.ApiConfig.Permissions.ToPermissionsMask(),
+                "scope=" + ApiManager.ApiConfig.Permissions.Sum(),
                 "response_type=token",
                 "display=mobile",
                 "revoke=1"

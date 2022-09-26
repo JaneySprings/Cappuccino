@@ -1,5 +1,7 @@
 /Artifacts/
 .vs/
+/**/bin
+/**/obj
 /**/.vs/
 .idea/
 /**/.idea/
@@ -7,3 +9,4 @@
 /tools
 /.vscode
 *.log
+*.snk

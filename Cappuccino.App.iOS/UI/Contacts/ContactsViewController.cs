@@ -1,6 +1,7 @@
 ﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Methods;
+using Cappuccino.Core.Network.Managing;
 using Models = Cappuccino.Core.Network.Models;
 using Friends = Cappuccino.Core.Network.Methods.Friends;
 using Users = Cappuccino.Core.Network.Methods.Users;
