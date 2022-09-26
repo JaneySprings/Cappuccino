@@ -17,12 +17,19 @@ stages:
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
+        variables:
+          - name : version
+            ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/core_') }}:
+              value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/core_', '') ] 
+            ${{ if not startsWith(variables['Build.SourceBranch'], 'refs/tags/core_') }}:
+              value: '1.0'
+          - group: Tokens
         steps:
           - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
             displayName: 'Install .NET 7.0.1xx Preview'
           - script: dotnet tool restore
             displayName: 'DotNet Restore'
-          - script: dotnet cake --target=network-build --configuration=release
+          - script: dotnet cake --target=network-build --configuration=release --up-version=$(version)
             displayName: 'Network Build' 
           - script: dotnet cake --target=network-test --configuration=release
             displayName: 'Network Test'
@@ -32,7 +39,7 @@ stages:
               testResultsFormat: 'VSTest'
               testResultsFiles: 'Artifacts/*.trx'
               failTaskOnFailedTests: true
-          - publish: 'Artifacts'
+          - publish: 'Artifacts/Common'
             displayName: 'Publish Artifacts'
             artifact: Artifacts
 
@@ -45,10 +52,6 @@ stages:
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
-        variables:
-          - name : tagName
-            value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/core_', '') ] 
-          - group: Tokens
         steps:
           - download: current
             displayName: 'Download Artifacts'
