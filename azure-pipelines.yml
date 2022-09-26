@@ -21,7 +21,7 @@ stages:
           - name : version
             ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/core_') }}:
               value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/core_', '') ] 
-            ${{ if not startsWith(variables['Build.SourceBranch'], 'refs/tags/core_') }}:
+            ${{ not(startsWith(variables['Build.SourceBranch'], 'refs/tags/core_')) }}:
               value: '1.0'
           - group: Tokens
         steps:
