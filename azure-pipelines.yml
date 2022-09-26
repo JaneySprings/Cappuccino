@@ -10,10 +10,10 @@ pr:
     - master
 
 stages:
-  - stage: Core Tests
+  - stage: CoreTests
     dependsOn: []
     jobs:
-      - job: network-build-test
+      - job: build
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
@@ -35,11 +35,11 @@ stages:
             artifact: Artifacts
 
 
-  - stage: Core Publish
+  - stage: CorePublish
     condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/core_')
-    dependsOn: 'Core Tests'
+    dependsOn: CoreTests
     jobs:
-      - job: network-build-publish
+      - job: publish
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
