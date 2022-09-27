@@ -36,11 +36,25 @@ public partial class ContactsViewController : UIViewController {
             RequestUsers(0);
     }
 
-    private void SearchTextChanged(object? sender, UISearchBarTextChangedEventArgs args) {
-        this.isSearchingMode = !args.SearchText.Equals(String.Empty);
 
+    private void SearchTextChanged(object? sender, UISearchBarTextChangedEventArgs args) {
+        this.isSearchingMode = !string.IsNullOrEmpty(args.SearchText);
+
+        if (this.isSearchingMode && !string.IsNullOrEmpty(args.SearchText)) {
+            requestManager.AddRequest(new Users.Search {
+                Query = args.SearchText,
+                Fields = Constants.DefaultUserFields,
+                Offset = 0, 
+                Count = 80
+            });
+        }
+    }
+
+    private void SearchCancelled(object? sender, EventArgs args) {
         if (this.isSearchingMode) {
-            requestManager.AddRequest(new Users.Search(args.SearchText, 0, 0, 80, UserFields.Default));
+            this.isSearchingMode = false;
+            this.adapter.ClearItems();
+            RequestUsers(0);
         }
     }
 
@@ -49,7 +63,12 @@ public partial class ContactsViewController : UIViewController {
 
     private void RequestUsers(int offset) {
         if (!this.isSearchingMode) {
-            Api.Get(new Friends.Get(UserFields.Default, Friends.Order.name, offset), new ApiCallback<Models.Friends.GetResponse>()
+            Api.Get(new Friends.Get {
+                Fields = Constants.DefaultUserFields,
+                Order = "name",
+                Count = 50,
+                Offset = offset
+            }, new ApiCallback<Models.Friends.GetResponse>()    
                 .OnSuccess(result => {
                     this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
                     this.adapter.AddItems(result.InnerResponse?.Items!);

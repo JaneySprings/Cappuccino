@@ -10,9 +10,9 @@ public partial class HeaderViewCell: UITableViewHeaderFooterView {
     private void Initialize() {
         this.ContentView.Frame = new CGRect(0, 0, UIScreen.MainScreen.Bounds.Width, 50);
 
-        this.divider = new UIView { BackgroundColor = UIColor.FromName("divider") };
+        this.divider = new UIView { BackgroundColor = Colors.Divider };
         this.header = new UILabel();
-        this.header.ApplyHeader2Appearance();
+        this.header.ApplyHeaderAppearance();
 
         this.ContentView.AddSubview(divider);
         this.ContentView.AddSubview(this.header);

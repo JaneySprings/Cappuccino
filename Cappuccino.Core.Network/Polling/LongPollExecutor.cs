@@ -15,13 +15,13 @@ namespace Cappuccino.Core.Network.Polling {
 
 
         public static void StartExecution() {
-            Api.Get(new Methods.Messages.GetLongPollServer(1), new ApiCallback<Models.Messages.GetLongPollServerResponse>()
-                .OnSuccess(result => {
-                    _serverInfo = result;
-                    ResumeExecution();
-                })
-                .OnError(reason => RequestError?.Invoke(reason))
-            );
+            // Api.Get(new Methods.Messages.GetLongPollServer(1), new ApiCallback<Models.Messages.GetLongPollServerResponse>()
+            //     .OnSuccess(result => {
+            //         _serverInfo = result;
+            //         ResumeExecution();
+            //     })
+            //     .OnError(reason => RequestError?.Invoke(reason))
+            // );
         }
         public static void StopExecution() {
             IsActive = false;

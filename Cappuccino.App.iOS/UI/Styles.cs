@@ -1,5 +1,16 @@
 ﻿namespace Cappuccino.App.iOS.UI;
 
+public static class Colors {
+    public static UIColor Accent => UIColor.FromName("accent")!;
+
+    public static UIColor Background => UIColor.FromName("background")!;
+    public static UIColor Foreground => UIColor.FromName("foreground")!;
+    public static UIColor Divider => UIColor.FromName("divider")!;
+
+    public static UIColor Text => UIColor.FromName("text")!;
+    public static UIColor TextGray => UIColor.FromName("text_gray")!;
+}
+
 
 public static class UITabBarStyles {
     public static void ApplyDefaultAppearance(this UITabBar tabBar) {
@@ -7,15 +18,15 @@ public static class UITabBarStyles {
         appearance.StackedItemPositioning = UITabBarItemPositioning.Centered;
 
         tabBar.StandardAppearance = appearance;
-        tabBar.TintColor = UIColor.FromName("accent");
-        tabBar.UnselectedItemTintColor = UIColor.FromName("text_gray_light");
-        tabBar.BackgroundColor = UIColor.FromName("foreground");
+        tabBar.TintColor = Colors.Accent;
+        tabBar.UnselectedItemTintColor = Colors.TextGray;
+        tabBar.BackgroundColor = Colors.Foreground;
     }
 }
 
 public static class UITableViewStyles {
     public static void ApplyDefaultAppearance(this UITableView tableView) {
-        tableView.BackgroundColor = UIColor.FromName("foreground");
+        tableView.BackgroundColor = Colors.Foreground;
         tableView.ShowsHorizontalScrollIndicator = false;
         tableView.BouncesZoom = false;
         tableView.AlwaysBounceVertical = true;
@@ -30,13 +41,13 @@ public static class UINavigationBarStyles {
         var attributes = new UIStringAttributes();
         var appearance = new UINavigationBarAppearance();
         var mock = new UIBarButtonItem {
-            TintColor = UIColor.FromName("accent")
+            TintColor = Colors.Accent
         };
 
         attributes.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
-        attributes.ForegroundColor = UIColor.FromName("text");
+        attributes.ForegroundColor = Colors.Text;;
 
-        appearance.BackgroundColor = UIColor.FromName("foreground");
+        appearance.BackgroundColor = Colors.Foreground;
         appearance.TitleTextAttributes = attributes;
         appearance.ShadowColor = UIColor.Clear;
 
@@ -48,30 +59,25 @@ public static class UINavigationBarStyles {
 }
  
 public static class UILabelStyles {
-    //todo
-    public static void ApplyHeader1Appearance(this UILabel label) {
-        label.Font = UIFont.SystemFontOfSize(19f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text_gray");
-    }
 
-    public static void ApplyHeader2Appearance(this UILabel label) {
+    public static void ApplyHeaderAppearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(19f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text_gray");
+        label.TextColor = Colors.TextGray;
     }
 
     public static void ApplyCaption1Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(17f, UIFontWeight.Medium);
-        label.TextColor = UIColor.FromName("text");
+        label.TextColor = Colors.Text;
     }
 
     public static void ApplyCaption2Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text_gray");
+        label.TextColor = Colors.TextGray;
     }
 
     public static void ApplyDefaultAppearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(16f, UIFontWeight.Regular);
-        label.TextColor = UIColor.FromName("text");
+        label.TextColor = Colors.Text;
     }
 
     public static void ApplyBadgeAppearance(this UILabel label) {

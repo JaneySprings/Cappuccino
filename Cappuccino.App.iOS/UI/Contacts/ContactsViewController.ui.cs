@@ -13,7 +13,9 @@ public partial class ContactsViewController {
         new NavigationBarBuilder()
             .WithElement(NavigationItem)
             .WithTitle("Contacts")
-            .WithSearch(SearchTextChanged)
+            .WithSearch()
+            .WithSearchTextChangedEvent(SearchTextChanged)
+            .WithSearchCancellEvent(SearchCancelled)
             .WithSearchIcon("sliders_outline_28", FilterIconClicked)
             .Apply();
 

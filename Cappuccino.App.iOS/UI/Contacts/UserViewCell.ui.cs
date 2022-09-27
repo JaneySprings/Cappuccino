@@ -22,7 +22,7 @@ public partial class UserViewCell {
         this.ContentView.AddSubview(this.name);
         this.ContentView.AddSubview(this.caption);
 
-        this.BackgroundColor = UIColor.FromName("foreground");
+        this.BackgroundColor = Colors.Foreground;
     }
 
     public override CGSize SizeThatFits(CGSize size) => new CGSize(size.Width, 76);

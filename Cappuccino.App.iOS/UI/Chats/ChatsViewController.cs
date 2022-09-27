@@ -25,7 +25,12 @@ public partial class ChatsViewController : UIViewController {
     }
 
     private void RequestConversations(int offset) {
-        Api.Get(new _Messages.GetConversations(UserFields.Default, offset, 100, 1), new ApiCallback<Models.Messages.GetConversationsResponse>()
+        Api.Get(new _Messages.GetConversations {
+            Fields = Constants.DefaultUserFields,
+            Count = 50,
+            Extended = 1,
+            Offset = offset
+        }, new ApiCallback<Models.Messages.GetConversationsResponse>()
             .OnSuccess(result => {
                 this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
                 this.adapter.AddItems(result.InnerResponse?.ToChatItems()!);

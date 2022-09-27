@@ -32,16 +32,16 @@ public partial class ChatViewCell {
         this.ContentView.AddSubview(this.read);
         this.ContentView.AddSubview(this.unread);
 
-        this.BackgroundColor = UIColor.FromName("foreground");
+        this.BackgroundColor = Colors.Foreground;
 
-        this.online.BackgroundColor = UIColor.FromName("foreground");
-        this.online.TintColor = UIColor.FromName("accent");
+        this.online.BackgroundColor = Colors.Foreground;
+        this.online.TintColor = Colors.Accent;
         this.online.Image = UIImage.FromBundle("dot_24");
 
-        this.read.TintColor = UIColor.FromName("text_gray");
+        this.read.TintColor = Colors.TextGray;
         this.read.Image = UIImage.FromBundle("dot_24");
 
-        this.unread.BackgroundColor = UIColor.FromName("accent");
+        this.unread.BackgroundColor = Colors.Accent;
     }
 
     public override CGSize SizeThatFits(CGSize size) => new CGSize(size.Width, 78);

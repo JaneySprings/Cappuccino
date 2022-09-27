@@ -15,7 +15,7 @@ public class NavigationBarBuilder {
     public NavigationBarBuilder WithMainAction(string image, EventHandler clicked) {
         this.actionMain = new UIBarButtonItem {
             Image = UIImage.FromBundle(image),
-            TintColor = UIColor.FromName("accent")
+            TintColor = Colors.Accent
         };
 
         this.actionMain.Clicked += clicked;
@@ -27,7 +27,7 @@ public class NavigationBarBuilder {
     public NavigationBarBuilder WithSubAction(string image, EventHandler clicked) {
         this.actionSub = new UIBarButtonItem {
             Image = UIImage.FromBundle(image),
-            TintColor = UIColor.FromName("accent")
+            TintColor = Colors.Accent
         };
 
         this.actionSub.Clicked += clicked;
@@ -43,13 +43,24 @@ public class NavigationBarBuilder {
         return this;
     }
 
-    public NavigationBarBuilder WithSearch(EventHandler<UISearchBarTextChangedEventArgs> textChanged) {
+    public NavigationBarBuilder WithSearch() {
         var controller = new UISearchController();
-        controller.SearchBar.TextChanged += textChanged;
         controller.Active = true;
             
         this.navigationItem!.HidesSearchBarWhenScrolling = true;
         this.navigationItem!.SearchController = controller;
+
+        return this;
+    }
+
+    public NavigationBarBuilder WithSearchTextChangedEvent(EventHandler<UISearchBarTextChangedEventArgs> textChanged) {
+        this.navigationItem!.SearchController!.SearchBar.TextChanged += textChanged;
+
+        return this;
+    }
+
+    public NavigationBarBuilder WithSearchCancellEvent(EventHandler textCancelled) {
+        this.navigationItem!.SearchController!.SearchBar.CancelButtonClicked += textCancelled;
 
         return this;
     }

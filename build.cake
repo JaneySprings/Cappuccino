@@ -76,7 +76,7 @@ Task("ios")
         }
 
         DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS"));
-        CopyFile(BundleiOSPath, $"{ArtifactsDirectory}/Cappuccino.App.iOS.{version}.ipa");
+        //MoveFile(BundleiOSPath, $"{ArtifactsDirectory}/Cappuccino.App.iOS.{version}.ipa");
     });
 
 Task("ios-run")

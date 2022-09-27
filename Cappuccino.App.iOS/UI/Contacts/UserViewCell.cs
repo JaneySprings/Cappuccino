@@ -11,10 +11,10 @@ public partial class UserViewCell : TableViewCellBase<User> {
 
         if (item.Online == 1) {
             this.caption!.Text = "online";
-            this.caption.TextColor = UIColor.FromName("accent");
+            this.caption.TextColor = Colors.Accent;
         } else {
             this.caption!.Text = $"was online {item.lastSeen?.Time.ParseShortDate()}";
-            this.caption.TextColor = UIColor.FromName("text_gray");
+            this.caption.TextColor = Colors.TextGray;
         }
 
         this.photo!.Load(item.Photo100);
