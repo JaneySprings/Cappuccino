@@ -19,10 +19,13 @@ public string NugetCorePath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.*.
 public string TestsResultPath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.Tests.trx";
 
 
-public DotNetPublishSettings DotNetPublishSettings(string output) {
+public DotNetPublishSettings DotNetPublishSettings(string output, string runtimeIdentifier = null) {
     var settings = new DotNetMSBuildSettings();
     settings.WithProperty("SignAssembly", signkey.Equals("null") ? "false" : "true");
     settings.WithProperty("AssemblyOriginatorKeyFile", signkey);
+
+    if (runtimeIdentifier != null)
+        settings.WithProperty("RuntimeIdentifier", runtimeIdentifier);
 
     return new DotNetPublishSettings {  
         MSBuildSettings = settings,

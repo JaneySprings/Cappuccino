@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="title_page_contacts" xml:space="preserve">
+        <value>Contacts</value>
+    </data>
+    <data name="title_page_chats" xml:space="preserve">
+        <value>Chats</value>
+    </data>
+    <data name="title_page_filters" xml:space="preserve">
+        <value>Filters</value>
+    </data>
+
+    <data name="common_abbr_today" xml:space="preserve">
+        <value>today</value>
+    </data>
+    <data name="common_abbr_yesterday" xml:space="preserve">
+        <value>yesterday</value>
+    </data>
+    <data name="common_abbr_online" xml:space="preserve">
+        <value>online</value>
+    </data>
+    <data name="common_abbr_was_online" xml:space="preserve">
+        <value>was online</value>
+    </data>
+    <data name="common_abbr_you" xml:space="preserve">
+        <value>You</value>
+    </data>
+    <data name="common_abbr_messages" xml:space="preserve">
+        <value>messages</value>
+    </data>
+    <data name="common_abbr_attachments" xml:space="preserve">
+        <value>attachments</value>
+    </data>
+    <data name="common_close_action" xml:space="preserve">
+        <value>Close</value>
+    </data>
+
+    <data name="filters_search_order" xml:space="preserve">
+        <value>Search Order</value>
+    </data>
+    <data name="filters_search_order_option_popularity" xml:space="preserve">
+        <value>Popularity</value>
+    </data>
+    <data name="filters_search_order_option_registration_date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+</root>

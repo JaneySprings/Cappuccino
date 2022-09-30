@@ -12,9 +12,8 @@ public static class DateExtensions {
             string result = DateTimeOffset.FromUnixTimeSeconds(unix).ToLocalTime().ToString("HH:mm");
 
             if (cur_hours >= last_hours)
-                return $"today, {result}";
-            else
-                return $"yesterday, {result}";
+                return $"{Localization.Instance.GetString("common_abbr_today")}, {result}";
+            return $"{Localization.Instance.GetString("common_abbr_yesterday")}, {result}";
         }
         if (offset < 365 * 24 * 60 * 60)
             return DateTimeOffset.FromUnixTimeSeconds(unix).ToString("d MMM");

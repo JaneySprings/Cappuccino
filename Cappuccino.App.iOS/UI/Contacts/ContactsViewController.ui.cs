@@ -10,14 +10,16 @@ public partial class ContactsViewController {
     public override void ViewDidLoad() {
         base.ViewDidLoad();
 
-        new NavigationBarBuilder()
-            .WithElement(NavigationItem)
-            .WithTitle("Contacts")
-            .WithSearch()
-            .WithSearchTextChangedEvent(SearchTextChanged)
-            .WithSearchCancellEvent(SearchCancelled)
-            .WithSearchIcon("sliders_outline_28", FilterIconClicked)
-            .Apply();
+        InterfaceUtility.LayoutNavigationBar(NavigationItem, new NavigationBarOptions {
+            Title = Localization.Instance.GetString("title_page_contacts"),
+            Search = true,
+            SearchTextChanged = SearchTextChanged,
+            SearchCancelled = SearchCancelled,
+            SearchAction = new BarButtonItemOptions {
+                Image = "sliders_outline_28",
+                Clicked = FilterIconClicked
+            }
+        });
 
         this.tableView = new UITableView(this.View!.Frame, UITableViewStyle.Plain);
         this.tableView.ApplyDefaultAppearance();

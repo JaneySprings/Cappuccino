@@ -1,6 +1,4 @@
-﻿using UIKit;
-
-namespace Cappuccino.App.iOS;
+﻿namespace Cappuccino.App.iOS;
 
 
 public class Application {

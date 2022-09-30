@@ -48,8 +48,7 @@ namespace Cappuccino.Core.Network {
 
         public async Task<TResult> Execute() {
             if (!CredentialsManager.IsInternalTokenValid()) {
-                TokenExpiredHandler.RequestTokenError();
-                throw new Exception("Access token incorrect!");
+                throw new Exception("Access token incorrect");
             }
 
             AddParam("lang", ApiManager.ApiConfig?.ApiLanguage);

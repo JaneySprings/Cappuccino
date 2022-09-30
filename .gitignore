@@ -1,12 +1,11 @@
-/Artifacts/
-.vs/
+/Artifacts
+/**/.vs
 /**/bin
 /**/obj
-/**/.vs/
-.idea/
-/**/.idea/
+/**/.vscode
+/**/.idea
 /**/.DS_Store
+
 /tools
-/.vscode
 *.log
 *.snk

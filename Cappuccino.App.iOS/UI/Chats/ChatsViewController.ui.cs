@@ -9,10 +9,9 @@ public partial class ChatsViewController {
     public override void ViewDidLoad() {
         base.ViewDidLoad();
 
-        new NavigationBarBuilder()
-            .WithElement(NavigationItem)
-            .WithTitle("Chats")
-            .Apply();
+        InterfaceUtility.LayoutNavigationBar(NavigationItem, new NavigationBarOptions {
+            Title = Localization.Instance.GetString("title_page_chats"),
+        });
 
         this.tableView = new UITableView(View!.Frame, UITableViewStyle.Plain);
         this.tableView.ApplyDefaultAppearance();

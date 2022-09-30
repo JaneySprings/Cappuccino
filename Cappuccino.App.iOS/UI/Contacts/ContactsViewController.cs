@@ -1,6 +1,5 @@
 ﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Handlers;
-using Cappuccino.Core.Network.Methods;
 using Cappuccino.Core.Network.Managing;
 using Models = Cappuccino.Core.Network.Models;
 using Friends = Cappuccino.Core.Network.Methods.Friends;
@@ -12,6 +11,10 @@ namespace Cappuccino.App.iOS.UI.Contacts;
 public partial class ContactsViewController : UIViewController {
     private readonly UsersAdapterDelegate adapter = new ();
     private readonly SingleRequestManager<Models.Users.SearchResponse> requestManager = new ();
+    private readonly FilterDataObject dataObject = new FilterDataObject {
+        SearchOrder = 0,
+        SearchSource = 0
+    };
     private bool isSearchingMode = false;
 
 
@@ -43,6 +46,7 @@ public partial class ContactsViewController : UIViewController {
         if (this.isSearchingMode && !string.IsNullOrEmpty(args.SearchText)) {
             requestManager.AddRequest(new Users.Search {
                 Query = args.SearchText,
+                Sort = this.dataObject.SearchOrder,
                 Fields = Constants.DefaultUserFields,
                 Offset = 0, 
                 Count = 80
@@ -58,7 +62,10 @@ public partial class ContactsViewController : UIViewController {
         }
     }
 
-    private void FilterIconClicked(object? sender, EventArgs args) {}
+    private void FilterIconClicked(object? sender, EventArgs args) {
+        var modalController = new FilterModalController(this.dataObject);
+        PresentViewController(modalController, true, null);
+    }
 
 
     private void RequestUsers(int offset) {

@@ -34,26 +34,26 @@ public partial class ChatViewCell : TableViewCellBase<ChatItem> {
         var trailing = "";
 
         if (item.InnerResponse.LastMessage?.Out == 1) {
-            sender = "You:";
+            sender = Localization.Instance.GetString("common_abbr_you");
         } else if (item.InnerResponse.Conversation?.peer?.Type == "chat") {
             if (item.InnerResponse.LastMessage?.FromId > 0) {
                 if (item.RelativeItemFromMessage is User user)
-                    sender = $"{user.FirstName}: ";
+                    sender = user.FirstName;
             } else {
                 if (item.RelativeItemFromMessage is Group group)
-                    sender = $"{group.Name}: ";
+                    sender = group.Name;
             }
         }
 
         if (item.InnerResponse.LastMessage?.FwdMessages?.Count != 0)
-            trailing = "[Messages]";
+            trailing = $"[{Localization.Instance.GetString("common_abbr_messages")}]";
         if (item.InnerResponse.LastMessage?.Attachments?.Count != 0)
-            trailing = "[Attachments]";
+            trailing = $"[{Localization.Instance.GetString("common_abbr_attachments")}]";
 
         message!.Text = sender 
-            + (sender.Equals(string.Empty) ? "" : " ") 
+            + (string.IsNullOrEmpty(sender) ? "" : ": ") 
             + item.InnerResponse.LastMessage?.Text?.Replace("\n", " ")
-            + (item.InnerResponse.LastMessage?.Text?.Equals(string.Empty) == true ? "" : " ") 
+            + (string.IsNullOrEmpty(item.InnerResponse.LastMessage?.Text) ? "" : " ") 
             + trailing;
 
         unread!.Text = item.InnerResponse.Conversation?.UnreadCount.ToString();

@@ -75,18 +75,19 @@ Task("ios")
             ReplaceTextInFiles(plist, match, patch);
         }
 
-        DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS"));
+        DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64"));
         //MoveFile(BundleiOSPath, $"{ArtifactsDirectory}/Cappuccino.App.iOS.{version}.ipa");
     });
 
 Task("ios-run")
-    .IsDependentOn("ios")
     .Does(() => {
-        StartProcess("dotnet", "xharness apple install"
-            + $" --app {ArtifactsDirectory}/iOS/ios-arm64/Cappuccino.App.iOS.app" 
+        DotNetBuild(ProjectiOSPath, new DotNetBuildSettings { Configuration = configuration });
+        StartProcess("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app");
+        StartProcess("dotnet", "xharness apple run"
+            + $" --app {ArtifactsDirectory}/iOS/iossimulator-x64/Cappuccino.App.iOS.app" 
             + $" --device {device}"
             + $" --output-directory {ArtifactsDirectory}"
-            + " --target ios-device"
+            + " --target ios-simulator-64"
         );
     });
 

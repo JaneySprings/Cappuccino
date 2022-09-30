@@ -6,7 +6,7 @@ using Cappuccino.Core.Network.Models;
 namespace Cappuccino.Core.Network.Handlers {
 
     public static class TokenExpiredHandler {
-        public static EventHandler? Expired;
+        public static Action<ErrorResponse>? Expired;
 
         private static readonly IEnumerable<int> Errors = new[] {
             5, 7, 15, 17, 20, 1114, 1116, 3301, 3302, 3609
@@ -14,11 +14,7 @@ namespace Cappuccino.Core.Network.Handlers {
 
         internal static void ValidateError(ErrorResponse error) {
             if (Errors.Contains(error.InnerError?.ErrorCode ?? 0))
-                Expired?.Invoke(error, EventArgs.Empty);
-        }
-
-        internal static void RequestTokenError() {
-            Expired?.Invoke("Access Token error", EventArgs.Empty);
+                Expired?.Invoke(error);
         }
     }
 }

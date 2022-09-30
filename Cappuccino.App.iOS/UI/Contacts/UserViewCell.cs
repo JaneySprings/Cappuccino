@@ -10,10 +10,10 @@ public partial class UserViewCell : TableViewCellBase<User> {
         this.name!.Text = $"{item.FirstName} {item.LastName}";
 
         if (item.Online == 1) {
-            this.caption!.Text = "online";
+            this.caption!.Text = Localization.Instance.GetString("common_abbr_online");
             this.caption.TextColor = Colors.Accent;
         } else {
-            this.caption!.Text = $"was online {item.lastSeen?.Time.ParseShortDate()}";
+            this.caption!.Text = $"{Localization.Instance.GetString("common_abbr_was_online")} {item.lastSeen?.Time.ParseShortDate()}";
             this.caption.TextColor = Colors.TextGray;
         }
 

@@ -18,7 +18,7 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
         ApiConfiguration config = new ApiConfiguration.Builder()
-            .SetApiLanguage("en")
+            .SetApiLanguage(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
             .SetAppId(7317599)
             .SetApiVersion("5.131")
             .SetLongPollVersion(3)
@@ -27,7 +27,7 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
             .Build();
 
         CredentialsManager.ApplyConfiguration(config);
-        TokenExpiredHandler.Expired += (sender, args) => ChangeRootViewController(new AuthViewController());
+        TokenExpiredHandler.Expired += (error) => ChangeRootViewController(new AuthViewController());
 
         ChangeRootViewController(
             CredentialsManager.IsInternalTokenValid() ? new RootViewController() : new AuthViewController()

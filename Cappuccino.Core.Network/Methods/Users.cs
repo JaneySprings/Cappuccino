@@ -19,7 +19,7 @@ namespace Cappuccino.Core.Network.Methods.Users {
         public string Query { set => AddParam("q", value); }
         public int Count { set => AddParam("count", value); }
         public int Offset { set => AddParam("offset", value); }
-        public int sort { set => AddParam("sort", value); }
+        public int Sort { set => AddParam("sort", value); }
         public IEnumerable<string> Fields { set => AddParam("fields", value); }
         public IEnumerable<string> FromList { set => AddParam("from_list", value); }
         public int GroupId { set => AddParam("group_id", value); }

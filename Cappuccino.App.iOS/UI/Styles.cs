@@ -45,7 +45,7 @@ public static class UINavigationBarStyles {
         };
 
         attributes.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
-        attributes.ForegroundColor = Colors.Text;;
+        attributes.ForegroundColor = Colors.Text;
 
         appearance.BackgroundColor = Colors.Foreground;
         appearance.TitleTextAttributes = attributes;
@@ -61,8 +61,8 @@ public static class UINavigationBarStyles {
 public static class UILabelStyles {
 
     public static void ApplyHeaderAppearance(this UILabel label) {
-        label.Font = UIFont.SystemFontOfSize(19f, UIFontWeight.Regular);
-        label.TextColor = Colors.TextGray;
+        label.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
+        label.TextColor = Colors.Text;
     }
 
     public static void ApplyCaption1Appearance(this UILabel label) {
@@ -96,5 +96,12 @@ public static class UIImageViewStyles {
     public static void ApplyRoundedAppearance(this UIImageView imageView) {
         imageView.Layer.CornerRadius = imageView.Bounds.Height / 2;
         imageView.ClipsToBounds = true;
+    }
+}
+
+public static class UISegmentedControlStyles {
+    public static void ApplyDefaultAppearance(this UISegmentedControl segmentedControl) {
+        segmentedControl.BackgroundColor = Colors.Divider;
+        segmentedControl.TintColor = Colors.Accent;
     }
 }

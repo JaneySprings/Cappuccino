@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 namespace Cappuccino.Core.Network.Models {
 
-    internal class ErrorResponse {
+    public class ErrorResponse {
         [JsonPropertyName("error")] public Error? InnerError { get; set; }
 
         public class Error {
