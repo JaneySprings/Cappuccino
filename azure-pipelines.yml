@@ -42,7 +42,7 @@ stages:
     condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/cappuccino_')
     dependsOn: []
     jobs:
-      - job: Publish
+      - job: Build
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 10
