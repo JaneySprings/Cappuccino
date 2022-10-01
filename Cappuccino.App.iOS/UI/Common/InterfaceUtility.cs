@@ -2,31 +2,6 @@ namespace Cappuccino.App.iOS.UI.Common;
 
 public static class InterfaceUtility {
 
-    public static CGSize LayoutSegmentedSection(UISegmentedControl control, UIView superview, SegmentedControlOptions options) {
-        var header = new UILabel();
-        header.Text = options.Title;
-
-        header.ApplyCaption2Appearance();
-        control.ApplyDefaultAppearance();
-
-        var headerSize = header.SizeThatFits(options.ContentSize);
-        header.Frame = new CGRect(options.HorizontalPadding, options.OriginY + options.VerticalPadding, headerSize.Width, headerSize.Height);
-
-        for (var i = 0; i < options.Options!.Length; i++) {
-            control.InsertSegment(options.Options[i], new IntPtr(i), false);
-        }
-
-        var controlSize = control!.SizeThatFits(options.ContentSize);
-        control.Frame = new CGRect(options.HorizontalPadding, options.OriginY + options.VerticalPadding + headerSize.Height + options.Spacing,
-            options.ContentSize.Width - 2 * options.HorizontalPadding, controlSize.Height + 2 * options.HeightAmplifier);
-
-        superview.AddSubview(header);
-        superview.AddSubview(control);
-
-        return new CGSize(options.ContentSize.Width, 2 * options.VerticalPadding + headerSize.Height + controlSize.Height + options.Spacing);
-    }
-
-
     public static void LayoutNavigationBar(UINavigationItem navigationItem, NavigationBarOptions options) {
         navigationItem.Title = options.Title;
 

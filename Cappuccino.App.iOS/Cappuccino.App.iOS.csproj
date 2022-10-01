@@ -9,16 +9,13 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <!-- Only for Apple Simulator -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(RuntimeIdentifier)' != 'ios-arm64'" >
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
-  <!-- -->
 
   <ItemGroup>
     <Reference Include="Cappuccino.Core.Network" HintPath="..\Artifacts\Common\Cappuccino.Core.Network.dll" />
     <PackageReference Include="SDWebImage.iOS" Version="1.*" />
-
-     <EmbeddedResource Include="..\Resources\*.resx" LinkBase="Resources" />
+    <EmbeddedResource Include="..\Resources\*.resx" LinkBase="Resources" />
   </ItemGroup>
 </Project>

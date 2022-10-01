@@ -9,6 +9,7 @@ pr:
     include:
     - master
 
+
 stages:
   - stage: CoreTests
     dependsOn: []
@@ -17,12 +18,34 @@ stages:
         pool:
           vmImage: 'macos-latest'
         timeoutInMinutes: 5
+        steps:
+          - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
+            displayName: 'Install .NET 7.0.1xx Preview'
+          - script: dotnet tool restore
+            displayName: 'DotNet Restore'
+          - script: dotnet cake --target=network-build
+            displayName: 'Network Build' 
+          - script: dotnet cake --target=network-test --configuration=release
+            displayName: 'Network Test'
+          - task: PublishTestResults@2
+            continueOnError: true
+            inputs:
+              testResultsFormat: 'VSTest'
+              testResultsFiles: 'Artifacts/*.trx'
+              failTaskOnFailedTests: true
+
+
+  - stage: Publish
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/cappuccino_')
+    dependsOn: []
+    jobs:
+      - job: Publish
+        pool:
+          vmImage: 'macos-latest'
+        timeoutInMinutes: 10
         variables:
           - name : version
-            ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/core_') }}:
-              value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/core_', '') ] 
-            ${{ if not(startsWith(variables['Build.SourceBranch'], 'refs/tags/core_')) }}:
-              value: '1.0'
+            value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/cappuccino_', '') ] 
           - group: Tokens
         steps:
           - task: DownloadSecureFile@1
@@ -34,35 +57,21 @@ stages:
             displayName: 'Install .NET 7.0.1xx Preview'
           - script: dotnet tool restore
             displayName: 'DotNet Restore'
-          - script: dotnet cake --target=network-build --configuration=release --up-version=$(version) --signkey=$(strongKey.secureFilePath)
-            displayName: 'Network Build' 
-          - script: dotnet cake --target=network-test --configuration=release
-            displayName: 'Network Test'
-          - task: PublishTestResults@2
-            continueOnError: true
-            inputs:
-              testResultsFormat: 'VSTest'
-              testResultsFiles: 'Artifacts/*.trx'
-              failTaskOnFailedTests: true
-          - publish: 'Artifacts/Common'
+          # Core
+          - script: dotnet cake --target=network-build --up-version=$(version) --signkey=$(strongKey.secureFilePath)
+            displayName: 'Network Build'
+          - publish: 'Artifacts/Publish'
             displayName: 'Publish Artifacts'
             artifact: Artifacts
-
-
-  - stage: CorePublish
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/core_')
-    dependsOn: CoreTests
-    jobs:
-      - job: Publish
-        pool:
-          vmImage: 'macos-latest'
-        timeoutInMinutes: 5
-        steps:
-          - download: current
-            displayName: 'Download Artifacts'
+          # - script: dotnet cake --target=network-publish --apikey=$(NUGET_API_KEY)
+          #   displayName: 'Network Publish'
+          # iOS
+          - script: dotnet workload install ios
+            displayName: 'Install iOS Workload'
+          - script: dotnet cake --target=ios --up-version=$(version) --signkey=$(strongKey.secureFilePath)
+            displayName: 'iOS Build'
+          - publish: 'Artifacts/Publish'
+            displayName: 'Publish Artifacts'
             artifact: Artifacts
-          - script: dotnet tool restore
-            displayName: 'DotNet Restore'
-          - script: dotnet cake --target=network-publish --apikey=$(NUGET_API_KEY)
-            displayName: 'Network Publish'
-            
+          # Android
+

@@ -16,7 +16,19 @@ string device           =  Argument("device"        , "");
 Task("clean").Does(() => {
     CleanDirectories("./**/bin");
     CleanDirectories("./**/obj");
-    CleanDirectory(ArtifactsDirectory);
+
+    if (!DirectoryExists(ArtifactsDirectory)) {
+        CreateDirectory(ArtifactsDirectory);
+        return;
+    }
+
+    foreach (var file in System.IO.Directory.GetFiles(ArtifactsDirectory)) 
+        DeleteFile(file);
+    foreach (var directory in System.IO.Directory.GetDirectories(ArtifactsDirectory))
+        if (!directory.Equals($"{ArtifactsDirectory}/Common"))
+            DeleteDirectory(directory, new DeleteDirectorySettings { Recursive = true });
+    
+    CreateDirectory(PublishDirectory);
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -35,6 +47,7 @@ Task("network-build")
             ReplaceTextInFiles(NuSpecCorePath, match, $"<version>{version}</version>");
 
         DotNetPublish(ProjectCorePath, DotNetPublishSettings($"{ArtifactsDirectory}/Common"));
+        NuGetPack(NuSpecCorePath, new NuGetPackSettings { OutputDirectory = PublishDirectory });
 
         foreach (var file in System.IO.Directory.GetFiles($"{ArtifactsDirectory}/Common")) 
             if (!file.Contains("Cappuccino.Core.Network"))
@@ -47,22 +60,17 @@ Task("network-test").Does(() => DotNetTest(ProjectCoreTestsPath, new DotNetTestS
     Logger = $"trx;LogFileName={TestsResultPath}"
 }));
 
-Task("network-publish").Does(() => {
-    NuGetPack(NuSpecCorePath, new NuGetPackSettings { 
-        OutputDirectory = ArtifactsDirectory 
-    });
-    NuGetPush(NugetCorePath, new NuGetPushSettings { 
-        Source = "https://api.nuget.org/v3/index.json", 
-        ApiKey = apikey 
-    });
-});
+Task("network-publish").Does(() => NuGetPush(NugetCorePath, new NuGetPushSettings { 
+    Source = "https://api.nuget.org/v3/index.json", 
+    ApiKey = apikey 
+}));
 
 //////////////////////////////////////////////////////////////////////
 // CAPPUCCINO iOS
 //////////////////////////////////////////////////////////////////////
 
 Task("ios")
-//    .IsDependentOn("clean")
+    .IsDependentOn("clean")
     .Does(() => {
         var options = System.Text.RegularExpressions.RegexOptions.None;
         var pattern = "\\<key\\>CFBundle[A-z]*Version[A-z]*\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
@@ -76,8 +84,18 @@ Task("ios")
         }
 
         DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64"));
-        //MoveFile(BundleiOSPath, $"{ArtifactsDirectory}/Cappuccino.App.iOS.{version}.ipa");
+        MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
+        Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
     });
+
+//////////////////////////////////////////////////////////////////////
+// CAPPUCCINO ANDROID
+//////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////
+// DEBUG
+//////////////////////////////////////////////////////////////////////
 
 Task("ios-run")
     .Does(() => {
@@ -87,13 +105,9 @@ Task("ios-run")
             + $" --app {ArtifactsDirectory}/iOS/iossimulator-x64/Cappuccino.App.iOS.app" 
             + $" --device {device}"
             + $" --output-directory {ArtifactsDirectory}"
-            + " --target ios-simulator-64"
+            +  " --target ios-simulator-64"
         );
     });
-
-//////////////////////////////////////////////////////////////////////
-// CAPPUCCINO ANDROID
-//////////////////////////////////////////////////////////////////////
 
 
 RunTarget(target);

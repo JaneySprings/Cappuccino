@@ -11,10 +11,7 @@ namespace Cappuccino.App.iOS.UI.Contacts;
 public partial class ContactsViewController : UIViewController {
     private readonly UsersAdapterDelegate adapter = new ();
     private readonly SingleRequestManager<Models.Users.SearchResponse> requestManager = new ();
-    private readonly FilterDataObject dataObject = new FilterDataObject {
-        SearchOrder = 0,
-        SearchSource = 0
-    };
+    private readonly FilterDataObject dataObject = new FilterDataObject { HomeTown = string.Empty, AgeTo = 100 };
     private bool isSearchingMode = false;
 
 
@@ -42,16 +39,7 @@ public partial class ContactsViewController : UIViewController {
 
     private void SearchTextChanged(object? sender, UISearchBarTextChangedEventArgs args) {
         this.isSearchingMode = !string.IsNullOrEmpty(args.SearchText);
-
-        if (this.isSearchingMode && !string.IsNullOrEmpty(args.SearchText)) {
-            requestManager.AddRequest(new Users.Search {
-                Query = args.SearchText,
-                Sort = this.dataObject.SearchOrder,
-                Fields = Constants.DefaultUserFields,
-                Offset = 0, 
-                Count = 80
-            });
-        }
+        RequestSearch(args.SearchText);
     }
 
     private void SearchCancelled(object? sender, EventArgs args) {
@@ -63,7 +51,9 @@ public partial class ContactsViewController : UIViewController {
     }
 
     private void FilterIconClicked(object? sender, EventArgs args) {
-        var modalController = new FilterModalController(this.dataObject);
+        var modalController = new FilterModalController(this.dataObject, () => {
+            RequestSearch(NavigationItem.SearchController?.SearchBar.Text ?? string.Empty);
+        });
         PresentViewController(modalController, true, null);
     }
 
@@ -83,6 +73,21 @@ public partial class ContactsViewController : UIViewController {
                 })
                 .OnError(reason => {})
             );
+        }
+    }
+
+    private void RequestSearch(string query) {
+        if (this.isSearchingMode && !string.IsNullOrEmpty(query)) {
+            requestManager.AddRequest(new Users.Search {
+                Sort = this.dataObject.SearchOrder,
+                Hometown = this.dataObject.HomeTown!,
+                AgeFrom = this.dataObject.AgeFrom,
+                AgeTo = this.dataObject.AgeTo,
+                Query = query,
+                Fields = Constants.DefaultUserFields,
+                Offset = 0, 
+                Count = 80
+            });
         }
     }
 }

@@ -31,17 +31,29 @@
     <data name="common_abbr_attachments" xml:space="preserve">
         <value>attachments</value>
     </data>
-    <data name="common_close_action" xml:space="preserve">
+    <data name="common_action_close" xml:space="preserve">
         <value>Close</value>
+    </data>
+    <data name="common_action_reset" xml:space="preserve">
+        <value>Reset</value>
+    </data>
+    <data name="common_action_show_results" xml:space="preserve">
+        <value>Show Results</value>
     </data>
 
     <data name="filters_search_order" xml:space="preserve">
-        <value>Search Order</value>
+        <value>Order</value>
     </data>
     <data name="filters_search_order_option_popularity" xml:space="preserve">
         <value>Popularity</value>
     </data>
     <data name="filters_search_order_option_registration_date" xml:space="preserve">
         <value>Date</value>
+    </data>
+     <data name="filters_location" xml:space="preserve">
+        <value>Location</value>
+    </data>
+    <data name="filters_location_placeholder" xml:space="preserve">
+        <value>City or country</value>
     </data>
 </root>

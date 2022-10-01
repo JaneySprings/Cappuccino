@@ -1,6 +1,7 @@
 public string RootDirectory => MakeAbsolute(Directory("./")).ToString();
 
 public string ArtifactsDirectory => $"{RootDirectory}/Artifacts";
+public string PublishDirectory => $"{ArtifactsDirectory}/Publish";
 
 public string BundleAndroidPath => $"{ArtifactsDirectory}/Android/Cappuccino.App.Android.apk";
 public string BundleiOSPath => $"{ArtifactsDirectory}/iOS/Cappuccino.App.iOS.ipa";
@@ -28,9 +29,9 @@ public DotNetPublishSettings DotNetPublishSettings(string output, string runtime
         settings.WithProperty("RuntimeIdentifier", runtimeIdentifier);
 
     return new DotNetPublishSettings {  
+        Verbosity = DotNetVerbosity.Minimal,
         MSBuildSettings = settings,
         OutputDirectory = output,
-        Configuration = configuration,
-        Verbosity = DotNetVerbosity.Minimal
+        Configuration = "release"
     };
 } 

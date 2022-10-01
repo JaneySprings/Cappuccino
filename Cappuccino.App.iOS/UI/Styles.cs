@@ -13,7 +13,7 @@ public static class Colors {
 
 
 public static class UITabBarStyles {
-    public static void ApplyDefaultAppearance(this UITabBar tabBar) {
+    public static UITabBar ApplyDefaultAppearance(this UITabBar tabBar) {
         var appearance = new UITabBarAppearance();
         appearance.StackedItemPositioning = UITabBarItemPositioning.Centered;
 
@@ -21,11 +21,13 @@ public static class UITabBarStyles {
         tabBar.TintColor = Colors.Accent;
         tabBar.UnselectedItemTintColor = Colors.TextGray;
         tabBar.BackgroundColor = Colors.Foreground;
+
+        return tabBar;
     }
 }
 
 public static class UITableViewStyles {
-    public static void ApplyDefaultAppearance(this UITableView tableView) {
+    public static UITableView ApplyDefaultAppearance(this UITableView tableView) {
         tableView.BackgroundColor = Colors.Foreground;
         tableView.ShowsHorizontalScrollIndicator = false;
         tableView.BouncesZoom = false;
@@ -33,11 +35,13 @@ public static class UITableViewStyles {
         tableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
         tableView.AllowsMultipleSelection = false;
         tableView.AllowsSelection = false;
+
+        return tableView;
     }
 }
 
 public static class UINavigationBarStyles {
-    public static void ApplyDefaultAppearance(this UINavigationBar navigationBar) {
+    public static UINavigationBar ApplyDefaultAppearance(this UINavigationBar navigationBar) {
         var attributes = new UIStringAttributes();
         var appearance = new UINavigationBarAppearance();
         var mock = new UIBarButtonItem {
@@ -55,53 +59,103 @@ public static class UINavigationBarStyles {
         navigationBar.StandardAppearance = appearance;
         navigationBar.ScrollEdgeAppearance = appearance;
         navigationBar.CompactAppearance = appearance;
+
+        return navigationBar;
     }
 }
  
 public static class UILabelStyles {
 
-    public static void ApplyHeaderAppearance(this UILabel label) {
+    public static UILabel ApplyHeaderAppearance(this UILabel label) {
         label.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
         label.TextColor = Colors.Text;
+        return label;
     }
 
-    public static void ApplyCaption1Appearance(this UILabel label) {
+    public static UILabel ApplyCaption1Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(17f, UIFontWeight.Medium);
         label.TextColor = Colors.Text;
+        return label;
     }
 
-    public static void ApplyCaption2Appearance(this UILabel label) {
+    public static UILabel ApplyCaption2Appearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Regular);
         label.TextColor = Colors.TextGray;
+        return label;
     }
 
-    public static void ApplyDefaultAppearance(this UILabel label) {
+    public static UILabel ApplyDefaultAppearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(16f, UIFontWeight.Regular);
         label.TextColor = Colors.Text;
+        return label;
     }
 
-    public static void ApplyBadgeAppearance(this UILabel label) {
+    public static UILabel ApplyBadgeAppearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Medium);
         label.TextAlignment = UITextAlignment.Center;
         label.TextColor = UIColor.White;
+        return label;
     }
 
-    public static void ApplyRoundedAppearance(this UILabel label) {
+    public static UILabel ApplyRoundedAppearance(this UILabel label) {
         label.Layer.CornerRadius = label.Bounds.Height / 2;
         label.Layer.MasksToBounds = true;
+        return label;
     }
 }
 
 public static class UIImageViewStyles {
-    public static void ApplyRoundedAppearance(this UIImageView imageView) {
+    public static UIImageView ApplyRoundedAppearance(this UIImageView imageView) {
         imageView.Layer.CornerRadius = imageView.Bounds.Height / 2;
         imageView.ClipsToBounds = true;
+        return imageView;
     }
 }
 
 public static class UISegmentedControlStyles {
-    public static void ApplyDefaultAppearance(this UISegmentedControl segmentedControl) {
-        segmentedControl.BackgroundColor = Colors.Divider;
-        segmentedControl.TintColor = Colors.Accent;
+    public static UISegmentedControl ApplyDefaultAppearance(this UISegmentedControl segmentedControl) {
+        var attrNormal = new UIStringAttributes();
+        var attrSelected = new UIStringAttributes();
+
+        attrNormal.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Medium);
+        attrSelected.Font = UIFont.SystemFontOfSize(15f, UIFontWeight.Medium);
+        attrNormal.ForegroundColor = Colors.TextGray;
+        attrSelected.ForegroundColor = Colors.Text;
+
+        segmentedControl.SetTitleTextAttributes(attrSelected, UIControlState.Selected);
+        segmentedControl.SetTitleTextAttributes(attrNormal, UIControlState.Normal);
+
+        return segmentedControl;
+    }
+}
+
+public static class UITextFieldStyles {
+    public static UITextField ApplyDefaultAppearance(this UITextField field) {
+        field.BackgroundColor = Colors.Divider;
+        field.TextColor = Colors.Text;
+        field.TintColor = Colors.Accent;
+        field.ClipsToBounds = true;
+        field.Layer.CornerRadius = 12;
+        field.LeftView = new UIView(new CGRect(0, 0, 16, field.Bounds.Height));
+        field.LeftViewMode = UITextFieldViewMode.Always;
+        field.Font = UIFont.SystemFontOfSize(16f, UIFontWeight.Regular);
+
+        return field;
+    }
+}
+
+public static class UIButtonStyles {
+    public static UIButton ApplyDefaultAppearance(this UIButton button) {
+        button.SetTitleColor(Colors.Accent, UIControlState.Normal);
+        return button;
+    }
+
+    public static UIButton ApplyActionAppearance(this UIButton button) {
+        button.ClipsToBounds = true;
+        button.Layer.CornerRadius = 12;
+        button.BackgroundColor = Colors.Accent;
+        button.SetTitleColor(UIColor.White, UIControlState.Normal);
+        button.TitleLabel.Font = UIFont.SystemFontOfSize(17f, UIFontWeight.Medium);
+        return button;
     }
 }
