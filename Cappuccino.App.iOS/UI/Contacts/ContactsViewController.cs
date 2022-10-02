@@ -1,6 +1,6 @@
 ﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Handlers;
-using Cappuccino.Core.Network.Managing;
+using Cappuccino.App.iOS.Extensions;
 using Models = Cappuccino.Core.Network.Models;
 using Friends = Cappuccino.Core.Network.Methods.Friends;
 using Users = Cappuccino.Core.Network.Methods.Users;
@@ -10,8 +10,8 @@ namespace Cappuccino.App.iOS.UI.Contacts;
 
 public partial class ContactsViewController : UIViewController {
     private readonly UsersAdapterDelegate adapter = new ();
-    private readonly SingleRequestManager<Models.Users.SearchResponse> requestManager = new ();
-    private readonly FilterDataObject dataObject = new FilterDataObject { HomeTown = string.Empty, AgeTo = 100 };
+    private readonly SelectiveRequestManager<Models.Users.SearchResponse> requestManager = new ();
+    private readonly FilterDataObject dataObject = new FilterDataObject();
     private bool isSearchingMode = false;
 
 
@@ -80,9 +80,7 @@ public partial class ContactsViewController : UIViewController {
         if (this.isSearchingMode && !string.IsNullOrEmpty(query)) {
             requestManager.AddRequest(new Users.Search {
                 Sort = this.dataObject.SearchOrder,
-                Hometown = this.dataObject.HomeTown!,
-                AgeFrom = this.dataObject.AgeFrom,
-                AgeTo = this.dataObject.AgeTo,
+                Hometown = this.dataObject.HomeTown ?? string.Empty,
                 Query = query,
                 Fields = Constants.DefaultUserFields,
                 Offset = 0, 

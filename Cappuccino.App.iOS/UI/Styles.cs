@@ -11,6 +11,11 @@ public static class Colors {
     public static UIColor TextGray => UIColor.FromName("text_gray")!;
 }
 
+public static class Dimensions {
+    public static nfloat HorizontalContentInsets => 16;
+    public static nfloat EditorsHeight => 42;
+}
+
 
 public static class UITabBarStyles {
     public static UITabBar ApplyDefaultAppearance(this UITabBar tabBar) {

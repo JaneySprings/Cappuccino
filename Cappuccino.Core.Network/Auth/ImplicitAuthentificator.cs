@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using Cappuccino.Core.Network.Config;
 using Cappuccino.Core.Network.Handlers;
@@ -8,24 +7,24 @@ using Cappuccino.Core.Network.Utils;
 
 namespace Cappuccino.Core.Network.Auth {
 
-    public class AuthManager {
+    public class ImplicitAuthentificator {
         public EventHandler? Authorized { get; set; }
 
 
         public string BuildAuthorizationUri() {
-            if (ApiManager.ApiConfig?.ApplicationId == null)
+            if (CredentialsManager.ApiConfig?.ApplicationId == null)
                 throw new Exception("Application Id does not exist in configuration");
 
             string[] uriParams = {
-                "client_id=" + ApiManager.ApiConfig.ApplicationId,
+                "client_id=" + CredentialsManager.ApiConfig.ApplicationId,
                 "redirect_uri=" + EndPoints.RedirectUri,
-                "scope=" + ApiManager.ApiConfig.Permissions.Sum(),
+                "scope=" + CredentialsManager.ApiConfig.Permissions,
                 "response_type=token",
                 "display=mobile",
                 "revoke=1"
             };
 
-            return $"{EndPoints.AuthorizeUri}?{String.Join("&", uriParams)}";
+            return $"{EndPoints.AuthorizeImplicitUri}?{String.Join("&", uriParams)}";
         }
 
         public void TryAuthorizeFromUri(string uri, IValidationCallback? callback = null) {
@@ -43,11 +42,9 @@ namespace Cappuccino.Core.Network.Auth {
                 Int32.Parse(keys["user_id"])
             );
 
-            if (!CredentialsManager.IsTokenValid(token, callback))
+            if (!CredentialsManager.ApplyAccessToken(token, callback))
                 return;
-
-            ApiManager.UpdateAccessToken(token);
-        
+                
             this.Authorized?.Invoke(this, EventArgs.Empty);
         }
     }

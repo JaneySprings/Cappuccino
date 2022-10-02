@@ -3,6 +3,7 @@ using Cappuccino.Core.Network.Methods;
 using Cappuccino.Core.Network.Handlers;
 using _Messages = Cappuccino.Core.Network.Methods.Messages;
 using Models = Cappuccino.Core.Network.Models;
+using Cappuccino.Core.Network.Polling;
 
 namespace Cappuccino.App.iOS.UI.Chats;
 
@@ -19,6 +20,11 @@ public partial class ChatsViewController : UIViewController {
         tableView.Delegate = this.adapter;
 
         this.adapter.OnLastItemBind = RequestConversations;
+        
+        LongPollManager.Instance.HistoryUpdated += (response) => {
+            this.adapter.ClearItems();
+            RequestConversations(0);  
+        };
 
         if (this.adapter.GetItemCount() == 0)
             RequestConversations(0);

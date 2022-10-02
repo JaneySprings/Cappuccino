@@ -51,16 +51,18 @@ stages:
             value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/cappuccino_', '') ] 
           - group: Tokens
         steps:
+          - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
+            displayName: 'Install .NET 7.0.1xx Preview'
+          - script: dotnet tool restore
+            displayName: 'DotNet Restore'
+#//////////////////////////////////////////////////////////////////////
+#// CORE
+#//////////////////////////////////////////////////////////////////////
           - task: DownloadSecureFile@1
             name: strongKey
             displayName: 'Download Strong Key'
             inputs:
               secureFile: 'key.snk'
-          - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
-            displayName: 'Install .NET 7.0.1xx Preview'
-          - script: dotnet tool restore
-            displayName: 'DotNet Restore'
-          # Core
           - script: dotnet cake --target=network-build --up-version=$(version) --signkey=$(strongKey.secureFilePath)
             displayName: 'Network Build'
           - publish: 'Artifacts/Publish'
@@ -68,7 +70,9 @@ stages:
             artifact: Artifacts
           # - script: dotnet cake --target=network-publish --apikey=$(NUGET_API_KEY)
           #   displayName: 'Network Publish'
-          # iOS
+#//////////////////////////////////////////////////////////////////////
+#// iOS
+#//////////////////////////////////////////////////////////////////////
           - script: dotnet workload install ios
             displayName: 'Install iOS Workload'
           - script: dotnet cake --target=ios --up-version=$(version) --signkey=$(strongKey.secureFilePath)
@@ -76,5 +80,7 @@ stages:
           - publish: 'Artifacts/Publish'
             displayName: 'Publish Artifacts'
             artifact: Artifacts
-          # Android
+#//////////////////////////////////////////////////////////////////////
+#// Android
+#//////////////////////////////////////////////////////////////////////
 

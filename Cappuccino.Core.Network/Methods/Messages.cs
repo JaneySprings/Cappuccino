@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Cappuccino.Core.Network.Internal;
+using Cappuccino.Core.Network.Config;
 
 namespace Cappuccino.Core.Network.Methods.Messages {
 
@@ -24,7 +24,7 @@ namespace Cappuccino.Core.Network.Methods.Messages {
         public int NeedPts { set => AddParam("need_pts", value); }
         
         public GetLongPollServer() : base("messages.getLongPollServer") {
-            AddParam("lp_version", ApiManager.ApiConfig?.LpVersion);
+            AddParam("lp_version", CredentialsManager.ApiConfig?.LpVersion);
         }
     }
 }

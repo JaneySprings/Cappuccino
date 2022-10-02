@@ -1,4 +1,6 @@
-﻿namespace Cappuccino.App.iOS;
+﻿using Cappuccino.Core.Network.Polling;
+
+namespace Cappuccino.App.iOS;
 
 
 [Register ("SceneDelegate")]
@@ -15,10 +17,14 @@ public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 	public void DidDisconnect (UIScene scene) {}
 
 	[Export ("sceneDidBecomeActive:")]
-	public void DidBecomeActive (UIScene scene) {}
+	public void DidBecomeActive (UIScene scene) {
+		LongPollManager.Instance.StartExecution();
+	}
 
 	[Export ("sceneWillResignActive:")]
-	public void WillResignActive (UIScene scene) {}
+	public void WillResignActive (UIScene scene) {
+		LongPollManager.Instance.StopExecution();
+	}
 
 	[Export ("sceneWillEnterForeground:")]
 	public void WillEnterForeground (UIScene scene) {}

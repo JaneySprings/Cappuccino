@@ -3,6 +3,7 @@ using Scope = Cappuccino.Core.Network.Auth.Permissions;
 using Cappuccino.App.iOS.UI.Auth;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.App.iOS.UI;
+using System.Globalization;
 
 namespace Cappuccino.App.iOS;
 
@@ -18,12 +19,12 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
         ApiConfiguration config = new ApiConfiguration.Builder()
-            .SetApiLanguage(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
-            .SetAppId(7317599)
-            .SetApiVersion("5.131")
-            .SetLongPollVersion(3)
-            .SetTokenStorageHandler(new KeychainProvider())
-            .SetPermissions(new List<int> { Scope.Friends, Scope.Messages })
+            .WithApiLanguage(CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
+            .WithAppId(7317599)
+            .WithApiVersion("5.131")
+            .WithLongPollVersion(12)
+            .WithTokenStorageHandler(new KeychainProvider())
+            .WithPermissions(new List<int> { Scope.Friends, Scope.Messages })
             .Build();
 
         CredentialsManager.ApplyConfiguration(config);

@@ -9,4 +9,9 @@ namespace Cappuccino.Core.Network.Models {
             [JsonPropertyName("error_msg")] public string? ErrorMsg { get; set; }
         }
     }
+
+    public class LongPollErrorResponse {
+        [JsonPropertyName("failed")] public int Failed { get; set; }
+        [JsonPropertyName("error")] public string? Error { get; set; }
+    }
 }

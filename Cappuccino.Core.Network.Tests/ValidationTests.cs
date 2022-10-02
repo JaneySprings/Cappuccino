@@ -39,19 +39,4 @@ public class ValidationTests: TestFixture {
         Assert.False(CredentialsManager.IsInternalTokenValid(handler));
         Assert.Contains(nameof(ITokenStorageHandler), handler.Message);
     }
-
-    [Fact]
-    public void NoTokenInRequestTest() {
-        SetupEmptyCredentials();
-        Assert.ThrowsAsync<Exception>(() => new TestRequest<int>().Execute()).Wait();
-    }
-
-
-    private class ValidationCallback: IValidationCallback { 
-        public string? Message { get; private set; }
-
-        public void OnValidationFail(string reason) {
-            Message = reason;
-        }
-    }
 }

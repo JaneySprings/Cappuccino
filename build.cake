@@ -16,19 +16,8 @@ string device           =  Argument("device"        , "");
 Task("clean").Does(() => {
     CleanDirectories("./**/bin");
     CleanDirectories("./**/obj");
-
-    if (!DirectoryExists(ArtifactsDirectory)) {
-        CreateDirectory(ArtifactsDirectory);
-        return;
-    }
-
-    foreach (var file in System.IO.Directory.GetFiles(ArtifactsDirectory)) 
-        DeleteFile(file);
-    foreach (var directory in System.IO.Directory.GetDirectories(ArtifactsDirectory))
-        if (!directory.Equals($"{ArtifactsDirectory}/Common"))
-            DeleteDirectory(directory, new DeleteDirectorySettings { Recursive = true });
-    
-    CreateDirectory(PublishDirectory);
+    CleanDirectory(ArtifactsDirectory);
+    CleanDirectory(PublishDirectory);
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -69,24 +58,23 @@ Task("network-publish").Does(() => NuGetPush(NugetCorePath, new NuGetPushSetting
 // CAPPUCCINO iOS
 //////////////////////////////////////////////////////////////////////
 
-Task("ios")
-    .IsDependentOn("clean")
-    .Does(() => {
-        var options = System.Text.RegularExpressions.RegexOptions.None;
-        var pattern = "\\<key\\>CFBundle[A-z]*Version[A-z]*\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
-        var plist = $"{RootiOSDirectory}/Info.plist";
-        var tag = $"\t<string>{version}</string>";
+Task("ios").Does(() => {
+    var options = System.Text.RegularExpressions.RegexOptions.None;
+    var pattern = "\\<key\\>CFBundle[A-z]*Version[A-z]*\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
+    var plist = $"{RootiOSDirectory}/Info.plist";
+    var tag = $"\t<string>{version}</string>";
 
-        foreach (var match in FindRegexMatchesInFile(plist, pattern, options)) {
-            var position = match.LastIndexOf('\t');
-            var patch = match.Remove(position, match.Length - position).Insert(position, tag);
-            ReplaceTextInFiles(plist, match, patch);
-        }
+    foreach (var match in FindRegexMatchesInFile(plist, pattern, options)) {
+        var position = match.LastIndexOf('\t');
+        var patch = match.Remove(position, match.Length - position).Insert(position, tag);
+        ReplaceTextInFiles(plist, match, patch);
+    }
 
-        DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64"));
-        MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
-        Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
-    });
+    CleanDirectory(PublishDirectory);
+    DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64"));
+    MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
+    Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
+});
 
 //////////////////////////////////////////////////////////////////////
 // CAPPUCCINO ANDROID

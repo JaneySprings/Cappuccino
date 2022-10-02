@@ -1,9 +1,9 @@
 ﻿namespace Cappuccino.App.iOS.UI;
 
 
-public class RootViewController : UITabBarController {
+public partial class RootViewController : UITabBarController {
     public override void ViewDidLoad() {
-        base.ViewDidLoad();
+        base.ViewDidLoad();;
 
         var tabIcons = new string[] {
             "users_outline_32",
@@ -33,5 +33,6 @@ public class RootViewController : UITabBarController {
         };
 
         this.TabBar.ApplyDefaultAppearance();
+        this.SelectedIndex = new IntPtr(1);
     }
 }

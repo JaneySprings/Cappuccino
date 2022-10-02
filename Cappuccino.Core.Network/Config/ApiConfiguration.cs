@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Internal;
 
 namespace Cappuccino.Core.Network.Config {
 
     public class ApiConfiguration {
-        public IEnumerable<int> Permissions { get; private set; }
+        public int Permissions { get; private set; }
         public int ApplicationId { get; private set; }
         public int DeviceId { get; private set; }
         public int LpVersion { get; private set; }
         public string? ApiLanguage { get; private set; }
         public string? ApiVersion { get; private set; }
+        public string? SecretKey { get; private set; }
         public ITokenStorageHandler? TokenStorageHandler { get; private set; }
 
         public ApiConfiguration(Builder builder) {
@@ -20,49 +22,50 @@ namespace Cappuccino.Core.Network.Config {
             ApiVersion = builder.ApiVersion;
             LpVersion = builder.LpVersion;
             Permissions = builder.Permissions;
+            SecretKey = builder.SecretKey;
             TokenStorageHandler = builder.TokenStorageHandler;
         }
 
         public class Builder {
             internal int AppId { get; private set; }
+            internal int Permissions { get; private set; }
             internal int DeviceId { get; private set; }
             internal int LpVersion { get; private set; }
             internal string? Language { get; private set; }
             internal string? ApiVersion { get; private set; }
+            internal string? SecretKey { get; private set; }
             internal ITokenStorageHandler? TokenStorageHandler { get; private set; }
-            internal IEnumerable<int> Permissions = new List<int>();
 
-            public Builder SetAppId(int appId) {
+
+            public Builder WithAppId(int appId) {
                 AppId = appId;
                 return this;
             }
-
-            public Builder SetDeviceId(int deviceId) {
+            public Builder WithDeviceId(int deviceId) {
                 DeviceId = deviceId;
                 return this;
             }
-
-            public Builder SetApiLanguage(string language) {
+            public Builder WithApiLanguage(string language) {
                 Language = language;
                 return this;
             }
-
-            public Builder SetApiVersion(string version) {
+            public Builder WithApiVersion(string version) {
                 ApiVersion = version;
                 return this;
             }
-
-            public Builder SetLongPollVersion(int version) {
+            public Builder WithLongPollVersion(int version) {
                 LpVersion = version;
                 return this;
             }
-
-            public Builder SetPermissions(IEnumerable<int> permissions) {
-                Permissions = permissions;
+            public Builder WithPermissions(IEnumerable<int> permissions) {
+                Permissions = permissions.Sum();
                 return this;
             }
-
-            public Builder SetTokenStorageHandler(ITokenStorageHandler handler) {
+            public Builder WithSecretKey(string secretKey) {
+                SecretKey = secretKey;
+                return this;
+            }
+            public Builder WithTokenStorageHandler(ITokenStorageHandler handler) {
                 TokenStorageHandler = handler;
                 return this;
             }

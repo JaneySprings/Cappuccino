@@ -4,7 +4,7 @@ namespace Cappuccino.App.iOS.UI.Auth;
 
 
 public partial class AuthViewController : UIViewController {
-    private readonly AuthManager authManager = new AuthManager();
+    private readonly ImplicitAuthentificator authManager = new();
 
     public override void ViewDidAppear(bool animated) {
         base.ViewDidAppear(animated);

@@ -5,32 +5,40 @@ using Cappuccino.Core.Network.Internal;
 
 namespace Cappuccino.Core.Network.Config {
 
-    public class CredentialsManager {
-        public int? CurrentUserId => ApiManager.AccessToken?.UserId;
+    public static class CredentialsManager {
+        internal static ApiConfiguration? ApiConfig { get; private set; }
+        internal static AccessToken? AccessToken {
+            get => ApiConfig?.TokenStorageHandler?.OnTokenRequested();
+            private set => ApiConfig?.TokenStorageHandler?.OnTokenReceived(value!);
+        }
+
+        public static int CurrentUserId => AccessToken?.UserId ?? 0;
+
 
         public static void ApplyConfiguration(ApiConfiguration config) {
-            ApiManager.UpdateApiConfiguration(config);
+            ApiConfig = config;
+        }
+        public static bool ApplyAccessToken(AccessToken? token, IValidationCallback? callback = null) {
+            if (!IsTokenValid(token, callback)) 
+                return false;
+                
+            AccessToken = token;
+            return true;
         }
 
-        public static void ApplyAccessToken(AccessToken? token, IValidationCallback? callback = null) {
-            if (IsTokenValid(ApiManager.AccessToken, callback))
-                ApiManager.UpdateAccessToken(token!);
-        }
 
         public static bool IsInternalTokenValid(IValidationCallback? callback = null) {
-            if (ApiManager.ApiConfig?.TokenStorageHandler == null) {
+            if (ApiConfig?.TokenStorageHandler == null) {
                 callback?.OnValidationFail($"Implementation of {nameof(ITokenStorageHandler)} does not find");
                 return false;
             }
 
-            if (ApiManager.AccessToken != null)
-                return IsTokenValid(ApiManager.AccessToken, callback);
+            if (AccessToken != null)
+                return IsTokenValid(AccessToken, callback);
 
             return false;
         }
-
         
-
         internal static bool IsTokenValid(AccessToken? token, IValidationCallback? callback = null) {
             if (token == null) {
                 callback?.OnValidationFail("Instance of token is null");

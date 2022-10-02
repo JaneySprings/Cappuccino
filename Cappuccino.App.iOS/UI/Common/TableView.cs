@@ -10,9 +10,8 @@ public abstract class TableViewCellBase<TItem> : UITableViewCell {
 }
 
 
-public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem>, new() {
+public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem> {
     private readonly List<TItem> items = new List<TItem>();
-    private readonly TCell mockCell = new TCell();
 
     public int ItemLimit { get; set; }
     public Action<TItem>? OnItemClicked { get; set; }
@@ -32,13 +31,6 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
 
         return cell!;
     }
-
-    [Export("tableView:heightForRowAtIndexPath:")]
-    public nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) {
-        mockCell.Bind(this.items[indexPath.Row]);
-        return mockCell.SizeThatFits(CGSize.Empty).Height;
-    }
-
 
     public int GetItemCount() => this.items.Count;
     public void AddItems(IEnumerable<TItem> items) {

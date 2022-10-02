@@ -38,7 +38,7 @@ public partial class ChatViewCell : TableViewCellBase<ChatItem> {
         } else if (item.InnerResponse.Conversation?.peer?.Type == "chat") {
             if (item.InnerResponse.LastMessage?.FromId > 0) {
                 if (item.RelativeItemFromMessage is User user)
-                    sender = user.FirstName;
+                    sender = $"{user.FirstName} {user.LastName![0]}";
             } else {
                 if (item.RelativeItemFromMessage is Group group)
                     sender = group.Name;

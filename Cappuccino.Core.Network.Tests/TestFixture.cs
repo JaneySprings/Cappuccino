@@ -10,9 +10,9 @@ public abstract class TestFixture {
     protected ApiConfiguration EmptyConfiguration => new ApiConfiguration.Builder().Build();
 
     protected ApiConfiguration MockConfiguration => new ApiConfiguration.Builder()
-            .SetTokenStorageHandler(new ValidTokenStorage())
-            .SetAppId(1)
-            .Build();
+        .WithTokenStorageHandler(new ValidTokenStorage())
+        .WithAppId(1)
+        .Build();
 
 
     protected void SetupEmptyCredentials() {
@@ -25,7 +25,7 @@ public abstract class TestFixture {
 
     protected void SetupCredentialsWithTokenStorageHandler(ITokenStorageHandler handler) {
         CredentialsManager.ApplyConfiguration(new ApiConfiguration.Builder()
-            .SetTokenStorageHandler(handler)
+            .WithTokenStorageHandler(handler)
             .Build());
     }
 
