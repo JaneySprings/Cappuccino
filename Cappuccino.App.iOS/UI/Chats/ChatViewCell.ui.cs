@@ -68,9 +68,14 @@ public partial class ChatViewCell {
 
         var unreadSize = this.unread!.SizeThatFits(new CGSize(width/2, height));
         unreadSize.Width += 20;
-        unreadSize.Height += 8;
 
-        this.unread.Frame = new CGRect(width - 16 - unreadSize.Width, (height - unreadSize.Height) / 2, unreadSize.Width, unreadSize.Height);
+        if (this.unread!.Text?.Length == 1) {
+            var size = Math.Max(unreadSize.Width, unreadSize.Height);
+            unreadSize.Width = photoSize / 2;
+            unreadSize.Height = photoSize / 2;
+        }
+
+        this.unread.Frame = new CGRect(width - 16 - unreadSize.Width, (height - unreadSize.Height) / 2, unreadSize.Width, photoSize / 2);
         this.unread.ApplyRoundedAppearance();
 
         var readWidth = read.Hidden ? 0 : (readSize + 16);

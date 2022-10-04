@@ -6,6 +6,7 @@ public partial class ProfileViewController {
         base.ViewDidLoad();
 
         this.View!.BackgroundColor = Colors.Background;
+        Initialize();
     }
 }
 

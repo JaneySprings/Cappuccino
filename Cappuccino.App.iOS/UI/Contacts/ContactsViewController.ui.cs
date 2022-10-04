@@ -21,9 +21,15 @@ public partial class ContactsViewController {
             }
         });
 
-        this.tableView = new UITableView(this.View!.Frame, UITableViewStyle.Plain);
+        this.tableView = new UITableView(CGRect.Empty, UITableViewStyle.Plain);
         this.tableView.ApplyDefaultAppearance();
 
         this.View!.AddSubview(tableView);
+        Initialize();
+    }
+
+    public override void ViewDidLayoutSubviews() {
+        base.ViewDidLayoutSubviews();
+        this.tableView!.Frame = View!.Bounds;
     }
 }

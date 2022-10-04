@@ -39,7 +39,7 @@ public static class UITableViewStyles {
         tableView.AlwaysBounceVertical = true;
         tableView.SeparatorStyle = UITableViewCellSeparatorStyle.None;
         tableView.AllowsMultipleSelection = false;
-        tableView.AllowsSelection = false;
+        tableView.AllowsSelection = true;
 
         return tableView;
     }
@@ -49,9 +49,9 @@ public static class UINavigationBarStyles {
     public static UINavigationBar ApplyDefaultAppearance(this UINavigationBar navigationBar) {
         var attributes = new UIStringAttributes();
         var appearance = new UINavigationBarAppearance();
-        var mock = new UIBarButtonItem {
-            TintColor = Colors.Accent
-        };
+        // var mock = new UIBarButtonItem {
+        //     TintColor = Colors.Accent
+        // };
 
         attributes.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
         attributes.ForegroundColor = Colors.Text;
@@ -60,7 +60,27 @@ public static class UINavigationBarStyles {
         appearance.TitleTextAttributes = attributes;
         appearance.ShadowColor = UIColor.Clear;
 
-        navigationBar.Items[0].BackBarButtonItem = mock;
+        //navigationBar.Items[0].BackBarButtonItem = mock;
+        navigationBar.StandardAppearance = appearance;
+        navigationBar.ScrollEdgeAppearance = appearance;
+        navigationBar.CompactAppearance = appearance;
+        navigationBar.PrefersLargeTitles = true;
+
+        return navigationBar;
+    }
+
+    public static UINavigationBar ApplyCaptionAppearance(this UINavigationBar navigationBar) {
+        var attributes = new UIStringAttributes();
+        var appearance = new UINavigationBarAppearance();
+
+        attributes.Font = UIFont.SystemFontOfSize(17f, UIFontWeight.Medium);
+        attributes.ForegroundColor = Colors.Text;
+
+        appearance.BackgroundColor = Colors.Foreground;
+        appearance.TitleTextAttributes = attributes;
+        appearance.ShadowColor = UIColor.Clear;
+
+
         navigationBar.StandardAppearance = appearance;
         navigationBar.ScrollEdgeAppearance = appearance;
         navigationBar.CompactAppearance = appearance;

@@ -7,10 +7,16 @@ public partial class AuthViewController {
     public override void ViewDidLoad() {
         base.ViewDidLoad();
 
-        this.webView = new WebKit.WKWebView(this.View!.Bounds, new WebKit.WKWebViewConfiguration());
-        this.View.AddSubview(webView);
+        this.webView = new WebKit.WKWebView(CGRect.Empty, new WebKit.WKWebViewConfiguration());
+        this.View!.AddSubview(webView);
 
         SetNeedsStatusBarAppearanceUpdate();
+        Initialize();
+    }
+
+    public override void ViewDidLayoutSubviews() {
+        base.ViewDidLayoutSubviews();
+        this.webView!.Frame = View!.Bounds;
     }
 
     public override UIStatusBarStyle PreferredStatusBarStyle() => UIStatusBarStyle.DarkContent;

@@ -15,14 +15,16 @@ public partial class ContactsViewController : UIViewController {
     private bool isSearchingMode = false;
 
 
-    public override void ViewDidAppear(bool animated) {
-        base.ViewDidAppear(animated);
-
+    private void Initialize() {
         tableView!.RegisterClassForCellReuse(typeof(UserViewCell), nameof(UserViewCell));
         tableView.DataSource = this.adapter;
         tableView.Delegate = this.adapter;
 
-        this.adapter.OnLastItemBind = RequestUsers;
+        this.adapter.LastItemBind = RequestUsers;
+        this.adapter.ItemClicked = (item) => {
+            var vc = new Messages.MessagesViewController(item.Id);
+            NavigationController?.PushViewController(vc, true);
+        };
         this.requestManager.RequestCallback = new ApiCallback<Models.Users.SearchResponse>()
             .OnSuccess(result => {
                 if (this.isSearchingMode) {
@@ -31,8 +33,8 @@ public partial class ContactsViewController : UIViewController {
                 }
             })
             .OnError(reason => { });
-
-        if (this.adapter.GetItemCount() == 0)
+        
+        if (this.adapter.ItemCount == 0)
             RequestUsers(0);
     }
 

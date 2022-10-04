@@ -6,9 +6,7 @@ namespace Cappuccino.App.iOS.UI.Auth;
 public partial class AuthViewController : UIViewController {
     private readonly ImplicitAuthentificator authManager = new();
 
-    public override void ViewDidAppear(bool animated) {
-        base.ViewDidAppear(animated);
-
+    private void Initialize() {
         this.authManager.Authorized += (sender, args) => {
             AppDelegate? appDelegate = UIApplication.SharedApplication.Delegate as AppDelegate;
             appDelegate?.ChangeRootViewController(new RootViewController());

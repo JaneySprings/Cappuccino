@@ -21,6 +21,7 @@ public partial class RootViewController : UITabBarController {
         for (int i = 0; i < 3; i++) {
             var navController = new UINavigationController(); 
             navController.TabBarItem = new UITabBarItem("", UIImage.FromBundle(tabIcons[i]), IntPtr.Zero);
+            navController.TabBarItem.BadgeColor = Colors.Accent;
             navController.ViewControllers = new UIViewController[] { rootControllers[i] };
             navController.NavigationBar.ApplyDefaultAppearance();
             navControllers.Add(navController);
@@ -34,5 +35,7 @@ public partial class RootViewController : UITabBarController {
 
         this.TabBar.ApplyDefaultAppearance();
         this.SelectedIndex = new IntPtr(1);
+
+        Initialize();
     }
 }

@@ -14,9 +14,14 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
     [Export("window")]
     public UIWindow? Window { get; set; }
 
+
     [Export ("application:didFinishLaunchingWithOptions:")]
     public bool FinishedLaunching (UIApplication application, NSDictionary launchOptions) {
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+        UserNotifications.UNUserNotificationCenter.Current.RequestAuthorization(
+            UserNotifications.UNAuthorizationOptions.Badge, (granted, error) => {}
+        );
 
         ApiConfiguration config = new ApiConfiguration.Builder()
             .WithApiLanguage(CultureInfo.CurrentCulture.TwoLetterISOLanguageName)
@@ -36,6 +41,7 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
 
         return true;
     }
+
 
     public void ChangeRootViewController(UIViewController controller) {
         Window!.RootViewController = controller;

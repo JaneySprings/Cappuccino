@@ -8,14 +8,20 @@ public partial class ChatsViewController {
 
     public override void ViewDidLoad() {
         base.ViewDidLoad();
-
+        
         InterfaceUtility.LayoutNavigationBar(NavigationItem, new NavigationBarOptions {
             Title = Localization.Instance.GetString("title_page_chats"),
         });
 
-        this.tableView = new UITableView(View!.Frame, UITableViewStyle.Plain);
+        this.tableView = new UITableView(CGRect.Empty, UITableViewStyle.Plain);
         this.tableView.ApplyDefaultAppearance();
 
-        this.View.AddSubview(tableView);
+        this.View!.AddSubview(tableView);
+        Initialize();
+    }
+
+    public override void ViewDidLayoutSubviews() {
+        base.ViewDidLayoutSubviews();
+        this.tableView!.Frame = View!.Bounds;
     }
 }

@@ -13,12 +13,14 @@ public static class ChatItemMapper {
 }
 
 public class ChatItem {
-    public readonly Chat InnerResponse;
-    public readonly object? RelativeItem;
-    public readonly object? RelativeItemFromMessage;
+    public int ChatId { get; private set; }
+    public Chat InnerResponse { get; private set; }
+    public object? RelativeItem { get; private set; }
+    public object? RelativeItemFromMessage { get; private set; }
 
     public ChatItem(Chat chat, List<User>? profiles, List<Group>? groups) {
         this.InnerResponse = chat;
+        this.ChatId = chat.Conversation?.peer?.Id ?? 0;
 
         switch (chat.Conversation?.peer?.Type) {
             case "user":

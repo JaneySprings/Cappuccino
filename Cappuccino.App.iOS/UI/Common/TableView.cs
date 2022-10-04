@@ -14,25 +14,39 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
     private readonly List<TItem> items = new List<TItem>();
 
     public int ItemLimit { get; set; }
-    public Action<TItem>? OnItemClicked { get; set; }
-    public Action<TItem>? OnItemLongClicked { get; set; }
-    public Action<int>? OnLastItemBind { get; set; }
+    public Action<TItem>? ItemClicked { get; set; }
+    public Action<TItem>? ItemLongClicked { get; set; }
+    public Action<int>? LastItemBind { get; set; }
 
-    public override nint RowsInSection(UITableView tableView, nint section) => GetItemCount();
+    public override nint RowsInSection(UITableView tableView, nint section) => ItemCount;
+
    
     public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath) {
         UITableViewCell view = tableView.DequeueReusableCell(typeof(TCell).Name)!;
         TCell? cell = view as TCell;
 
-        cell?.Bind(this.items[indexPath.Row]);
+        if (ItemCount <= indexPath.Row) 
+            return cell!;
+        
+        cell!.Bind(this.items[indexPath.Row]);
 
-        if (indexPath.Row == GetItemCount() - 1 && GetItemCount() < ItemLimit)
-            this.OnLastItemBind?.Invoke(indexPath.Row);
+        if (indexPath.Row == ItemCount - 1 && ItemCount < ItemLimit)
+            this.LastItemBind?.Invoke(indexPath.Row);
 
         return cell!;
     }
 
-    public int GetItemCount() => this.items.Count;
+    [Export("tableView:didSelectRowAtIndexPath:")]
+    public void DidSelectRow(UITableView tableView, NSIndexPath indexPath) {
+        tableView.DeselectRow(indexPath, true);
+
+        if (ItemCount <= indexPath.Row) 
+            return;
+
+        ItemClicked?.Invoke(items[indexPath.Row]);
+    }
+
+    public int ItemCount => this.items.Count;
     public void AddItems(IEnumerable<TItem> items) {
         this.items.AddRange(items);
     }
