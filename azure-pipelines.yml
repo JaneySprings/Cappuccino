@@ -5,16 +5,17 @@ trigger:
     - '*'
   branches:
     include:
-    - master
+    - '*'
 
 pr:
   branches:
     include:
-    - master
+    - '*'
 
 
 stages:
   - stage: CoreTests
+    condition: not(startsWith(variables['Build.SourceBranch'], 'refs/tags'))
     dependsOn: []
     jobs:
       - job: Build
@@ -45,7 +46,7 @@ stages:
       - job: Build
         pool:
           vmImage: 'macos-latest'
-        timeoutInMinutes: 10
+        timeoutInMinutes: 15
         variables:
           - name : version
             value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/cappuccino_', '') ] 
@@ -67,7 +68,7 @@ stages:
             displayName: 'Network Build'
           - publish: 'Artifacts/Publish'
             displayName: 'Publish Artifacts'
-            artifact: Artifacts
+            artifact: Core
           # - script: dotnet cake --target=network-publish --apikey=$(NUGET_API_KEY)
           #   displayName: 'Network Publish'
 #//////////////////////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ stages:
             displayName: 'iOS Build'
           - publish: 'Artifacts/Publish'
             displayName: 'Publish Artifacts'
-            artifact: Artifacts
+            artifact: iOS
 #//////////////////////////////////////////////////////////////////////
 #// Android
 #//////////////////////////////////////////////////////////////////////
