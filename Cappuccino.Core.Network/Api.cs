@@ -4,16 +4,17 @@ using Cappuccino.Core.Network.Handlers;
 
 namespace Cappuccino.Core.Network {
 
-    public class Api {
-        public static async void Get<TResult>(ApiRequest<TResult> request,
-                              IRequestCallback<TResult>? callback = null) {
-
-            try {
-                TResult response = await request.Execute();
-                callback?.OnSuccess(response);
-            } catch (Exception e) {
-                callback?.OnError(e.Message);
-            }
+    public static class Api {
+        public static async void Get<TResult>(ApiRequest<TResult> request, IRequestCallback<TResult>? callback = null, int retryCount = 3) {
+            do {
+                try {
+                    TResult response = await request.Execute();
+                    callback?.OnSuccess(response);
+                    break;
+                } catch (Exception e) {
+                    callback?.OnError(e.Message);
+                }
+            } while (--retryCount > 0);
         }
     }
 }

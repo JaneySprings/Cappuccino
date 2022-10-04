@@ -24,7 +24,12 @@ namespace Cappuccino.Core.Network.Polling {
                 return instance;
             }
         }
-
+//#if DEBUG
+        public Action? CallHandler { 
+            get => looper.callHandler; 
+            set => looper.callHandler = value;
+        }
+//endif
 
         public void StartExecution() => looper.Prepare();
         public void StopExecution() => looper.Interrupt();

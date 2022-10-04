@@ -8,19 +8,10 @@ namespace Cappuccino.Core.Network.Tests;
 
 public class AuthManagerTests: TestFixture {
 
-    public AuthManagerTests() {
-        var permissions = new int[] { Permissions.Friends, Permissions.Status, Permissions.Photos };
-        CredentialsManager.ApplyConfiguration(new ApiConfiguration.Builder()
-            .WithTokenStorageHandler(new AssertionTokenStorage())
-            .WithPermissions(permissions)
-            .WithAppId(1)
-            .Build()
-        );
-    }
-
-
     [Fact]
     public void AuthorizationUriTest() {
+        SetupMockCredentials();
+
         var manager = new ImplicitAuthentificator();
         var missingCount = 4;
         var tokens = manager.BuildAuthorizationUri().Split('?')[1].Split('&');
@@ -40,6 +31,8 @@ public class AuthManagerTests: TestFixture {
 
     [Fact]
     public void AuthorizationTest() {
+        SetupMockCredentials();
+        
         var manager = new ImplicitAuthentificator();
         var handler = new ValidationCallback { DebugLog = true };
         var authorizedCount = 0;

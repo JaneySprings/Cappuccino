@@ -8,7 +8,7 @@ using Cappuccino.Core.Network.Utils;
 
 namespace Cappuccino.Core.Network.Auth {
 
-    // TODO not implemented
+    [Obsolete("Need direct authorization permissions, not tested", true)]
     internal class DirectAuthentificator: IRequestCallback<int> {
         private IValidationCallback? validationCallback;
         public EventHandler? Authorized { get; set; }

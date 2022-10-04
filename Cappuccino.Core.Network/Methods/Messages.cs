@@ -17,6 +17,17 @@ namespace Cappuccino.Core.Network.Methods.Messages {
         public GetConversations() : base("messages.getConversations") {}
     }
 
+    /*  
+     * Mark: documentation [https://vk.com/dev/messages.getConversationsById]
+     */
+    public sealed class GetConversationsById : ApiRequest<Models.Messages.GetConversationsByIdResponse> {
+        public IEnumerable<int> PeerIds { set => AddParam("peer_ids", value); }
+        public int Extended { set => AddParam("extended", value); }
+        public IEnumerable<string> Fields { set => AddParam("fields", value); }
+
+        public GetConversationsById() : base("messages.getConversationsById") {}
+    }
+
     /* 
      * Mark: documentation [https://vk.com/dev/messages.getLongPollServer]
      */

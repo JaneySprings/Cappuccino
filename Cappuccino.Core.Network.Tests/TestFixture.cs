@@ -1,6 +1,7 @@
 using Xunit;
 using Cappuccino.Core.Network.Config;
 using Cappuccino.Core.Network.Handlers;
+using Cappuccino.Core.Network.Auth;
 
 namespace Cappuccino.Core.Network.Tests;
 
@@ -11,6 +12,7 @@ public abstract class TestFixture {
 
     protected ApiConfiguration MockConfiguration => new ApiConfiguration.Builder()
         .WithTokenStorageHandler(new ValidTokenStorage())
+        .WithPermissions(new List<Permission> { Permissions.Friends, Permissions.Status, Permissions.Photos  })
         .WithAppId(1)
         .Build();
 

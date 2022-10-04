@@ -21,7 +21,7 @@ namespace Cappuccino.Core.Network.Internal {
         }
         protected void AddParam(string key, bool? value) {
             if (value != null)
-                this.Args.Add(key, value.ToString());
+                this.Args.Add(key, value.ToString().ToLower());
         }
         protected void AddParam(string key, IEnumerable<string>? value) {
             if (value != null)

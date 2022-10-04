@@ -23,6 +23,7 @@ namespace Cappuccino.Core.Network.Polling {
         public Action<string>? errorHandler { get; set; }
 
 //#if DEBUG
+        public Action? callHandler { get; set; }
         public int _errors_ = 0;
 //#endif
 
@@ -33,21 +34,24 @@ namespace Cappuccino.Core.Network.Polling {
 
         private async void Loop() {
             while (IsActive) {
+//#if DEBUG
+                callHandler?.Invoke();
+//#endif
                 try {
                     var request = new LongPoolRequest(serverCredentials!);
                     var result = await request.Execute();
 
                     _serverCredentials!.Ts = result.Ts;
 
-                    if (result.Updates?.Count != 0)
+                    if (result.Updates?.Count != 0 && IsActive)
                         updateHandler?.Invoke(result);
                 } catch (Exception e) {
                     errorHandler?.Invoke(e.Message);         
 //#if DEBUG
                     _errors_++;
-                    if (_errors_ > 4) {
+                    //if (_errors_ > 4) {
                         IsActive = false;
-                    }
+                    //}
 //#endif
                 }
             }

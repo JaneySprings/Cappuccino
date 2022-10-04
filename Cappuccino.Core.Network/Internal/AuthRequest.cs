@@ -8,7 +8,7 @@ using System;
 
 namespace Cappuccino.Core.Network.Internal { 
 
-    //Todo : not implemented
+    [Obsolete("Need direct authorization permissions, not tested", true)]
     internal class AuthRequest : ApiRequest<int> {
         
         public AuthRequest(string username, string password) : base("") { 
