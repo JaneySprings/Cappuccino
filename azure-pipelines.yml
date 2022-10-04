@@ -78,8 +78,12 @@ stages:
           - task: InstallAppleCertificate@2
             displayName: 'Install Apple certificate'
             inputs:
-              certSecureFile: 'mobileprovision.p12'
+              certSecureFile: 'certificate.p12'
               certPwd: '$(PROVISION_KEY)'
+          - task: InstallAppleProvisioningProfile@1
+            displayName: 'Install Apple provisioning profile'
+            inputs:
+              provProfileSecureFile: 'profile.mobileprovision'
           - script: dotnet cake --target=ios --up-version=$(version) --signkey=$(strongKey.secureFilePath)
             displayName: 'iOS Build'
           - publish: 'Artifacts/Publish'
