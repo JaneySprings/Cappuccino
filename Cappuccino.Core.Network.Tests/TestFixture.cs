@@ -12,7 +12,7 @@ public abstract class TestFixture {
 
     protected ApiConfiguration MockConfiguration => new ApiConfiguration.Builder()
         .WithTokenStorageHandler(new ValidTokenStorage())
-        .WithPermissions(new List<Permission> { Permissions.Friends, Permissions.Status, Permissions.Photos  })
+        .WithPermissions(new List<int> { Permissions.Friends, Permissions.Status, Permissions.Photos  })
         .WithAppId(1)
         .Build();
 
