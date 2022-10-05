@@ -2,6 +2,7 @@ using Cappuccino.Core.Network.Models;
 using Cappuccino.Core.Network.Internal;
 using Cappuccino.Core.Network.Utils;
 using Cappuccino.Core.Network.Config;
+using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Models.Messages;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -9,10 +10,13 @@ using System;
 
 namespace Cappuccino.Core.Network.Internal { 
 
-    internal class LongPoolRequest : ApiRequest<LongPollResponse> {
+    internal class LongPollRequest : ApiRequest<LongPollResponse> {
         private readonly GetLongPollServerResponse.Response credentials;
-        public LongPoolRequest(GetLongPollServerResponse.Response credentials) : base("") { 
+        private readonly IPollingErrorHandler errorHandler;
+
+        public LongPollRequest(GetLongPollServerResponse.Response credentials, IPollingErrorHandler errorHandler) : base("") { 
             this.credentials = credentials;
+            this.errorHandler = errorHandler;
 
             AddParam("act", "a_check");
             AddParam("key", credentials!.Key);
@@ -42,6 +46,7 @@ namespace Cappuccino.Core.Network.Internal {
             if (error.Error == null)
                 return OnResponseSuccess(response);
 
+            errorHandler.HandleError(error);
             throw new Exception($"Api {error.Failed}: {error.Error}");
         }
     }

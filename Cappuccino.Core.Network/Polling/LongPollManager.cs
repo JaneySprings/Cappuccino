@@ -6,7 +6,7 @@ namespace Cappuccino.Core.Network.Polling {
 
     public class LongPollManager {
         private PollingLooper looper = new PollingLooper();
-        public Action<Models.LongPollResponse>? HistoryUpdated { 
+        public Action<Models.LongPollResponse>? MessageReceived { 
             get => looper.updateHandler; 
             set => looper.updateHandler = value;
         }
@@ -24,6 +24,7 @@ namespace Cappuccino.Core.Network.Polling {
                 return instance;
             }
         }
+        public bool IsActive => looper.IsActive;
 //#if DEBUG
         public Action? CallHandler { 
             get => looper.callHandler; 
