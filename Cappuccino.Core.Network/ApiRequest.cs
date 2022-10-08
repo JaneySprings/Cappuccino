@@ -9,20 +9,22 @@ using Cappuccino.Core.Network.Config;
 
 namespace Cappuccino.Core.Network {
 
-    public abstract class ApiRequest<TResult>: Requestable {
+    public abstract class ApiRequest<TResult>: ApiParams {
         private readonly string method;
 
-        protected ApiRequest(string method) { this.method = method; }
+        protected ApiRequest(string method) { 
+            this.method = method; 
+
+            AddParam("lang", CredentialsManager.ApiConfig?.ApiLanguage);
+            AddParam("v", CredentialsManager.ApiConfig?.ApiVersion);
+            AddParam("access_token", CredentialsManager.AccessToken?.Token);
+        }
 
 
         public virtual async Task<TResult> Execute() {
             if (!CredentialsManager.IsInternalTokenValid()) {
                 throw new Exception("Access token incorrect");
             }   
-
-            AddParam("lang", CredentialsManager.ApiConfig?.ApiLanguage);
-            AddParam("v", CredentialsManager.ApiConfig?.ApiVersion);
-            AddParam("access_token", CredentialsManager.AccessToken!.Token);
 
             using Executor executor = new Executor();
             string request = $"{EndPoints.MethodsUri}/{this.method}?{this.Args.JoinToUrl()}";

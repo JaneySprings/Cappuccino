@@ -9,7 +9,7 @@ using Cappuccino.Core.Network.Methods.Messages;
 
 namespace Cappuccino.Core.Network.Polling { 
 
-    internal class PollingLooper : IRequestCallback<GetLongPollServerResponse>, IPollingErrorHandler {
+    internal class PollingLooper : IRequestCallback<GetLongPollServerResponse> {
         private GetLongPollServerResponse.Response? _serverCredentials;
         private GetLongPollServerResponse.Response? serverCredentials { 
             get => _serverCredentials;
@@ -21,7 +21,7 @@ namespace Cappuccino.Core.Network.Polling {
         }
         public bool IsActive { get; private set; }
         public Action<Models.LongPollResponse>? updateHandler { get; set; }
-        public Action<string>? errorHandler { get; set; }
+        public Action<Exception>? errorHandler { get; set; }
 
 //#if DEBUG
         public Action? callHandler { get; set; }
@@ -39,7 +39,7 @@ namespace Cappuccino.Core.Network.Polling {
                 callHandler?.Invoke();
 //#endif
                 try {
-                    var request = new LongPollRequest(serverCredentials!, this);
+                    var request = new LongPollRequest(serverCredentials!);
                     var result = await request.Execute();
 
                     _serverCredentials!.Ts = result.Ts;
@@ -47,7 +47,9 @@ namespace Cappuccino.Core.Network.Polling {
                     if (result.Updates?.Count != 0 && IsActive)
                         updateHandler?.Invoke(result);
                 } catch (Exception e) {
-                    errorHandler?.Invoke(e.Message);      
+                    errorHandler?.Invoke(e);   
+                    IsActive = false;
+                    Prepare();   
 //#if DEBUG
                     //if (_errors_ > 4) {
                     //    IsActive = false;
@@ -62,13 +64,8 @@ namespace Cappuccino.Core.Network.Polling {
                 serverCredentials = result.InnerResponse;
             }
         }
-        void IRequestCallback<GetLongPollServerResponse>.OnError(string reason) {
-            errorHandler?.Invoke(reason);
+        void IRequestCallback<GetLongPollServerResponse>.OnError(Exception exception) {
+            errorHandler?.Invoke(exception);
         } 
-
-        void IPollingErrorHandler.HandleError(LongPollErrorResponse error) {
-            IsActive = false;
-            Prepare();
-        }  
     }
 }

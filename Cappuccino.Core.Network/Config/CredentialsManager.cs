@@ -7,9 +7,20 @@ namespace Cappuccino.Core.Network.Config {
 
     public static class CredentialsManager {
         internal static ApiConfiguration? ApiConfig { get; private set; }
+
+        private static AccessToken? _accessToken;
         internal static AccessToken? AccessToken {
-            get => ApiConfig?.TokenStorageHandler?.OnTokenRequested();
-            private set => ApiConfig?.TokenStorageHandler?.OnTokenReceived(value!);
+            get {
+                if (_accessToken == null) 
+                    _accessToken = ApiConfig?.TokenStorageHandler?.OnTokenRequested();
+                return _accessToken;
+            }
+            private set {
+                if (_accessToken != null) 
+                    ApiConfig?.TokenStorageHandler?.OnTokenReceived(value!);
+                _accessToken = value;
+               
+            }
         }
 
         public static int CurrentUserId => AccessToken?.UserId ?? 0;
@@ -17,6 +28,7 @@ namespace Cappuccino.Core.Network.Config {
 
         public static void ApplyConfiguration(ApiConfiguration config) {
             ApiConfig = config;
+            AccessToken = null;
         }
         public static bool ApplyAccessToken(AccessToken? token, IValidationCallback? callback = null) {
             if (!IsTokenValid(token, callback)) 

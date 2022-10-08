@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-namespace Cappuccino.Core.Network.Internal {
+namespace Cappuccino.Core.Network {
 
-    public abstract class Requestable {
+    public abstract class ApiParams {
         protected Dictionary<string, string> Args { get; private set; }
 
 
-        public Requestable() {
+        public ApiParams() {
             Args = new Dictionary<string, string>();
         }
 
@@ -30,6 +30,10 @@ namespace Cappuccino.Core.Network.Internal {
         protected void AddParam(string key, IEnumerable<int>? value) {
             if (value != null)
                 this.Args.Add(key, string.Join(',', value));
+        }
+        
+        protected void ClearParams() {
+            Args.Clear();
         }
     }
 }

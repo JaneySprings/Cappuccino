@@ -12,7 +12,7 @@ namespace Cappuccino.Core.Network {
                     callback?.OnSuccess(response);
                     break;
                 } catch (Exception e) {
-                    callback?.OnError(e.Message);
+                    callback?.OnError(e);
                 }
             } while (--retryCount > 0);
         }

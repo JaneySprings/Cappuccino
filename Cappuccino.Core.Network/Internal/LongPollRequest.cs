@@ -12,12 +12,11 @@ namespace Cappuccino.Core.Network.Internal {
 
     internal class LongPollRequest : ApiRequest<LongPollResponse> {
         private readonly GetLongPollServerResponse.Response credentials;
-        private readonly IPollingErrorHandler errorHandler;
 
-        public LongPollRequest(GetLongPollServerResponse.Response credentials, IPollingErrorHandler errorHandler) : base("") { 
+        public LongPollRequest(GetLongPollServerResponse.Response credentials) : base("") { 
             this.credentials = credentials;
-            this.errorHandler = errorHandler;
-
+            
+            ClearParams();
             AddParam("act", "a_check");
             AddParam("key", credentials!.Key);
             AddParam("ts", credentials!.Ts);
@@ -46,7 +45,6 @@ namespace Cappuccino.Core.Network.Internal {
             if (error.Error == null)
                 return OnResponseSuccess(response);
 
-            errorHandler.HandleError(error);
             throw new Exception($"Api {error.Failed}: {error.Error}");
         }
     }

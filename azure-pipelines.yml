@@ -85,7 +85,7 @@ stages:
             displayName: 'Install Apple provisioning profile'
             inputs:
               provProfileSecureFile: 'profile.mobileprovision'
-          - script: dotnet cake --target=ios --up-version=$(version) --signkey=$(strongKey.secureFilePath)
+          - script: dotnet cake --target=ios-build --up-version=$(version) --signkey=$(strongKey.secureFilePath)
             displayName: 'iOS Build'
           - publish: 'Artifacts/Publish'
             displayName: 'Publish Artifacts'

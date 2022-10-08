@@ -27,6 +27,17 @@ public class RequestTests: TestFixture {
     }
 
     [Fact]
+    public void DuplicateParamsInRequestTest() {
+        SetupEmptyCredentials();
+        Assert.ThrowsAsync<ArgumentException>(() => { 
+            var request = new TestRequest<int>();
+            request.AddParam("param1", "value1");
+            request.AddParam("param1", "value2");
+            return request.Execute();
+        }).Wait();
+    }
+
+    [Fact]
     public void NormalResponseTest() {
         SetupMockCredentials();
         

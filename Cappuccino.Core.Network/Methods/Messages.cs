@@ -38,4 +38,20 @@ namespace Cappuccino.Core.Network.Methods.Messages {
             AddParam("lp_version", CredentialsManager.ApiConfig?.LpVersion);
         }
     }
+
+    /* 
+     * Mark: documentation [https://vk.com/dev/messages.getHistory]
+     */
+    public class GetHistory : ApiRequest<Models.Messages.GetHistoryResponse> {
+        public int Offset { set => AddParam("offset", value); }
+        public int Count { set => AddParam("count", value); }
+        public int UserId { set => AddParam("user_id", value); }
+        public int PeerId { set => AddParam("peer_id", value); }
+        public int StartMessageId { set => AddParam("start_message_id", value); }
+        public int Rev { set => AddParam("rev", value); }
+        public int Extended { set => AddParam("extended", value); }
+        public IEnumerable<string> Fields { set => AddParam("fields", value); }
+        
+        public GetHistory() : base("messages.getHistory") {}
+    }
 }

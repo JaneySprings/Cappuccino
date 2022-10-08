@@ -10,7 +10,7 @@ namespace Cappuccino.Core.Network.Polling {
             get => looper.updateHandler; 
             set => looper.updateHandler = value;
         }
-        public Action<string>? ErrorReceived { 
+        public Action<Exception>? ErrorReceived { 
             get => looper.errorHandler; 
             set => looper.errorHandler = value;
         }

@@ -27,8 +27,8 @@ namespace Cappuccino.Core.Network.Auth {
             //Validate token
             this.Authorized?.Invoke(this, EventArgs.Empty);
         }
-        void IRequestCallback<int>.OnError(string reason) {
-            this.validationCallback?.OnValidationFail(reason);
+        void IRequestCallback<int>.OnError(Exception exception) {
+            //this.validationCallback?.OnValidationFail(reason);
         }  
     }
 }

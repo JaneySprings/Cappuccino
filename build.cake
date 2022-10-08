@@ -21,7 +21,7 @@ Task("clean").Does(() => {
 });
 
 //////////////////////////////////////////////////////////////////////
-// CAPPUCCINO NETWORK
+// NETWORK
 //////////////////////////////////////////////////////////////////////
 
 Task("network-build")
@@ -55,12 +55,12 @@ Task("network-publish").Does(() => NuGetPush(NugetCorePath, new NuGetPushSetting
 }));
 
 //////////////////////////////////////////////////////////////////////
-// CAPPUCCINO iOS
+// iOS
 //////////////////////////////////////////////////////////////////////
 
-Task("ios").Does(() => {
+Task("ios-build").Does(() => {
     var options = System.Text.RegularExpressions.RegexOptions.None;
-    var pattern = "\\<key\\>CFBundle[A-z]*Version[A-z]*\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
+    var pattern = "\\<key\\>CFBundle(Short)?Version(String)?\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
     var plist = $"{RootiOSDirectory}/Info.plist";
     var tag = $"\t<string>{version}</string>";
 
@@ -76,26 +76,21 @@ Task("ios").Does(() => {
     Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
 });
 
+Task("ios-run").Does(() => {
+    DotNetBuild(ProjectiOSPath, new DotNetBuildSettings { Configuration = configuration });
+    StartProcess("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app");
+    StartProcess("dotnet", "xharness apple run"
+        + $" --app {ArtifactsDirectory}/iOS/iossimulator-x64/Cappuccino.App.iOS.app" 
+        + $" --device {device}"
+        + $" --output-directory {ArtifactsDirectory}"
+        +  " --target ios-simulator-64"
+    );
+});
+
 //////////////////////////////////////////////////////////////////////
-// CAPPUCCINO ANDROID
+// ANDROID
 //////////////////////////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////////////////////////////
-// DEBUG
-//////////////////////////////////////////////////////////////////////
-
-Task("ios-run")
-    .Does(() => {
-        DotNetBuild(ProjectiOSPath, new DotNetBuildSettings { Configuration = configuration });
-        StartProcess("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app");
-        StartProcess("dotnet", "xharness apple run"
-            + $" --app {ArtifactsDirectory}/iOS/iossimulator-x64/Cappuccino.App.iOS.app" 
-            + $" --device {device}"
-            + $" --output-directory {ArtifactsDirectory}"
-            +  " --target ios-simulator-64"
-        );
-    });
 
 
 RunTarget(target);

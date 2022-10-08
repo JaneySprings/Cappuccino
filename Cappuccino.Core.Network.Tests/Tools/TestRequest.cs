@@ -2,6 +2,7 @@ namespace Cappuccino.Core.Network.Tests;
 
 public class TestRequest<TResult>: ApiRequest<TResult> {
     public TestRequest() : base("TestRequest") {
+        ClearParams();
         string? nullData = null;
         AddParam("string", "test");
         AddParam("int", 0);
@@ -13,4 +14,5 @@ public class TestRequest<TResult>: ApiRequest<TResult> {
 
     public Dictionary<string, string> Arguments => base.Args;
     public TResult ResultForResponse(string response) => base.OnServerResponseReceived(response);
+    public void AddParam(string name, string? value) => base.AddParam(name, value);
 }

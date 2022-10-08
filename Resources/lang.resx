@@ -40,6 +40,9 @@
     <data name="common_action_show_results" xml:space="preserve">
         <value>Show Results</value>
     </data>
+    <data name="common_message_input_placeholder" xml:space="preserve">
+        <value>Write something</value>
+    </data>
 
     <data name="filters_search_order" xml:space="preserve">
         <value>Order</value>

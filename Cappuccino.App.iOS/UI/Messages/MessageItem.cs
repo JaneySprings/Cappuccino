@@ -1,13 +1,14 @@
 ﻿using Cappuccino.Core.Network.Models.Users;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Messages;
+using Models = Cappuccino.Core.Network.Models;
 
 namespace Cappuccino.App.iOS.UI.Messages {
 
     public static class MessageItemMapper {
-        //public static List<MessageItem> ToMessageItems(this Models.Messages.Message response) {
-        //    return response.Items!.Select(chat => new ChatItem(chat, response.Profiles, response.Groups)).ToList();
-        //}
+        public static List<MessageItem> ToMessageItems(this Models.Messages.GetHistoryResponse.Response response) {
+           return response.Items!.Select(it => new MessageItem(it, response.Profiles, response.Groups)).ToList();
+        }
         public static MessageItem ToMessageItem(this Message response, List<User>? profiles, List<Group>? groups) {
             return new MessageItem(response, profiles, groups);
         }

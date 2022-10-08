@@ -41,6 +41,7 @@ public partial class ContactsViewController : UIViewController {
 
     private void SearchTextChanged(object? sender, UISearchBarTextChangedEventArgs args) {
         this.isSearchingMode = !string.IsNullOrEmpty(args.SearchText);
+        this.adapter.ItemLimit = 0;
         RequestSearch(args.SearchText);
     }
 
@@ -61,21 +62,19 @@ public partial class ContactsViewController : UIViewController {
 
 
     private void RequestUsers(int offset) {
-        if (!this.isSearchingMode) {
-            Api.Get(new Friends.Get {
-                Fields = Constants.DefaultUserFields,
-                Order = "name",
-                Count = 50,
-                Offset = offset
-            }, new ApiCallback<Models.Friends.GetResponse>()    
-                .OnSuccess(result => {
-                    this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
-                    this.adapter.AddItems(result.InnerResponse?.Items!);
-                    tableView!.ReloadData();
-                })
-                .OnError(reason => {})
-            );
-        }
+        Api.Get(new Friends.Get {
+            Fields = Constants.DefaultUserFields,
+            Order = "name",
+            Count = 50,
+            Offset = offset
+        }, new ApiCallback<Models.Friends.GetResponse>()    
+            .OnSuccess(result => {
+                this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
+                this.adapter.AddItems(result.InnerResponse?.Items!);
+                tableView!.ReloadData();
+            })
+            .OnError(reason => {})
+        );
     }
 
     private void RequestSearch(string query) {

@@ -5,6 +5,21 @@ using Cappuccino.Core.Network.Models.Users;
 using Cappuccino.Core.Network.Models;
 
 namespace Cappuccino.Core.Network.Models.Messages {
+
+    /* 
+     * Mark: documentation [https://vk.com/dev/messages.getHistory]
+     */
+    public class GetHistoryResponse {
+        [JsonPropertyName("response")] public Response? InnerResponse { get; set; }
+
+        public class Response {
+            [JsonPropertyName("count")] public int Count { get; set; }
+            [JsonPropertyName("items")] public List<Message>? Items { get; set; }
+            [JsonPropertyName("profiles")] public List<User>? Profiles { get; set; }
+            [JsonPropertyName("groups")] public List<Group>? Groups { get; set; }
+        }
+    }
+
     /* 
      * Mark: documentation [https://vk.com/dev/messages.getLongPollServer]
      */

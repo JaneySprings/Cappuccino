@@ -31,7 +31,7 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
         cell!.Bind(this.items[indexPath.Row]);
 
         if (indexPath.Row == ItemCount - 1 && ItemCount < ItemLimit)
-            this.LastItemBind?.Invoke(indexPath.Row);
+            this.LastItemBind?.Invoke(ItemCount);
 
         return cell!;
     }

@@ -9,7 +9,7 @@ namespace Cappuccino.App.iOS.UI.Chats;
 
 public partial class ChatsViewController : UIViewController {
     private readonly ChatsAdapterDelegate adapter = new ChatsAdapterDelegate();
-
+    
 
     private void Initialize() {
         tableView!.RegisterClassForCellReuse(typeof(ChatViewCell), nameof(ChatViewCell));
@@ -25,17 +25,17 @@ public partial class ChatsViewController : UIViewController {
         if (this.adapter.ItemCount == 0)
             RequestConversations(0);
 
-        LongPollManager.Instance.HistoryUpdated += _ => {
+        LongPollManager.Instance.MessageReceived += _ => {
             this.adapter.ClearItems();
             RequestConversations(0);  
+        };  
+
+//#if DEBUG
+        LongPollManager.Instance.ErrorReceived += exception => {
+            var alert = new UIAlertView(exception.Message, exception.StackTrace, null, "OK", null);
+            alert.Show();
         };
-        
-// //#if DEBUG
-//         LongPollManager.Instance.ErrorReceived += (reason) => {
-//             NavigationItem.Title = reason;
-//         };
-// //#endif  
-        
+//#endif
     }
 
     public override void ViewDidAppear(bool animated) {
@@ -43,6 +43,7 @@ public partial class ChatsViewController : UIViewController {
         if (this.adapter.ItemCount != 0)
             this.tableView!.ReloadData();
     }
+    
 
 
     private void RequestConversations(int offset) {

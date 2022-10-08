@@ -8,7 +8,7 @@ namespace Cappuccino.App.iOS.UI.Messages;
 
 
 public partial class MessagesViewController : UIViewController {
-    public override bool HidesBottomBarWhenPushed => true;
+    private MessagesAdapterDelegate adapter = new MessagesAdapterDelegate();
     private int conversationId;
 
     public MessagesViewController(int conversationId) {
@@ -17,11 +17,41 @@ public partial class MessagesViewController : UIViewController {
     
 
     private void Initialize() {
+        tableView!.RegisterClassForCellReuse(typeof(MessageViewCell), nameof(MessageViewCell));
+        tableView.DataSource = this.adapter;
+        tableView.Delegate = this.adapter;
+
+        //this.adapter.LastItemBind = RequestMessages;
+        this.adapter.ItemClicked += item =>  {
+            this.messageBoxField!.EndEditing(true);
+        };
+
         RequrstConversation();
+
+        if (this.adapter.ItemCount == 0)
+            RequestMessages(0);
     }
 
 
 
+    private void RequestMessages(int offset) { 
+        Api.Get(new _Messages.GetHistory {
+            Fields = Constants.DefaultUserFields,
+            PeerId = this.conversationId,
+            Offset = offset,
+            Count = 30
+        }, new ApiCallback<Models.Messages.GetHistoryResponse>()
+            .OnSuccess(result => {
+                this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
+                var data = result.InnerResponse?.ToMessageItems();
+                data!.Reverse();
+                this.adapter.AddItems(data);
+                this.tableView!.ReloadData();
+                this.tableView.ScrollToRow(NSIndexPath.FromRowSection(new IntPtr(this.adapter.ItemCount - 1), new IntPtr(0)), UITableViewScrollPosition.Bottom, true);
+            })
+            .OnError(reason => {})
+        );
+    }
     private void RequrstConversation() {
         Api.Get(new _Messages.GetConversationsById {
             PeerIds = new[] { this.conversationId },
@@ -33,17 +63,17 @@ public partial class MessagesViewController : UIViewController {
                 switch(conversation?.peer?.Type) {
                     case "user":
                         var user = result.InnerResponse?.Profiles?.FirstOrDefault(it => it.Id == this.conversationId);
-                        this.photo!.Load(user?.Photo200);
-                        this.title!.Text = $"{user?.FirstName} {user?.LastName}";
+                        this.chatPhotoButton!.Load(user?.Photo200);
+                        TitleLabel = $"{user?.FirstName} {user?.LastName}";
                         break;
                     case "chat":
-                        this.photo!.Load(conversation.chatSettings?.Photo?.Photo200);
-                        this.title!.Text = conversation.chatSettings?.Title; 
+                        this.chatPhotoButton!.Load(conversation.chatSettings?.Photo?.Photo200);
+                        TitleLabel = conversation.chatSettings?.Title; 
                         break;
                     case "group":
                         var group = result.InnerResponse?.Groups?.FirstOrDefault(it => it.Id == -this.conversationId);
-                        this.photo!.Load(group?.Photo200);
-                        this.title!.Text = group?.Name;
+                        this.chatPhotoButton!.Load(group?.Photo200);
+                        TitleLabel = group?.Name;
                         break;
                 }
             })

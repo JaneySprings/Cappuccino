@@ -46,8 +46,8 @@ public class SelectiveRequestManager<TResult>: IRequestCallback<TResult> {
         AfterExecute();
         
     }
-    void IRequestCallback<TResult>.OnError(string reason) {
-        RequestCallback?.OnError(reason);
+    void IRequestCallback<TResult>.OnError(Exception exception) {
+        RequestCallback?.OnError(exception);
         AfterExecute();
     }  
 }

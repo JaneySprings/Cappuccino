@@ -14,6 +14,7 @@ public static class Colors {
 public static class Dimensions {
     public static nfloat HorizontalContentInsets => 16;
     public static nfloat EditorsHeight => 42;
+    public static nfloat ButtonIconSize => 36;
 }
 
 
@@ -90,7 +91,6 @@ public static class UINavigationBarStyles {
 }
  
 public static class UILabelStyles {
-
     public static UILabel ApplyHeaderAppearance(this UILabel label) {
         label.Font = UIFont.FromName("VKSansDisplay-DemiBold", 21f);
         label.TextColor = Colors.Text;
@@ -182,5 +182,31 @@ public static class UIButtonStyles {
         button.SetTitleColor(UIColor.White, UIControlState.Normal);
         button.TitleLabel.Font = UIFont.SystemFontOfSize(17f, UIFontWeight.Medium);
         return button;
+    }
+
+    public static UIButton ApplyImageAppearance(this UIButton button) {
+        button.TitleLabel.Hidden = true;
+        button.TintColor = Colors.Accent;
+        return button;
+    }
+}
+
+public static class UITextViewStyles {
+    public static UITextView ApplyDefaultAppearance(this UITextView textView) {
+        textView.Font = UIFont.SystemFontOfSize(16f, UIFontWeight.Regular);
+        textView.TextColor = Colors.Text;
+        textView.BackgroundColor = Colors.Divider;
+        textView.TextAlignment = UITextAlignment.Natural;
+        textView.TextContainerInset = new UIEdgeInsets(8, 8, 8, 8);
+        return textView;
+    }
+
+    public static UITextView ApplyRoundedAppearance(this UITextView textView) {
+        if (textView.Layer.CornerRadius != 0)
+            return textView;
+        
+        textView.ClipsToBounds = true;
+        textView.Layer.CornerRadius = textView.Bounds.Height / 2;
+        return textView;
     }
 }
