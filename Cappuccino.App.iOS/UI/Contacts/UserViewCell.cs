@@ -13,7 +13,7 @@ public partial class UserViewCell : TableViewCellBase<User> {
             this.caption!.Text = Localization.Instance.GetString("common_abbr_online");
             this.caption.TextColor = Colors.Accent;
         } else {
-            this.caption!.Text = $"{Localization.Instance.GetString("common_abbr_was_online")} {item.lastSeen?.Time.ParseShortDate()}";
+            this.caption!.Text = $"{Localization.Instance.GetString("common_abbr_was_online")} {item.lastSeen?.Time.ParseDate()}";
             this.caption.TextColor = Colors.TextGray;
         }
 

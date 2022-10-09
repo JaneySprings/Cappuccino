@@ -22,14 +22,16 @@ public partial class MessagesViewController : UIViewController {
         tableView.Delegate = this.adapter;
 
         //this.adapter.LastItemBind = RequestMessages;
-        this.adapter.ItemClicked += item =>  {
-            this.messageBoxField!.EndEditing(true);
-        };
 
         RequrstConversation();
 
         if (this.adapter.ItemCount == 0)
             RequestMessages(0);
+    }
+
+    public override void ViewDidDisappear(bool animated) {
+        base.ViewDidDisappear(animated);
+        NSNotificationCenter.DefaultCenter.RemoveObserver(this);
     }
 
 
@@ -39,7 +41,8 @@ public partial class MessagesViewController : UIViewController {
             Fields = Constants.DefaultUserFields,
             PeerId = this.conversationId,
             Offset = offset,
-            Count = 30
+            Extended = 1,
+            Count = 25
         }, new ApiCallback<Models.Messages.GetHistoryResponse>()
             .OnSuccess(result => {
                 this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
@@ -47,7 +50,8 @@ public partial class MessagesViewController : UIViewController {
                 data!.Reverse();
                 this.adapter.AddItems(data);
                 this.tableView!.ReloadData();
-                this.tableView.ScrollToRow(NSIndexPath.FromRowSection(new IntPtr(this.adapter.ItemCount - 1), new IntPtr(0)), UITableViewScrollPosition.Bottom, true);
+                if (this.adapter.ItemCount != 0)
+                    this.tableView.ScrollToRow(NSIndexPath.FromRowSection(new IntPtr(this.adapter.ItemCount - 1), new IntPtr(0)), UITableViewScrollPosition.Bottom, true);
             })
             .OnError(reason => {})
         );

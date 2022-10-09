@@ -3,19 +3,15 @@
 
 public partial class MessagesViewController {
     private UIImageView? chatPhotoButton;
-    private UIButton? sendMessageButton;
-    private UIButton? stickerViewButton;
-    private UIButton? attachMediaButton;
-    private UITextView? messageBoxField;
-    private UIView? bottomBarContainer;
-    private UILabel? messageBoxPlaceholderView;
+    private BottomMessagingPanel? bottomPanel;
     private UITableView? tableView;
-
-    private nfloat keyboardFrameHeight;
 
 
     public override bool HidesBottomBarWhenPushed => true;
+    public override bool CanBecomeFirstResponder => true;
+    public override UIView InputAccessoryView => this.bottomPanel!;
     private string? TitleLabel { set => this.NavigationItem.Title = value; }
+
 
     
     public override void ViewDidLoad() {
@@ -23,85 +19,135 @@ public partial class MessagesViewController {
         
         var photoContainer = new UIView(new CGRect(0, 0, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize));
         var photoItem = new UIBarButtonItem(photoContainer);
-
         this.chatPhotoButton = new UIImageView(photoContainer.Bounds);
-        this.bottomBarContainer = new UIView(); 
-        this.sendMessageButton = new UIButton();
-        this.stickerViewButton = new UIButton();
-        this.attachMediaButton = new UIButton();
-        this.messageBoxField = new UITextView();
-        this.messageBoxPlaceholderView = new UILabel();
         this.tableView = new UITableView();
+        this.bottomPanel = new BottomMessagingPanel(this.View!.Bounds.Size);
 
         this.chatPhotoButton.ApplyRoundedAppearance();
-        this.sendMessageButton.ApplyImageAppearance();
-        this.stickerViewButton.ApplyImageAppearance();
-        this.attachMediaButton.ApplyImageAppearance();
-        this.messageBoxField.ApplyDefaultAppearance();
-        this.messageBoxPlaceholderView.ApplyCaption2Appearance();
         this.tableView.ApplyDefaultAppearance();
 
         photoContainer.AddSubview(this.chatPhotoButton);
-        this.messageBoxField.AddSubview(this.messageBoxPlaceholderView);
-        this.bottomBarContainer.AddSubview(this.sendMessageButton);
-        this.bottomBarContainer.AddSubview(this.stickerViewButton);
-        this.bottomBarContainer.AddSubview(this.attachMediaButton);
-        this.bottomBarContainer.AddSubview(this.messageBoxField);
-        this.View!.AddSubview(this.bottomBarContainer);
-        this.View.AddSubview(this.tableView);
+        this.View!.AddSubview(this.tableView);
 
         this.NavigationItem.RightBarButtonItem = photoItem;
-        this.NavigationItem.LargeTitleDisplayMode = UINavigationItemLargeTitleDisplayMode.Never;
         this.View!.BackgroundColor = Colors.Foreground;
-        this.bottomBarContainer!.BackgroundColor = Colors.Foreground;
-        this.sendMessageButton!.SetImage(UIImage.FromBundle("send_28"), UIControlState.Normal);
-        this.stickerViewButton!.SetImage(UIImage.FromBundle("smile_outline_28"), UIControlState.Normal);
-        this.attachMediaButton!.SetImage(UIImage.FromBundle("add_circle_outline_28"), UIControlState.Normal);
-        this.messageBoxPlaceholderView.Text = Localization.Instance.GetString("common_message_input_placeholder");
+        this.NavigationItem.LargeTitleDisplayMode = UINavigationItemLargeTitleDisplayMode.Never;
+        this.tableView.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.Interactive;
 
-        this.messageBoxField.Changed += (sender, e) => {
-            this.messageBoxPlaceholderView.Hidden = this.messageBoxField!.Text?.Length > 0;
-            this.View!.SetNeedsLayout();
-        };
-        NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillShowNotification, KeyboardWillShow);
-        NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillHideNotification, KeyboardWillHide);
+        NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillShowNotification, KeyboardShowObserver);
+        NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.WillHideNotification, KeyboardHideObserver);
+        
         Initialize();
     }
 
     public override void ViewDidLayoutSubviews() {
         base.ViewDidLayoutSubviews();
-        
-        var messageBoxMaxHeight = 180;
-        var messageBoxPivotX = 24 + Dimensions.ButtonIconSize * 2;
-        var messageBoxWidth = this.View!.Frame.Width - messageBoxPivotX - 16 - Dimensions.ButtonIconSize;
-        var messageBoxRequestedHeight = this.messageBoxField!.SizeThatFits(new CGSize(messageBoxWidth, 100)).Height;
-        var messageBoxHeight = messageBoxRequestedHeight < messageBoxMaxHeight ? messageBoxRequestedHeight : messageBoxMaxHeight;
-        
-        var toolbarHeight = messageBoxHeight + 16;
-        var safeAreaBottomInset = (keyboardFrameHeight == 0) ? this.View!.SafeAreaInsets.Bottom : 0;
-        var bottomBarPivotY = this.View.Frame.Height - toolbarHeight - safeAreaBottomInset - keyboardFrameHeight;
-        var buttonPivotY = toolbarHeight - Dimensions.ButtonIconSize - (toolbarHeight - messageBoxHeight) / 2;
-        var messageBoxPivotY = (toolbarHeight - messageBoxHeight) / 2;
-
-        this.bottomBarContainer!.Frame = new CGRect(0, bottomBarPivotY, this.View.Frame.Width, toolbarHeight);
-        this.attachMediaButton!.Frame = new CGRect(8, buttonPivotY, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize);
-        this.stickerViewButton!.Frame = new CGRect(16 + Dimensions.ButtonIconSize, buttonPivotY, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize);
-        this.sendMessageButton!.Frame = new CGRect(this.bottomBarContainer.Frame.Width - 8 - Dimensions.ButtonIconSize, buttonPivotY, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize);
-        this.messageBoxField.Frame = new CGRect(messageBoxPivotX, messageBoxPivotY, messageBoxWidth, messageBoxHeight);
-        this.messageBoxPlaceholderView!.Frame = new CGRect(12, 0, messageBoxWidth - 24, messageBoxHeight);
-        this.tableView!.Frame = new CGRect(0, 0, this.View.Frame.Width, bottomBarPivotY);
-
-        this.messageBoxField.ApplyRoundedAppearance();
+        var tableViewHeight = this.View!.Frame.Height - this.View!.SafeAreaInsets.Bottom;
+        this.tableView!.Frame = new CGRect(0, 0, this.View!.Frame.Width, tableViewHeight);
     }
 
-    private void KeyboardWillShow(NSNotification notification) {
+    private void KeyboardShowObserver(NSNotification notification) {
         var keyboardFrame = UIKeyboard.FrameEndFromNotification(notification);
-        keyboardFrameHeight = keyboardFrame.Height;
-        UIView.Animate(0, 0, UIViewAnimationOptions.CurveEaseOut, () => this.View!.SetNeedsLayout(), null);
+        this.tableView!.ContentInset = new UIEdgeInsets(0, 0, keyboardFrame.Height, 0);
     }
-    private void KeyboardWillHide(NSNotification notification) {
-        keyboardFrameHeight = 0;
-        UIView.Animate(0, 0, UIViewAnimationOptions.CurveEaseOut, () => this.View!.SetNeedsLayout(), null);
+    private void KeyboardHideObserver(NSNotification notification) {
+        var keyboardFrame = UIKeyboard.FrameEndFromNotification(notification);
+        this.tableView!.ContentInset = new UIEdgeInsets(0, 0, this.bottomPanel!.Bounds.Height, 0);
+    }
+
+
+    private class BottomMessagingPanel: UIView {
+        public UIButton? SendMessageButton { get; private set; }
+        public UIButton? StickerViewButton { get; private set; }
+        public UIButton? AttachMediaButton { get; private set; }
+        public UITextView? MessageBoxField { get; private set; }
+        private UILabel? messageBoxPlaceholderView;
+
+        private nfloat minimumHeight;
+
+
+        public BottomMessagingPanel(CGSize size) : base() {
+            SendMessageButton = new UIButton();
+            StickerViewButton = new UIButton();
+            AttachMediaButton = new UIButton();
+            MessageBoxField = new UITextView();
+            messageBoxPlaceholderView = new UILabel();
+
+            SendMessageButton.ApplyImageAppearance();
+            StickerViewButton.ApplyImageAppearance();
+            AttachMediaButton.ApplyImageAppearance();
+            MessageBoxField.ApplyDefaultAppearance();
+            messageBoxPlaceholderView.ApplyCaption2Appearance();
+
+            AddSubview(SendMessageButton);
+            AddSubview(StickerViewButton);
+            AddSubview(AttachMediaButton);
+            AddSubview(MessageBoxField);
+
+            MessageBoxField.AddSubview(messageBoxPlaceholderView);
+
+            BackgroundColor = Colors.Foreground;
+            SendMessageButton.SetImage(UIImage.FromBundle("send_28"), UIControlState.Normal);
+            StickerViewButton.SetImage(UIImage.FromBundle("smile_outline_28"), UIControlState.Normal);
+            AttachMediaButton!.SetImage(UIImage.FromBundle("add_circle_outline_28"), UIControlState.Normal);
+            messageBoxPlaceholderView.Text = Localization.Instance.GetString("common_message_input_placeholder");
+
+            MessageBoxField.Changed += (sender, e) => {
+                this.messageBoxPlaceholderView.Hidden = MessageBoxField!.Text?.Length > 0;
+                var contentSize = SizeThatFits(this.Bounds.Size);
+                var offset = minimumHeight - contentSize.Height;
+                this.Frame = new CGRect(0, offset, contentSize.Width, this.Bounds.Height);
+                SetNeedsLayout();
+            };
+
+            var requestedSize = SizeThatFits(size);
+            this.Frame = new CGRect(0, 0, requestedSize.Width, requestedSize.Height);
+        }
+
+        public override CGSize SizeThatFits(CGSize size) {
+            var messageBoxMaxHeight = 180;
+            var messageBoxPivotX = 24 + Dimensions.ButtonIconSize * 2;
+            var messageBoxWidth = size.Width - messageBoxPivotX - 16 - Dimensions.ButtonIconSize;
+            var messageBoxRequestedHeight = MessageBoxField!.SizeThatFits(new CGSize(messageBoxWidth, 100)).Height;
+            var messageBoxHeight = messageBoxRequestedHeight < messageBoxMaxHeight ? messageBoxRequestedHeight : messageBoxMaxHeight;
+            var panelHeight = messageBoxHeight + 16;
+
+            return new CGSize(size.Width, panelHeight);
+        }
+
+        public override void LayoutSubviews() {
+            base.LayoutSubviews();
+
+            var messageBoxMaxHeight = 180;
+            var messageBoxPivotX = 24 + Dimensions.ButtonIconSize * 2;
+            var messageBoxWidth = this.Bounds.Width - messageBoxPivotX - 16 - Dimensions.ButtonIconSize;
+            var messageBoxRequestedHeight = MessageBoxField!.SizeThatFits(new CGSize(messageBoxWidth, 100)).Height;
+            var messageBoxHeight = messageBoxRequestedHeight < messageBoxMaxHeight ? messageBoxRequestedHeight : messageBoxMaxHeight;
+            
+            var panelHeight = messageBoxHeight + 16;
+            var buttonPivotY = panelHeight - Dimensions.ButtonIconSize - (panelHeight - messageBoxHeight) / 2;
+            var messageBoxPivotY = (panelHeight - messageBoxHeight) / 2;
+
+            if (minimumHeight == 0)
+                minimumHeight = panelHeight;
+
+            AttachMediaButton!.Frame = new CGRect(8, buttonPivotY, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize);
+            StickerViewButton!.Frame = new CGRect(16 + Dimensions.ButtonIconSize, buttonPivotY, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize);
+            SendMessageButton!.Frame = new CGRect(this.Bounds.Width - 8 - Dimensions.ButtonIconSize, buttonPivotY, Dimensions.ButtonIconSize, Dimensions.ButtonIconSize);
+            MessageBoxField.Frame = new CGRect(messageBoxPivotX, messageBoxPivotY, messageBoxWidth, messageBoxHeight);
+            this.messageBoxPlaceholderView!.Frame = new CGRect(14, 0, messageBoxWidth - 28, messageBoxHeight);
+          
+            MessageBoxField.ApplyRoundedAppearance();
+        }
+
+
+        // StackOverflow hack for safe area insets
+        public override void MovedToWindow() {
+            base.MovedToWindow();
+            if(this.Window != null) {
+                this.BottomAnchor.ConstraintLessThanOrEqualToSystemSpacingBelowAnchor(this.Window!.SafeAreaLayoutGuide.BottomAnchor, 1).Active = true;
+            }
+        }
     }
 }
 

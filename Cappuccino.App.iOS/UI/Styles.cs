@@ -9,6 +9,9 @@ public static class Colors {
 
     public static UIColor Text => UIColor.FromName("text")!;
     public static UIColor TextGray => UIColor.FromName("text_gray")!;
+
+    public static UIColor MessageBoxIn => UIColor.FromName("message_box_in")!;
+    public static UIColor MessageBoxOut => UIColor.FromName("message_box_out")!;
 }
 
 public static class Dimensions {
@@ -109,6 +112,12 @@ public static class UILabelStyles {
         return label;
     }
 
+    public static UILabel ApplyCaption3Appearance(this UILabel label) {
+        label.Font = UIFont.SystemFontOfSize(12f, UIFontWeight.Regular);
+        label.TextColor = Colors.TextGray;
+        return label;
+    }
+
     public static UILabel ApplyDefaultAppearance(this UILabel label) {
         label.Font = UIFont.SystemFontOfSize(16f, UIFontWeight.Regular);
         label.TextColor = Colors.Text;
@@ -125,6 +134,12 @@ public static class UILabelStyles {
     public static UILabel ApplyRoundedAppearance(this UILabel label) {
         label.Layer.CornerRadius = label.Bounds.Height / 2;
         label.Layer.MasksToBounds = true;
+        return label;
+    }
+
+    public static UILabel ApplyMultilineAppearance(this UILabel label) {
+        label.LineBreakMode = UILineBreakMode.WordWrap;
+        label.Lines = IntPtr.Zero;
         return label;
     }
 }
@@ -197,7 +212,7 @@ public static class UITextViewStyles {
         textView.TextColor = Colors.Text;
         textView.BackgroundColor = Colors.Divider;
         textView.TextAlignment = UITextAlignment.Natural;
-        textView.TextContainerInset = new UIEdgeInsets(8, 8, 8, 8);
+        textView.TextContainerInset = new UIEdgeInsets(10, 10, 10, 10);
         return textView;
     }
 
