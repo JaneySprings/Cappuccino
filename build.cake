@@ -16,7 +16,8 @@ string device           =  Argument("device"        , "");
 Task("clean").Does(() => {
     CleanDirectories("./**/bin");
     CleanDirectories("./**/obj");
-    CleanDirectory(ArtifactsDirectory);
+    CleanDirectory($"{ArtifactsDirectory}/iOS");
+    CleanDirectory($"{ArtifactsDirectory}/Android");
     CleanDirectory(PublishDirectory);
 });
 
@@ -24,32 +25,33 @@ Task("clean").Does(() => {
 // NETWORK
 //////////////////////////////////////////////////////////////////////
 
-Task("network-build")
-    .IsDependentOn("clean")
+Task("network-build").IsDependentOn("clean")
     .Does(() => {
         var options = System.Text.RegularExpressions.RegexOptions.None;
         var pattern = "\\<[Vv]ersion\\>[^,]*?\\</[Vv]ersion\\>";
 
         foreach (var match in FindRegexMatchesInFile(ProjectCorePath, pattern, options)) 
             ReplaceTextInFiles(ProjectCorePath, match, $"<Version>{version}</Version>");
-        foreach (var match in FindRegexMatchesInFile(NuSpecCorePath, pattern, options)) 
-            ReplaceTextInFiles(NuSpecCorePath, match, $"<version>{version}</version>");
-
+        foreach (var match in FindRegexMatchesInFile(NuSpecPath, pattern, options)) 
+            ReplaceTextInFiles(NuSpecPath, match, $"<version>{version}</version>");
+    })
+    .Does(() => {
         DotNetPublish(ProjectCorePath, DotNetPublishSettings($"{ArtifactsDirectory}/Common"));
-        NuGetPack(NuSpecCorePath, new NuGetPackSettings { OutputDirectory = PublishDirectory });
-
-        foreach (var file in System.IO.Directory.GetFiles($"{ArtifactsDirectory}/Common")) 
-            if (!file.Contains("Cappuccino.Core.Network"))
-                DeleteFile(file);
-    });
+        NuGetPack(NuSpecPath, new NuGetPackSettings { OutputDirectory = PublishDirectory });
+    })
+    .Does(() => MoveFile(
+        $"{ArtifactsDirectory}/Common/msbuild.binlog", 
+        $"{PublishDirectory}/Cappuccino.Core.Network.{version}.binlog"
+    ));
 
 Task("network-test").Does(() => DotNetTest(ProjectCoreTestsPath, new DotNetTestSettings {  
     Configuration = configuration,
     Verbosity = DotNetVerbosity.Quiet,
-    Logger = $"trx;LogFileName={TestsResultPath}"
+    ResultsDirectory = ArtifactsDirectory,
+    Loggers = new[] { "trx" }
 }));
 
-Task("network-publish").Does(() => NuGetPush(NugetCorePath, new NuGetPushSettings { 
+Task("network-publish").Does(() => NuGetPush(NuGetPackagePath, new NuGetPushSettings { 
     Source = "https://api.nuget.org/v3/index.json", 
     ApiKey = apikey 
 }));
@@ -58,23 +60,28 @@ Task("network-publish").Does(() => NuGetPush(NugetCorePath, new NuGetPushSetting
 // iOS
 //////////////////////////////////////////////////////////////////////
 
-Task("ios-build").Does(() => {
-    var options = System.Text.RegularExpressions.RegexOptions.None;
-    var pattern = "\\<key\\>CFBundle(Short)?Version(String)?\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
-    var plist = $"{RootiOSDirectory}/Info.plist";
-    var tag = $"\t<string>{version}</string>";
+Task("ios-build").IsDependentOn("clean")
+    .Does(() => {
+        var options = System.Text.RegularExpressions.RegexOptions.None;
+        var pattern = "\\<key\\>CFBundle(Short)?Version(String)?\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
+        var plist = $"{RootiOSDirectory}/Info.plist";
+        var replace = $"\t<string>{version}</string>";
 
-    foreach (var match in FindRegexMatchesInFile(plist, pattern, options)) {
-        var position = match.LastIndexOf('\t');
-        var patch = match.Remove(position, match.Length - position).Insert(position, tag);
-        ReplaceTextInFiles(plist, match, patch);
-    }
-
-    CleanDirectory(PublishDirectory);
-    DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64"));
-    MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
-    Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
-});
+        foreach (var match in FindRegexMatchesInFile(plist, pattern, options)) {
+            var position = match.LastIndexOf('\t');
+            var patch = match.Remove(position, match.Length - position).Insert(position, replace);
+            ReplaceTextInFiles(plist, match, patch);
+        }
+    })
+    .Does(() => DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64")))
+    .Does(() => {
+        Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
+        MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
+        MoveFile(
+            $"{ArtifactsDirectory}/iOS/msbuild.binlog",
+            $"{PublishDirectory}/Cappuccino.App.iOS.{version}.binlog"
+        );
+    });
 
 Task("ios-run").Does(() => {
     DotNetBuild(ProjectiOSPath, new DotNetBuildSettings { Configuration = configuration });

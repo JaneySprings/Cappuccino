@@ -40,7 +40,7 @@ public partial class MessageViewCell {
         this.ContentView.AddSubview(this.container);
 
         this.ContentView.BackgroundColor = Colors.Foreground;
-        this.container.Layer.CornerRadius = 16;
+        this.container.Layer.CornerRadius = 18;
     }
 
     public override CGSize SizeThatFits(CGSize size) {

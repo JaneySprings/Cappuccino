@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Cappuccino.Core.Network.Models.Messages;
 
 
 namespace Cappuccino.Core.Network.Polling {
@@ -14,6 +15,8 @@ namespace Cappuccino.Core.Network.Polling {
             get => looper.errorHandler; 
             set => looper.errorHandler = value;
         }
+        public GetLongPollServerResponse.Response? Credentials => looper.ServerCredentials;
+
 
         private static LongPollManager? instance;
         public static LongPollManager Instance { 

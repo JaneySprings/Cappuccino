@@ -113,7 +113,7 @@ public static class UILabelStyles {
     }
 
     public static UILabel ApplyCaption3Appearance(this UILabel label) {
-        label.Font = UIFont.SystemFontOfSize(12f, UIFontWeight.Regular);
+        label.Font = UIFont.SystemFontOfSize(10f, UIFontWeight.Regular);
         label.TextColor = Colors.TextGray;
         return label;
     }

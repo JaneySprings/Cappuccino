@@ -5,9 +5,9 @@
     <version>1.0</version>
     <title>Cappuccino Request Library for VK</title>
     <authors>Nikita Romanov</authors>
-    <licenseUrl>https://raw.githubusercontent.com/JaneySprings/Cappuccino/master/LICENSE</licenseUrl>
+    <license type="file">LICENSE.txt</license>
     <projectUrl>https://github.com/JaneySprings/Cappuccino/tree/master/Cappuccino.Core.Network</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/JaneySprings/Cappuccino/master/Cappuccino.Core.Network/Nuget/PackageIcon.png</iconUrl>
+    <icon>images\icon.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>todo</description>
     <copyright>Copyright (C) 2022</copyright>
@@ -17,14 +17,11 @@
             <dependency id="System.Text.Json" version="6.0.1" />
         </group>
     </dependencies>
-
-    <references>
-      <group targetFramework="netstandard2.1">
-        <reference file="Cappuccino.Core.Network.dll" />
-      </group>
-    </references>
   </metadata>
+  
   <files>
+    <file src=".\icon.png" target="images" />
+    <file src=".\..\..\LICENSE.txt" target="" />
     <file src=".\..\..\Artifacts\Common\Cappuccino.Core.Network.dll" target="lib\netstandard2.1"/>
   </files>
 </package>

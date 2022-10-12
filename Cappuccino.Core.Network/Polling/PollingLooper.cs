@@ -11,9 +11,9 @@ namespace Cappuccino.Core.Network.Polling {
 
     internal class PollingLooper : IRequestCallback<GetLongPollServerResponse> {
         private GetLongPollServerResponse.Response? _serverCredentials;
-        private GetLongPollServerResponse.Response? serverCredentials { 
+        public GetLongPollServerResponse.Response? ServerCredentials { 
             get => _serverCredentials;
-            set {
+            private set {
                 _serverCredentials = value;
                 IsActive = true;
                 Loop();
@@ -39,13 +39,13 @@ namespace Cappuccino.Core.Network.Polling {
                 callHandler?.Invoke();
 //#endif
                 try {
-                    var request = new LongPollRequest(serverCredentials!);
+                    var request = new LongPollRequest(ServerCredentials!);
                     var result = await request.Execute();
-
-                    _serverCredentials!.Ts = result.Ts;
 
                     if (result.Updates?.Count != 0 && IsActive)
                         updateHandler?.Invoke(result);
+                    
+                    _serverCredentials!.Ts = result.Ts;
                 } catch (Exception e) {
                     errorHandler?.Invoke(e);   
                     IsActive = false;
@@ -61,7 +61,7 @@ namespace Cappuccino.Core.Network.Polling {
 
         void IRequestCallback<GetLongPollServerResponse>.OnSuccess(GetLongPollServerResponse result) {
             if (result?.InnerResponse != null && !IsActive) {
-                serverCredentials = result.InnerResponse;
+                ServerCredentials = result.InnerResponse;
             }
         }
         void IRequestCallback<GetLongPollServerResponse>.OnError(Exception exception) {

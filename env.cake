@@ -14,14 +14,18 @@ public string ProjectCoreTestsPath => $"{RootDirectory}/Cappuccino.Core.Network.
 public string ProjectAndroidPath => $"{RootAndroidDirectory}/Cappuccino.App.Android.csproj";
 public string ProjectiOSPath => $"{RootiOSDirectory}/Cappuccino.App.iOS.csproj";
 
-public string NuSpecCorePath => $"{RootDirectory}/Cappuccino.Core.Network/Nuget/Cappuccino.Core.Network.nuspec";
-public string NugetCorePath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.*.nupkg";
+public string NuSpecPath => $"{RootDirectory}/Cappuccino.Core.Network/Nuget/Cappuccino.Core.Network.nuspec";
+public string NuGetPackagePath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.*.nupkg";
 
-public string TestsResultPath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.Tests.trx";
 
 
 public DotNetPublishSettings DotNetPublishSettings(string output, string runtimeIdentifier = null) {
-    var settings = new DotNetMSBuildSettings();
+    var settings = new DotNetMSBuildSettings {
+        BinaryLogger = new MSBuildBinaryLoggerSettings {
+            FileName = $"{output}/msbuild.binlog",
+            Enabled = true
+        }
+    };
     settings.WithProperty("SignAssembly", signkey.Equals("null") ? "false" : "true");
     settings.WithProperty("AssemblyOriginatorKeyFile", signkey);
 
