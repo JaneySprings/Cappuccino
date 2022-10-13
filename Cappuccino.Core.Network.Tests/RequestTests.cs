@@ -1,7 +1,5 @@
 using Xunit;
-using Cappuccino.Core.Network.Config;
 using Cappuccino.Core.Network.Handlers;
-
 namespace Cappuccino.Core.Network.Tests;
 
 
@@ -11,19 +9,31 @@ public class RequestTests: TestFixture {
     public void TokenErrorHandlingTest() {
         SetupMockCredentials();
         
+        const string response = "{\"error\":{\"error_code\":5,\"error_msg\":\"User authorization failed: access_token has expired.\"}}";
         var request = new TestRequest<string>();
-        var response = "{\"error\":{\"error_code\":5,\"error_msg\":\"User authorization failed: access_token has expired.\"}}";
         var handledMessage = "";
         TokenExpiredHandler.Expired += (error) => handledMessage = error?.InnerError?.ErrorMsg ?? "";
 
-        Assert.Throws<Exception>(() => request.ResultForResponse(response));
+        Assert.Throws<ApiException>(() => request.ResultForResponse(response));
         Assert.Contains("access_token has expired", handledMessage);
+    }
+
+    [Fact]
+    public void SingleErrorInvokeTest() {
+        SetupEmptyCredentials();
+        
+        var request = new TestRequest<string>();
+        var callback = new ApiCallback<string>();
+
+        Api.Get(request, callback, 3);
+        Assert.Contains("Access token incorrect", callback.Message);
+        Assert.Equal(1, callback.RiseCount);
     }
 
     [Fact]
     public void NoTokenInRequestTest() {
         SetupEmptyCredentials();
-        Assert.ThrowsAsync<Exception>(() => new TestRequest<int>().Execute()).Wait();
+        Assert.ThrowsAsync<ApiException>(() => new TestRequest<int>().Execute()).Wait();
     }
 
     [Fact]
@@ -31,8 +41,8 @@ public class RequestTests: TestFixture {
         SetupEmptyCredentials();
         Assert.ThrowsAsync<ArgumentException>(() => { 
             var request = new TestRequest<int>();
-            request.AddParam("param1", "value1");
-            request.AddParam("param1", "value2");
+            request.AddRequestParam("param1", "value1");
+            request.AddRequestParam("param1", "value2");
             return request.Execute();
         }).Wait();
     }
@@ -41,8 +51,8 @@ public class RequestTests: TestFixture {
     public void NormalResponseTest() {
         SetupMockCredentials();
         
+        const string response = "{\"response\":{\"messages\":5,\"calls\":2}}";
         var request = new TestRequest<Models.Account.GetCountersResponse>();
-        var response = "{\"response\":{\"messages\":5,\"calls\":2}}";
         var handledMessage = "";
         TokenExpiredHandler.Expired += (error) => handledMessage = error?.InnerError?.ErrorMsg ?? "";
 

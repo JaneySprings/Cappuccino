@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Internal;
@@ -23,7 +22,7 @@ namespace Cappuccino.Core.Network {
 
         public virtual async Task<TResult> Execute() {
             if (!CredentialsManager.IsInternalTokenValid()) {
-                throw new Exception("Access token incorrect");
+                throw new ApiException("Access token incorrect");
             }   
 
             using Executor executor = new Executor();
@@ -41,13 +40,12 @@ namespace Cappuccino.Core.Network {
                 return OnResponseSuccess(response);
 
             TokenExpiredHandler.ValidateError(error);
-            throw new Exception($"Api {error.InnerError!.ErrorCode}: {error.InnerError!.ErrorMsg}");
+            throw new ApiException(error.InnerError);
         }
 
         /* Handled response, deserialize and pass */
         protected virtual TResult OnResponseSuccess(string response) {
-            TResult result = JsonSerializer.Deserialize<TResult>(response)!;
-            return result;
+            return JsonSerializer.Deserialize<TResult>(response)!;
         }
     }
 }

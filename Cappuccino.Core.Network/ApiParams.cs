@@ -3,10 +3,10 @@ using System.Collections.Generic;
 namespace Cappuccino.Core.Network {
 
     public abstract class ApiParams {
-        protected Dictionary<string, string> Args { get; private set; }
+        protected Dictionary<string, string> Args { get; }
 
 
-        public ApiParams() {
+        protected ApiParams() {
             Args = new Dictionary<string, string>();
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace Cappuccino.Core.Network.Internal {
 
-    internal class EndPoints {
+    internal static class EndPoints {
         public const string AuthorizeBaseUri = "https://oauth.vk.com";
         public const string AuthorizeDirectUri = AuthorizeBaseUri + "/token";
         public const string AuthorizeImplicitUri = AuthorizeBaseUri + "/authorize";

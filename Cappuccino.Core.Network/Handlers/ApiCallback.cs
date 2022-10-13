@@ -21,8 +21,8 @@ namespace Cappuccino.Core.Network.Handlers {
             this.onSuccess?.Invoke(result);
         }
 
-        void IRequestCallback<TResult>.OnError(Exception exception) {
-            this.onError?.Invoke(exception.Message);
+        void IRequestCallback<TResult>.OnError(ApiException exception) {
+            this.onError?.Invoke(exception.ErrorMessage ?? exception.Message);
         }
     }
 }

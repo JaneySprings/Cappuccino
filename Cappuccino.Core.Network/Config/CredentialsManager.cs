@@ -1,7 +1,6 @@
 ﻿using System;
 using Cappuccino.Core.Network.Auth;
 using Cappuccino.Core.Network.Handlers;
-using Cappuccino.Core.Network.Internal;
 
 namespace Cappuccino.Core.Network.Config {
 
@@ -10,11 +9,7 @@ namespace Cappuccino.Core.Network.Config {
 
         private static AccessToken? _accessToken;
         internal static AccessToken? AccessToken {
-            get {
-                if (_accessToken == null) 
-                    _accessToken = ApiConfig?.TokenStorageHandler?.OnTokenRequested();
-                return _accessToken;
-            }
+            get => _accessToken ??= ApiConfig?.TokenStorageHandler?.OnTokenRequested();
             private set {
                 if (_accessToken != null) 
                     ApiConfig?.TokenStorageHandler?.OnTokenReceived(value!);

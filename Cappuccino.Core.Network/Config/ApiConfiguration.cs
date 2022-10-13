@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cappuccino.Core.Network.Handlers;
-using Cappuccino.Core.Network.Internal;
 
 namespace Cappuccino.Core.Network.Config {
 
     public class ApiConfiguration {
-        public int Permissions { get; private set; }
-        public int ApplicationId { get; private set; }
-        public int DeviceId { get; private set; }
-        public int LpVersion { get; private set; }
-        public string? ApiLanguage { get; private set; }
-        public string? ApiVersion { get; private set; }
-        public string? SecretKey { get; private set; }
-        public ITokenStorageHandler? TokenStorageHandler { get; private set; }
+        public int Permissions { get; }
+        public int ApplicationId { get; }
+        public int DeviceId { get; }
+        public int LpVersion { get; }
+        public string? ApiLanguage { get; }
+        public string? ApiVersion { get; }
+        public string? SecretKey { get; }
+        public ITokenStorageHandler? TokenStorageHandler { get; }
 
         public ApiConfiguration(Builder builder) {
             ApplicationId = builder.AppId;

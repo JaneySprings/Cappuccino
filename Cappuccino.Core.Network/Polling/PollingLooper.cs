@@ -1,6 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using Cappuccino.Core.Network.Models;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Internal;
 using Cappuccino.Core.Network.Models.Messages;
@@ -20,8 +18,8 @@ namespace Cappuccino.Core.Network.Polling {
             }
         }
         public bool IsActive { get; private set; }
-        public Action<Models.LongPollResponse>? updateHandler { get; set; }
-        public Action<Exception>? errorHandler { get; set; }
+        public Action<Models.LongPollResponse>? UpdateHandler { get; set; }
+        public Action<Exception>? ErrorHandler { get; set; }
 
 //#if DEBUG
         public Action? callHandler { get; set; }
@@ -43,11 +41,11 @@ namespace Cappuccino.Core.Network.Polling {
                     var result = await request.Execute();
 
                     if (result.Updates?.Count != 0 && IsActive)
-                        updateHandler?.Invoke(result);
+                        UpdateHandler?.Invoke(result);
                     
                     _serverCredentials!.Ts = result.Ts;
                 } catch (Exception e) {
-                    errorHandler?.Invoke(e);   
+                    ErrorHandler?.Invoke(e);   
                     IsActive = false;
                     Prepare();   
 //#if DEBUG
@@ -64,8 +62,8 @@ namespace Cappuccino.Core.Network.Polling {
                 ServerCredentials = result.InnerResponse;
             }
         }
-        void IRequestCallback<GetLongPollServerResponse>.OnError(Exception exception) {
-            errorHandler?.Invoke(exception);
+        void IRequestCallback<GetLongPollServerResponse>.OnError(ApiException exception) {
+            ErrorHandler?.Invoke(exception);
         } 
     }
 }

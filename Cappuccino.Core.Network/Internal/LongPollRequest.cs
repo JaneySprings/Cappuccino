@@ -1,19 +1,17 @@
 using Cappuccino.Core.Network.Models;
-using Cappuccino.Core.Network.Internal;
 using Cappuccino.Core.Network.Utils;
 using Cappuccino.Core.Network.Config;
-using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Models.Messages;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System;
 
-namespace Cappuccino.Core.Network.Internal { 
+namespace Cappuccino.Core.Network.Internal {
 
     internal class LongPollRequest : ApiRequest<LongPollResponse> {
         private readonly GetLongPollServerResponse.Response credentials;
 
-        public LongPollRequest(GetLongPollServerResponse.Response credentials) : base("") { 
+        public LongPollRequest(GetLongPollServerResponse.Response credentials) : base("") {
             this.credentials = credentials;
             
             ClearParams();
@@ -26,7 +24,6 @@ namespace Cappuccino.Core.Network.Internal {
             AddParam("version", CredentialsManager.ApiConfig?.LpVersion);
         }
 
-
         public override async Task<LongPollResponse> Execute() {
             if (!CredentialsManager.IsInternalTokenValid()) {
                 throw new Exception("Access token incorrect");
@@ -35,7 +32,7 @@ namespace Cappuccino.Core.Network.Internal {
             using Executor executor = new Executor();
             string request = $"https://{credentials?.Server}?{this.Args.JoinToUrl()}";
             string? response = await executor.GetAsync(request);
-            
+
             return OnServerResponseReceived(response!);
         }
 
