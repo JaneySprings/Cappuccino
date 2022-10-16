@@ -3,7 +3,7 @@
 
 public partial class RootViewController : UITabBarController {
     public override void ViewDidLoad() {
-        base.ViewDidLoad();;
+        base.ViewDidLoad();
 
         var tabIcons = new string[] {
             "users_outline_32",
@@ -35,6 +35,7 @@ public partial class RootViewController : UITabBarController {
 
         this.TabBar.ApplyDefaultAppearance();
         this.SelectedIndex = new IntPtr(1);
+        this.View!.BackgroundColor = Colors.Foreground;
 
         Initialize();
     }

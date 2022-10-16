@@ -7,6 +7,7 @@ namespace Cappuccino.App.iOS.UI.Messages;
 
 
 public partial class MessageViewCell : TableViewCellBase<MessageItem> {
+    private const int chatIdOffset = 2000000000;
     
     public override void Bind(MessageItem item) {
         this.message!.Text = item.InnerResponse.Text;
@@ -19,7 +20,7 @@ public partial class MessageViewCell : TableViewCellBase<MessageItem> {
         } else {
             this.container!.BackgroundColor = Colors.MessageBoxIn;
 
-            if (item.InnerResponse.PeerId > Constants.ChatIdOffset) {
+            if (item.InnerResponse.PeerId > chatIdOffset) {
                 this.displayAdditinalInfo = true;
 
                 if (item.RelativeItem is User user) 

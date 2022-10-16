@@ -13,13 +13,15 @@ public abstract class TableViewCellBase<TItem> : UITableViewCell {
 public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem> {
     private readonly List<TItem> items = new List<TItem>();
 
+    public int ItemCount => this.items.Count;
     public int ItemLimit { get; set; }
+
     public Action<TItem>? ItemClicked { get; set; }
     public Action<TItem>? ItemLongClicked { get; set; }
     public Action<int>? LastItemBind { get; set; }
 
-    public override nint RowsInSection(UITableView tableView, nint section) => ItemCount;
 
+    public override nint RowsInSection(UITableView tableView, nint section) => ItemCount;
    
     public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath) {
         UITableViewCell view = tableView.DequeueReusableCell(typeof(TCell).Name)!;
@@ -46,15 +48,31 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
         ItemClicked?.Invoke(items[indexPath.Row]);
     }
 
-    public int ItemCount => this.items.Count;
+    public virtual void CellRequested(int row) {
+        
+    }
+
+
     public void AddItems(IEnumerable<TItem> items) {
         this.items.AddRange(items);
+    }
+    public void AddItem(TItem item) {
+        this.items.Add(item);
+    }
+    public void InsertItems(IEnumerable<TItem> items, int position) {
+        this.items.InsertRange(position, items); 
+    }
+    public void InsertItem(TItem item, int position) {
+        this.items.Insert(position, item); 
     }
     public void ReplaceItems(IEnumerable<TItem> items) {
         this.items.Clear();
         this.items.AddRange(items);
     }
-    public void ClearItems() {
+    public void RemoveItem(TItem item) {
+        this.items.Remove(item);
+    }
+    public void RemoveItems() {
         this.items.Clear();
     }
 }

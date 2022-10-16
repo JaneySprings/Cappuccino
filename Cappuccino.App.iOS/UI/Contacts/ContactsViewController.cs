@@ -48,22 +48,20 @@ public partial class ContactsViewController : UIViewController {
     private void SearchCancelled(object? sender, EventArgs args) {
         if (this.isSearchingMode) {
             this.isSearchingMode = false;
-            this.adapter.ClearItems();
+            this.adapter.RemoveItems();
             RequestUsers(0);
         }
     }
 
     private void FilterIconClicked(object? sender, EventArgs args) {
-        var modalController = new FilterModalController(this.dataObject, () => {
-            RequestSearch(NavigationItem.SearchController?.SearchBar.Text ?? string.Empty);
-        });
+        var modalController = new FilterModalController(this.dataObject, () => RequestSearch(NavigationItem.SearchController?.SearchBar.Text ?? string.Empty));
         PresentViewController(modalController, true, null);
     }
 
 
     private void RequestUsers(int offset) {
         Api.Get(new Friends.Get {
-            Fields = Constants.DefaultUserFields,
+            Fields = RequestExtensions.UserDefaults(),
             Order = "name",
             Count = 50,
             Offset = offset
@@ -82,8 +80,8 @@ public partial class ContactsViewController : UIViewController {
             requestManager.AddRequest(new Users.Search {
                 Sort = this.dataObject.SearchOrder,
                 Hometown = this.dataObject.HomeTown ?? string.Empty,
+                Fields = RequestExtensions.UserDefaults(),
                 Query = query,
-                Fields = Constants.DefaultUserFields,
                 Offset = 0, 
                 Count = 80
             });

@@ -1,4 +1,5 @@
 using Cappuccino.Core.Network;
+using Cappuccino.Core.Network.Polling;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.App.iOS.Extensions;
 using _Messages = Cappuccino.Core.Network.Methods.Messages;
@@ -9,6 +10,7 @@ namespace Cappuccino.App.iOS.UI.Messages;
 
 public partial class MessagesViewController : UIViewController {
     private MessagesAdapterDelegate adapter = new MessagesAdapterDelegate();
+    private DataController? dataController;
     private int conversationId;
 
     public MessagesViewController(int conversationId) {
@@ -21,45 +23,93 @@ public partial class MessagesViewController : UIViewController {
         tableView.DataSource = this.adapter;
         tableView.Delegate = this.adapter;
 
-        //this.adapter.LastItemBind = RequestMessages;
+        dataController = new DataController {
+            TableView = tableView,
+            Adapter = this.adapter,
+            ConversationId = conversationId
+        };
 
-        RequrstConversation();
+        this.adapter.ItemClicked = TableViewItemClicked;
+        this.bottomPanel!.SendMessageButton!.TouchUpInside += SendButtonClicked;
 
-        if (this.adapter.ItemCount == 0)
-            RequestMessages(0);
+        LongPollManager.Instance.MessageReceived += RequestHistory;
+        
+
+        if (this.adapter.ItemCount == 0) {
+            RequrstConversation();
+            RequestMessages();
+        }
     }
 
     public override void ViewDidDisappear(bool animated) {
         base.ViewDidDisappear(animated);
+
+        this.adapter.ItemClicked -= TableViewItemClicked;
+        this.bottomPanel!.SendMessageButton!.TouchUpInside -= SendButtonClicked;
+
+        LongPollManager.Instance.MessageReceived -= RequestHistory;
         NSNotificationCenter.DefaultCenter.RemoveObserver(this);
     }
 
 
 
-    private void RequestMessages(int offset) { 
-        Api.Get(new _Messages.GetHistory {
-            Fields = Constants.DefaultUserFields,
+    private void TableViewItemClicked(MessageItem item) {
+        this.bottomPanel!.MessageBoxField!.EndEditing(true);
+    }
+    private void SendButtonClicked(object? sender, EventArgs e) {
+        RequestSend();
+    }
+
+
+
+    private void RequestSend() { 
+        Api.Get(new _Messages.Send {
             PeerId = this.conversationId,
-            Offset = offset,
-            Extended = 1,
-            Count = 25
-        }, new ApiCallback<Models.Messages.GetHistoryResponse>()
+            RandomId = this.bottomPanel!.MessageBoxField!.Text.GetHashCode(),
+            Message = this.bottomPanel!.MessageBoxField!.Text
+        }, new ApiCallback<Models.Messages.SendResponse>()
             .OnSuccess(result => {
-                this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
-                var data = result.InnerResponse?.ToMessageItems();
-                data!.Reverse();
-                this.adapter.AddItems(data);
-                this.tableView!.ReloadData();
-                if (this.adapter.ItemCount != 0)
-                    this.tableView.ScrollToRow(NSIndexPath.FromRowSection(new IntPtr(this.adapter.ItemCount - 1), new IntPtr(0)), UITableViewScrollPosition.Bottom, true);
+                this.bottomPanel.MessageBoxField.Text = string.Empty;
             })
             .OnError(reason => {})
         );
     }
+
+    private void RequestMessages() { 
+        Api.Get(new _Messages.GetHistory {
+            Fields = RequestExtensions.UserDefaults(),
+            PeerId = this.conversationId,
+            Offset = 0,
+            Extended = 1,
+            Count = 100
+        }, new ApiCallback<Models.Messages.GetHistoryResponse>()
+            .OnSuccess(result => {
+                this.adapter.AddItems(result.InnerResponse?.ToMessageItems()!);
+                this.tableView!.ReloadData();
+                this.tableView.ScrollDown(false);
+            })
+            .OnError(reason => {})
+        );
+    }
+
+    private void RequestHistory(Models.LongPollResponse _) { 
+        Api.Get(new _Messages.GetLongPollHistory {
+            Fields = RequestExtensions.UserDefaults(),
+            Ts = LongPollManager.Instance.Ts,
+            Pts = LongPollManager.Instance.Pts,
+        }, new ApiCallback<Models.Messages.GetLongPollHistoryResponse>()
+            .OnSuccess(result => {
+                dataController?.ProcessUpdate(result.InnerResponse!);
+                LongPollManager.Instance.Pts = result.InnerResponse?.NewPts ?? 0;
+            })
+            .OnError(reason => {})
+        );
+    }
+
     private void RequrstConversation() {
         Api.Get(new _Messages.GetConversationsById {
             PeerIds = new[] { this.conversationId },
-            Fields = Constants.DefaultUserFields,
+            Fields = RequestExtensions.UserDefaults(),
             Extended = 1
         }, new ApiCallback<Models.Messages.GetConversationsByIdResponse>()
             .OnSuccess(result => {

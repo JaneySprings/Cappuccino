@@ -9,7 +9,7 @@ public class KeychainProvider: ITokenStorageHandler {
     private const string Alias = "Cappuccino.KeychainProvider";
 
     public AccessToken? OnTokenRequested() {
-        SecRecord record = new SecRecord (SecKind.Key) { Label = Alias };
+        SecRecord record = new SecRecord(SecKind.Key) { Label = Alias };
         NSData[]? data = SecKeyChain.QueryAsData(record, 1);
 
         if (data == null)

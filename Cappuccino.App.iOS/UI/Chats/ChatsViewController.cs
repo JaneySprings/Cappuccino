@@ -1,5 +1,6 @@
 ﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Handlers;
+using Cappuccino.App.iOS.Extensions;
 using _Messages = Cappuccino.Core.Network.Methods.Messages;
 using Models = Cappuccino.Core.Network.Models;
 using Cappuccino.Core.Network.Polling;
@@ -26,7 +27,7 @@ public partial class ChatsViewController : UIViewController {
             RequestConversations(0);
 
         LongPollManager.Instance.MessageReceived += _ => {
-            this.adapter.ClearItems();
+            this.adapter.RemoveItems();
             RequestConversations(0);  
         };  
 
@@ -48,7 +49,7 @@ public partial class ChatsViewController : UIViewController {
 
     private void RequestConversations(int offset) {
         Api.Get(new _Messages.GetConversations {
-            Fields = Constants.DefaultUserFields,
+            Fields = RequestExtensions.UserDefaults(),
             Count = 50,
             Extended = 1,
             Offset = offset

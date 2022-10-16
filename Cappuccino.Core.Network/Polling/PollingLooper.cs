@@ -17,6 +17,7 @@ namespace Cappuccino.Core.Network.Polling {
                 Loop();
             }
         }
+
         public bool IsActive { get; private set; }
         public Action<Models.LongPollResponse>? UpdateHandler { get; set; }
         public Action<Exception>? ErrorHandler { get; set; }
@@ -40,19 +41,15 @@ namespace Cappuccino.Core.Network.Polling {
                     var request = new LongPollRequest(ServerCredentials!);
                     var result = await request.Execute();
 
+                    _serverCredentials!.Ts = result.Ts;
+
                     if (result.Updates?.Count != 0 && IsActive)
                         UpdateHandler?.Invoke(result);
                     
-                    _serverCredentials!.Ts = result.Ts;
                 } catch (Exception e) {
                     ErrorHandler?.Invoke(e);   
                     IsActive = false;
-                    Prepare();   
-//#if DEBUG
-                    //if (_errors_ > 4) {
-                    //    IsActive = false;
-                    //}
-//#endif
+                    Prepare();
                 }
             }
         }

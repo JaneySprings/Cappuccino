@@ -84,6 +84,7 @@ Task("ios-build").IsDependentOn("clean")
     });
 
 Task("ios-run").Does(() => {
+    DeleteFiles($"{ArtifactsDirectory}/*.log");
     DotNetBuild(ProjectiOSPath, new DotNetBuildSettings { Configuration = configuration });
     StartProcess("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app");
     StartProcess("dotnet", "xharness apple run"

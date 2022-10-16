@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Users;
-using Cappuccino.Core.Network.Models;
 
 namespace Cappuccino.Core.Network.Models.Messages {
+    /* 
+     * Mark: documentation [https://vk.com/dev/messages.send]
+     */
+    public class SendResponse {
+        [JsonPropertyName("response")] public int Response { get; set; }
+    }
+
+
     /* 
      * Mark: documentation [https://vk.com/dev/messages.getLongPollHistory]
      */

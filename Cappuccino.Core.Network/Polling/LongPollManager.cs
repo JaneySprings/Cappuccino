@@ -15,20 +15,28 @@ namespace Cappuccino.Core.Network.Polling {
             set => looper.ErrorHandler = value;
         }
 
-        private static LongPollManager? instance;
-        public static LongPollManager Instance { 
-            get => instance ??= new LongPollManager();
+        public int Pts { 
+            get => looper.ServerCredentials?.Pts ?? 0;
+            set => looper.ServerCredentials!.Pts = value;
         }
-
-        public GetLongPollServerResponse.Response? Credentials => looper.ServerCredentials;
-        public bool IsActive => looper.IsActive;
-
+        public int Ts { 
+            get => looper.ServerCredentials?.Ts ?? 0;
+            set => looper.ServerCredentials!.Ts = value;
+        }
 //#if DEBUG
         public Action? CallHandler { 
             get => looper.callHandler; 
             set => looper.callHandler = value;
         }
 //endif
+        public bool IsActive => looper.IsActive;
+
+
+
+        private static LongPollManager? instance;
+        public static LongPollManager Instance { 
+            get => instance ??= new LongPollManager();
+        }
 
         public void StartExecution() => looper.Prepare();
         public void StopExecution() => looper.Interrupt();
