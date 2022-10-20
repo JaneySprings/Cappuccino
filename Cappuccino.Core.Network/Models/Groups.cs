@@ -1,9 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+
+/* Mark: https://vk.com/dev/groups.get */
 namespace Cappuccino.Core.Network.Models.Groups {
 
-    /* 
-     * Mark: documentation [https://vk.com/dev/objects/group] 
-     */
     public class Group {
         // Base properties
         [JsonPropertyName("id")] public int Id { get; set; }

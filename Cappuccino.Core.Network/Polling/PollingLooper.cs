@@ -1,15 +1,13 @@
 using System;
 using Cappuccino.Core.Network.Handlers;
-using Cappuccino.Core.Network.Internal;
-using Cappuccino.Core.Network.Models.Messages;
 using Cappuccino.Core.Network.Methods.Messages;
 
 
 namespace Cappuccino.Core.Network.Polling { 
 
-    internal class PollingLooper : IRequestCallback<GetLongPollServerResponse> {
-        private GetLongPollServerResponse.Response? _serverCredentials;
-        public GetLongPollServerResponse.Response? ServerCredentials { 
+    internal class PollingLooper : IRequestCallback<GetLongPollServer.Response> {
+        private GetLongPollServer.Response.InnerResponse? _serverCredentials;
+        public GetLongPollServer.Response.InnerResponse? ServerCredentials { 
             get => _serverCredentials;
             private set {
                 _serverCredentials = value;
@@ -54,12 +52,12 @@ namespace Cappuccino.Core.Network.Polling {
             }
         }
 
-        void IRequestCallback<GetLongPollServerResponse>.OnSuccess(GetLongPollServerResponse result) {
-            if (result?.InnerResponse != null && !IsActive) {
-                ServerCredentials = result.InnerResponse;
+        void IRequestCallback<GetLongPollServer.Response>.OnSuccess(GetLongPollServer.Response result) {
+            if (result?.Inner != null && !IsActive) {
+                ServerCredentials = result.Inner;
             }
         }
-        void IRequestCallback<GetLongPollServerResponse>.OnError(ApiException exception) {
+        void IRequestCallback<GetLongPollServer.Response>.OnError(ApiException exception) {
             ErrorHandler?.Invoke(exception);
         } 
     }

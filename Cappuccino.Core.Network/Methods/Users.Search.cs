@@ -1,21 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Cappuccino.Core.Network.Models.Users;
+
+/* Mark: https://vk.com/dev/users.search */
 namespace Cappuccino.Core.Network.Methods.Users {
 
-    /* 
-     * Mark: documentation [https://vk.com/dev/users.get]
-     */
-    public class Get : ApiRequest<Models.Users.GetResponse> {
-        public IEnumerable<string> Fields { set => AddParam("fields", value); }
-        public string NameCase { set => AddParam("name_case", value); }
-        public IEnumerable<int> UserIds { set => AddParam("user_ids", value); }
+    public class Search : ApiMethod<Search.Response> {
+        public Search() : base("users.search") {}
 
-        public Get() : base("users.get") {}
-    }
 
-    /* 
-     * Mark: documentation [https://vk.com/dev/users.search]
-     */
-    public class Search : ApiRequest<Models.Users.SearchResponse> {
         public string Query { set => AddParam("q", value); }
         public int Count { set => AddParam("count", value); }
         public int Offset { set => AddParam("offset", value); }
@@ -49,7 +42,13 @@ namespace Cappuccino.Core.Network.Methods.Users {
         public int Company { set => AddParam("company", value); }
         public int Position { set => AddParam("position", value); }
 
-        public Search() : base("users.search") {}
-    }
+        public class Response {
+            [JsonPropertyName("response")] public InnerResponse? Inner { get; set; }
 
+            public class InnerResponse {
+                [JsonPropertyName("count")] public int Count { get; set; }
+                [JsonPropertyName("items")] public List<User>? Items { get; set; }
+            }
+        }
+    }
 }

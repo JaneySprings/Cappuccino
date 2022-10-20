@@ -1,6 +1,4 @@
 ﻿using System;
-using Cappuccino.Core.Network.Models.Messages;
-
 
 namespace Cappuccino.Core.Network.Polling {
 

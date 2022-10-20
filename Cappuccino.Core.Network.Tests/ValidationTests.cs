@@ -39,4 +39,13 @@ public class ValidationTests: TestFixture {
         Assert.False(CredentialsManager.IsInternalTokenValid(handler));
         Assert.Contains(nameof(ITokenStorageHandler), handler.Message);
     }
+
+    [Fact]
+    public void ApplyingNullTokenTest() {
+        SetupMockCredentials();
+
+        var handler = new ValidationCallback();
+        CredentialsManager.ApplyAccessToken(null, handler);
+        Assert.Contains("null", handler.Message);
+    }
 }

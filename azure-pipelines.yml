@@ -27,8 +27,6 @@ stages:
             displayName: 'Install .NET 7.0.1xx Preview'
           - script: dotnet tool restore
             displayName: 'DotNet Restore'
-          - script: dotnet cake --target=network-build
-            displayName: 'Network Build' 
           - script: dotnet cake --target=network-test --configuration=release
             displayName: 'Network Test'
           - task: PublishTestResults@2

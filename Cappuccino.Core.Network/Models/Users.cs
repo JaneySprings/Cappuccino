@@ -1,37 +1,8 @@
 ﻿using System.Text.Json.Serialization;
-using System.Collections.Generic;
 
-
+/* Mark: https://vk.com/dev/objects/user */
 namespace Cappuccino.Core.Network.Models.Users {
 
-    /*  
-     * Mark: documentation [https://vk.com/dev/users.get]
-     */
-    public class GetResponse {
-        [JsonPropertyName("response")] public Response? InnerResponse { get; set; }
-
-        public class Response {
-            [JsonPropertyName("count")] public int Count { get; set; }
-            [JsonPropertyName("items")] public List<User>? Items { get; set; }
-        }
-    }
-
-    /*  
-     * Mark: documentation [https://vk.com/dev/users.search]
-     */
-    public class SearchResponse {
-        [JsonPropertyName("response")] public Response? InnerResponse { get; set; }
-
-        public class Response {
-            [JsonPropertyName("count")] public int Count { get; set; }
-            [JsonPropertyName("items")] public List<User>? Items { get; set; }
-        }
-    }
-
-
-    /* 
-     * Mark: documentation [https://vk.com/dev/objects/user] 
-     */
     public class User {
         // Base properties
         [JsonPropertyName("id")] public int Id { get; set; }
