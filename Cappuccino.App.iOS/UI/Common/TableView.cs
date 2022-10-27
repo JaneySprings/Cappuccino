@@ -2,8 +2,8 @@
 
 
 public abstract class TableViewCellBase<TItem> : UITableViewCell {
-    public TableViewCellBase(IntPtr handle) : base(handle) { Initialize(); }
-    public TableViewCellBase() : base() { Initialize(); }
+    protected TableViewCellBase(IntPtr handle) : base(handle) { Initialize(); }
+    protected TableViewCellBase() : base() { Initialize(); }
 
     protected abstract void Initialize();
     public abstract void Bind(TItem item);
@@ -11,7 +11,7 @@ public abstract class TableViewCellBase<TItem> : UITableViewCell {
 
 
 public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem> {
-    private readonly List<TItem> items = new List<TItem>();
+    protected readonly List<TItem> items = new List<TItem>();
 
     public int ItemCount => this.items.Count;
     public int ItemLimit { get; set; }
@@ -48,10 +48,6 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
         ItemClicked?.Invoke(items[indexPath.Row]);
     }
 
-    public virtual void CellRequested(int row) {
-        
-    }
-
 
     public void AddItems(IEnumerable<TItem> items) {
         this.items.AddRange(items);
@@ -59,20 +55,11 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
     public void AddItem(TItem item) {
         this.items.Add(item);
     }
-    public void InsertItems(IEnumerable<TItem> items, int position) {
-        this.items.InsertRange(position, items); 
-    }
-    public void InsertItem(TItem item, int position) {
-        this.items.Insert(position, item); 
-    }
-    public void ReplaceItems(IEnumerable<TItem> items) {
-        this.items.Clear();
-        this.items.AddRange(items);
-    }
     public void RemoveItem(TItem item) {
         this.items.Remove(item);
     }
-    public void RemoveItems() {
+    
+    public void ClearItems() {
         this.items.Clear();
     }
 }

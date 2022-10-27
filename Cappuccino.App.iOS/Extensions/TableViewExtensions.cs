@@ -27,7 +27,7 @@ public static class TableViewExtensions {
             return;
 
         var targetRowIndexPath = NSIndexPath.FromRowSection(lastRowIndex, new IntPtr(0));
-        tableView.InsertRows(new[] { targetRowIndexPath }, UITableViewRowAnimation.Bottom);
+        tableView.InsertRows(new[] { targetRowIndexPath }, UITableViewRowAnimation.Automatic);
         tableView.ScrollDown();
     }
 }

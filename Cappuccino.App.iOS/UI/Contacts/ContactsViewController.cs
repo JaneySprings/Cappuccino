@@ -1,7 +1,6 @@
 ﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.App.iOS.Extensions;
-using Models = Cappuccino.Core.Network.Models;
 using Friends = Cappuccino.Core.Network.Methods.Friends;
 using Users = Cappuccino.Core.Network.Methods.Users;
 
@@ -10,7 +9,7 @@ namespace Cappuccino.App.iOS.UI.Contacts;
 
 public partial class ContactsViewController : UIViewController {
     private readonly UsersAdapterDelegate adapter = new ();
-    private readonly SelectiveRequestManager<Models.Users.SearchResponse> requestManager = new ();
+    private readonly SelectiveRequestManager<Users.Search.Response> requestManager = new ();
     private readonly FilterDataObject dataObject = new FilterDataObject();
     private bool isSearchingMode = false;
 
@@ -25,10 +24,11 @@ public partial class ContactsViewController : UIViewController {
             var vc = new Messages.MessagesViewController(item.Id);
             NavigationController?.PushViewController(vc, true);
         };
-        this.requestManager.RequestCallback = new ApiCallback<Models.Users.SearchResponse>()
+        this.requestManager.RequestCallback = new ApiCallback<Users.Search.Response>()
             .OnSuccess(result => {
                 if (this.isSearchingMode) {
-                    this.adapter.ReplaceItems(result.InnerResponse?.Items!);
+                    this.adapter.ClearItems();
+                    this.adapter.AddItems(result.Inner?.Items!);
                     tableView!.ReloadData();
                 }
             })
@@ -48,7 +48,7 @@ public partial class ContactsViewController : UIViewController {
     private void SearchCancelled(object? sender, EventArgs args) {
         if (this.isSearchingMode) {
             this.isSearchingMode = false;
-            this.adapter.RemoveItems();
+            this.adapter.ClearItems();
             RequestUsers(0);
         }
     }
@@ -61,14 +61,14 @@ public partial class ContactsViewController : UIViewController {
 
     private void RequestUsers(int offset) {
         Api.Get(new Friends.Get {
-            Fields = RequestExtensions.UserDefaults(),
+            Fields = RequestConstants.UserDefaults(),
             Order = "name",
             Count = 50,
             Offset = offset
-        }, new ApiCallback<Models.Friends.GetResponse>()    
+        }, new ApiCallback<Friends.Get.Response>()    
             .OnSuccess(result => {
-                this.adapter.ItemLimit = result.InnerResponse?.Count ?? 0;
-                this.adapter.AddItems(result.InnerResponse?.Items!);
+                this.adapter.ItemLimit = result.Inner?.Count ?? 0;
+                this.adapter.AddItems(result.Inner?.Items!);
                 tableView!.ReloadData();
             })
             .OnError(reason => {})
@@ -80,7 +80,7 @@ public partial class ContactsViewController : UIViewController {
             requestManager.AddRequest(new Users.Search {
                 Sort = this.dataObject.SearchOrder,
                 Hometown = this.dataObject.HomeTown ?? string.Empty,
-                Fields = RequestExtensions.UserDefaults(),
+                Fields = RequestConstants.UserDefaults(),
                 Query = query,
                 Offset = 0, 
                 Count = 80

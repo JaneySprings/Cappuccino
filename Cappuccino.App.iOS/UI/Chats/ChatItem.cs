@@ -1,40 +1,51 @@
 ﻿using Cappuccino.Core.Network.Models.Users;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Messages;
-using Models = Cappuccino.Core.Network.Models;
+using Cappuccino.Core.Network.Methods.Messages;
 
 namespace Cappuccino.App.iOS.UI.Chats;
 
 
 public static class ChatItemMapper {
-    public static List<ChatItem> ToChatItems(this Models.Messages.GetConversationsResponse.Response response) {
-        return response.Items!.Select(chat => new ChatItem(chat, response.Profiles, response.Groups)).ToList();
+    public static List<ChatItem> ToChatItems(this GetConversations.Response.InnerResponse response) {
+        return response.Items!.ConvertAll(chat => new ChatItem(chat, response.Profiles, response.Groups));
+    }
+}
+
+public class ChatItemComparer : IComparer<ChatItem> {
+    public int Compare(ChatItem? x, ChatItem? y) {
+        return y!.InnerResponse.LastMessage!.Date.CompareTo(x!.InnerResponse.LastMessage!.Date);
     }
 }
 
 public class ChatItem {
-    public int ChatId { get; private set; }
-    public Chat InnerResponse { get; private set; }
-    public object? RelativeItem { get; private set; }
-    public object? RelativeItemFromMessage { get; private set; }
+    public const string TypeUser = "user";
+    public const string TypeGroup = "group";
+    public const string TypeChat = "chat";
+
+    public int ChatId { get; }
+    public string ChatName { get; }
+    public string ChatType { get; }
+    public Chat InnerResponse { get; }
+    public object? RelativeItem { get; }
 
     public ChatItem(Chat chat, List<User>? profiles, List<Group>? groups) {
-        this.InnerResponse = chat;
         this.ChatId = chat.Conversation?.peer?.Id ?? 0;
+        this.ChatType = chat.Conversation?.peer?.Type ?? string.Empty;
+        this.InnerResponse = chat;
 
-        switch (chat.Conversation?.peer?.Type) {
-            case "user":
-                this.RelativeItem = profiles?.Find(it => it.Id == chat.Conversation?.peer?.Id);
-                break;
-            case "group":
-                this.RelativeItem = groups?.Find(it => it.Id == -chat.Conversation?.peer?.Id);
-                break;
+        if (this.ChatType.Equals(ChatItem.TypeUser)) {
+            this.RelativeItem = profiles?.Find(it => it.Id == chat.Conversation?.peer?.Id);
+        } else {
+            this.RelativeItem = groups?.Find(it => it.Id == -chat.Conversation?.peer?.Id);
         }
 
         if (chat.LastMessage?.FromId > 0) {
-            this.RelativeItemFromMessage = profiles?.Find(it => it.Id == chat.LastMessage?.FromId);
+            var user = profiles?.Find(it => it.Id == chat.LastMessage?.FromId);
+            this.ChatName = $"{user?.FirstName} {user?.LastName![0]}"; //: John D
         } else {
-            this.RelativeItemFromMessage = groups?.Find(it => it.Id == -chat.LastMessage?.FromId);
+            var group = groups?.Find(it => it.Id == -chat.LastMessage?.FromId);
+            this.ChatName = group?.Name ?? string.Empty;
         }
     }
 }

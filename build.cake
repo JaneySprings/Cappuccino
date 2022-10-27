@@ -6,7 +6,6 @@ string configuration    =  Argument("configuration" , "debug");
 string version          =  Argument("up-version"    , "1.0");
 string signkey          =  Argument("signkey"       , "null");
 string apikey           =  Argument("apikey"        , "null");
-string device           =  Argument("device"        , "");
 
 
 //////////////////////////////////////////////////////////////////////
@@ -25,7 +24,8 @@ Task("clean").Does(() => {
 // NETWORK
 //////////////////////////////////////////////////////////////////////
 
-Task("network-build").IsDependentOn("clean")
+Task("network-build")
+    .IsDependentOn("clean")
     .Does(() => {
         var options = System.Text.RegularExpressions.RegexOptions.None;
         var pattern = "\\<[Vv]ersion\\>[^,]*?\\</[Vv]ersion\\>";
@@ -36,7 +36,7 @@ Task("network-build").IsDependentOn("clean")
             ReplaceTextInFiles(NuSpecPath, match, $"<version>{version}</version>");
     })
     .Does(() => {
-        DotNetPublish(ProjectCorePath, DotNetPublishSettings($"{ArtifactsDirectory}/Common"));
+        DotNetPublish(ProjectCorePath, DotNetPublishSettings($"{ArtifactsDirectory}/Common", signkey));
         NuGetPack(NuSpecPath, new NuGetPackSettings { OutputDirectory = PublishDirectory });
     })
     .Does(() => MoveFile(
@@ -52,15 +52,16 @@ Task("network-test").Does(() => DotNetTest(ProjectCoreTestsPath, new DotNetTestS
 }));
 
 Task("network-publish").Does(() => NuGetPush(NuGetPackagePath, new NuGetPushSettings { 
-    Source = "https://api.nuget.org/v3/index.json", 
-    ApiKey = apikey 
+    Source = "https://api.nuget.org/v3/index.json",
+    ApiKey = apikey
 }));
 
 //////////////////////////////////////////////////////////////////////
 // iOS
 //////////////////////////////////////////////////////////////////////
 
-Task("ios-build").IsDependentOn("clean")
+Task("ios-build")
+    .IsDependentOn("clean")
     .Does(() => {
         var options = System.Text.RegularExpressions.RegexOptions.None;
         var pattern = "\\<key\\>CFBundle(Short)?Version(String)?\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
@@ -73,7 +74,7 @@ Task("ios-build").IsDependentOn("clean")
             ReplaceTextInFiles(plist, match, patch);
         }
     })
-    .Does(() => DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", "ios-arm64")))
+    .Does(() => DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", signkey, "ios-arm64")))
     .Does(() => {
         Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
         MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
@@ -82,18 +83,6 @@ Task("ios-build").IsDependentOn("clean")
             $"{PublishDirectory}/Cappuccino.App.iOS.{version}.binlog"
         );
     });
-
-Task("ios-run").Does(() => {
-    DeleteFiles($"{ArtifactsDirectory}/*.log");
-    DotNetBuild(ProjectiOSPath, new DotNetBuildSettings { Configuration = configuration });
-    StartProcess("open", "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app");
-    StartProcess("dotnet", "xharness apple run"
-        + $" --app {ArtifactsDirectory}/iOS/iossimulator-x64/Cappuccino.App.iOS.app" 
-        + $" --device {device}"
-        + $" --output-directory {ArtifactsDirectory}"
-        +  " --target ios-simulator-64"
-    );
-});
 
 //////////////////////////////////////////////////////////////////////
 // ANDROID

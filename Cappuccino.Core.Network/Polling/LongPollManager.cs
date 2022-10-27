@@ -21,12 +21,7 @@ namespace Cappuccino.Core.Network.Polling {
             get => looper.ServerCredentials?.Ts ?? 0;
             set => looper.ServerCredentials!.Ts = value;
         }
-//#if DEBUG
-        public Action? CallHandler { 
-            get => looper.callHandler; 
-            set => looper.callHandler = value;
-        }
-//endif
+
         public bool IsActive => looper.IsActive;
 
 

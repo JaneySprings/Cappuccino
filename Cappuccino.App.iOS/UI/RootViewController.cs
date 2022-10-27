@@ -8,11 +8,6 @@ namespace Cappuccino.App.iOS.UI;
 
 
 public partial class RootViewController {
-
-//#if DEBUG
-    private int lpUpdates = 0;
-//#endif
-
     private void Initialize() {
         RequestBadgeCounters(null);
     }
@@ -21,12 +16,12 @@ public partial class RootViewController {
         base.ViewDidAppear(animated);
         LongPollManager.Instance.StartExecution();
         LongPollManager.Instance.MessageReceived += RequestBadgeCounters;
-// //#if DEBUG
-        LongPollManager.Instance.CallHandler += () => { 
-            lpUpdates++;
-            this.TabBar.Items![0].BadgeValue = lpUpdates.ToString();
+//#if DEBUG
+        LongPollManager.Instance.ErrorReceived += exception => {
+            var alert = new UIAlertView(exception.Message, exception.StackTrace, null, "OK", null);
+            alert.Show();
         };
-// //#endif
+//#endif
     }
 
     public override void ViewDidDisappear(bool animated) {
@@ -38,10 +33,10 @@ public partial class RootViewController {
 
 
     private void RequestBadgeCounters(Models.LongPollResponse? _) {
-        Api.Get(new Account.GetCounters(), new ApiCallback<Models.Account.GetCountersResponse>()
+        Api.Get(new Account.GetCounters(), new ApiCallback<Account.GetCounters.Response>()
             .OnSuccess(result => {
-                var contactsBadgeValue = result.InnerResponse?.Friends ?? 0;
-                var chatsBadgeValue = result.InnerResponse?.Messages ?? 0;
+                var contactsBadgeValue = result.Inner?.Friends ?? 0;
+                var chatsBadgeValue = result.Inner?.Messages ?? 0;
 
                 this.TabBar.Items![0].BadgeValue = contactsBadgeValue == 0 ? null : contactsBadgeValue.ToString();
                 this.TabBar.Items![1].BadgeValue = chatsBadgeValue == 0 ? null : chatsBadgeValue.ToString();

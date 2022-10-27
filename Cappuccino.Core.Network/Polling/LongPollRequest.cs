@@ -17,11 +17,11 @@ namespace Cappuccino.Core.Network.Polling {
             using Executor executor = new Executor();
             string request = $"https://{credentials?.Server}?" 
                 + $"version={CredentialsManager.ApiConfig?.LpVersion}"
-                + $"ts={credentials!.Ts}"
-                + $"pts={credentials!.Pts}"
-                + $"key={credentials!.Key}"
-                + "act=a_check"
-                + "wait=25"
+                + $"&ts={credentials!.Ts}"
+                + $"&pts={credentials!.Pts}"
+                + $"&key={credentials!.Key}"
+                + "&act=a_check"
+                + "&wait=25"
                 + "mode=2";
             string? response = await executor.GetAsync(request);
 

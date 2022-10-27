@@ -18,24 +18,23 @@ public string NuSpecPath => $"{RootDirectory}/Cappuccino.Core.Network/Nuget/Capp
 public string NuGetPackagePath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.*.nupkg";
 
 
-
-public DotNetPublishSettings DotNetPublishSettings(string output, string runtimeIdentifier = null) {
+public DotNetPublishSettings DotNetPublishSettings(string output, string key, string runtimeIdentifier = null) {
     var settings = new DotNetMSBuildSettings {
         BinaryLogger = new MSBuildBinaryLoggerSettings {
             FileName = $"{output}/msbuild.binlog",
             Enabled = true
         }
     };
-    settings.WithProperty("SignAssembly", signkey.Equals("null") ? "false" : "true");
-    settings.WithProperty("AssemblyOriginatorKeyFile", signkey);
+    settings.WithProperty("SignAssembly", key.Equals("null") ? "false" : "true");
+    settings.WithProperty("AssemblyOriginatorKeyFile", key);
 
     if (runtimeIdentifier != null)
         settings.WithProperty("RuntimeIdentifier", runtimeIdentifier);
 
-    return new DotNetPublishSettings {  
+    return new DotNetPublishSettings {
         Verbosity = DotNetVerbosity.Minimal,
         MSBuildSettings = settings,
         OutputDirectory = output,
         Configuration = "release"
     };
-} 
+}

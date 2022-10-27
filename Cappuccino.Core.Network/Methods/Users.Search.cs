@@ -42,6 +42,7 @@ namespace Cappuccino.Core.Network.Methods.Users {
         public int Company { set => AddParam("company", value); }
         public int Position { set => AddParam("position", value); }
 
+
         public class Response {
             [JsonPropertyName("response")] public InnerResponse? Inner { get; set; }
 
