@@ -4,14 +4,11 @@
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
-    <SupportedOSPlatformVersion>13.2</SupportedOSPlatformVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RuntimeIdentifier)' != 'ios-arm64'">
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Cappuccino.Core.Network" HintPath="..\Artifacts\Common\Cappuccino.Core.Network.dll" />
-    <PackageReference Include="SDWebImage.iOS" Version="1.*" />
+    <PackageReference Include="SDWebImage.iOS" Version="2.*" />
     <EmbeddedResource Include="..\Resources\*.resx" LinkBase="Resources" />
   </ItemGroup>
 </Project>

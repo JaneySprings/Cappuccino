@@ -11,9 +11,9 @@ public abstract class TableViewCellBase<TItem> : UITableViewCell {
 
 
 public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource, IUITableViewDelegate where TCell: TableViewCellBase<TItem> {
-    protected readonly List<TItem> items = new List<TItem>();
+    public List<TItem> Items { get; private set; } = new List<TItem>();
 
-    public int ItemCount => this.items.Count;
+    public int ItemCount => Items.Count;
     public int ItemLimit { get; set; }
 
     public Action<TItem>? ItemClicked { get; set; }
@@ -30,7 +30,7 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
         if (ItemCount <= indexPath.Row) 
             return cell!;
         
-        cell!.Bind(this.items[indexPath.Row]);
+        cell!.Bind(Items[indexPath.Row]);
 
         if (indexPath.Row == ItemCount - 1 && ItemCount < ItemLimit)
             this.LastItemBind?.Invoke(ItemCount);
@@ -45,21 +45,6 @@ public abstract class TableViewAdapterBase<TItem, TCell>: UITableViewDataSource,
         if (ItemCount <= indexPath.Row) 
             return;
 
-        ItemClicked?.Invoke(items[indexPath.Row]);
-    }
-
-
-    public void AddItems(IEnumerable<TItem> items) {
-        this.items.AddRange(items);
-    }
-    public void AddItem(TItem item) {
-        this.items.Add(item);
-    }
-    public void RemoveItem(TItem item) {
-        this.items.Remove(item);
-    }
-    
-    public void ClearItems() {
-        this.items.Clear();
+        ItemClicked?.Invoke(Items[indexPath.Row]);
     }
 }

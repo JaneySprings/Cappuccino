@@ -1,6 +1,7 @@
 ﻿using Cappuccino.Core.Network;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.App.iOS.Extensions;
+using Cappuccino.App.iOS.UI.Chats;
 using Friends = Cappuccino.Core.Network.Methods.Friends;
 using Users = Cappuccino.Core.Network.Methods.Users;
 
@@ -21,14 +22,19 @@ public partial class ContactsViewController : UIViewController {
 
         this.adapter.LastItemBind = RequestUsers;
         this.adapter.ItemClicked = (item) => {
-            var vc = new Messages.MessagesViewController(item.Id);
+            var vc = new Messages.MessagesViewController(new ChatItem {
+                Id = item.Id,
+                ChatType = ChatItem.TypeUser,
+                Title = $"{item.FirstName} {item.LastName}",
+                Photo = item.Photo200
+            });
             NavigationController?.PushViewController(vc, true);
         };
         this.requestManager.RequestCallback = new ApiCallback<Users.Search.Response>()
             .OnSuccess(result => {
                 if (this.isSearchingMode) {
-                    this.adapter.ClearItems();
-                    this.adapter.AddItems(result.Inner?.Items!);
+                    this.adapter.Items.Clear();
+                    this.adapter.Items.AddRange(result.Inner?.Items!);
                     tableView!.ReloadData();
                 }
             })
@@ -48,13 +54,18 @@ public partial class ContactsViewController : UIViewController {
     private void SearchCancelled(object? sender, EventArgs args) {
         if (this.isSearchingMode) {
             this.isSearchingMode = false;
-            this.adapter.ClearItems();
+            this.adapter.Items.Clear();
             RequestUsers(0);
         }
     }
 
     private void FilterIconClicked(object? sender, EventArgs args) {
         var modalController = new FilterModalController(this.dataObject, () => RequestSearch(NavigationItem.SearchController?.SearchBar.Text ?? string.Empty));
+        if (modalController.PresentationController is UISheetPresentationController sheetController) {
+            sheetController.Detents = new [] {
+                UISheetPresentationControllerDetent.CreateMediumDetent()
+            };
+        }
         PresentViewController(modalController, true, null);
     }
 
@@ -68,7 +79,7 @@ public partial class ContactsViewController : UIViewController {
         }, new ApiCallback<Friends.Get.Response>()    
             .OnSuccess(result => {
                 this.adapter.ItemLimit = result.Inner?.Count ?? 0;
-                this.adapter.AddItems(result.Inner?.Items!);
+                this.adapter.Items.AddRange(result.Inner?.Items!);
                 tableView!.ReloadData();
             })
             .OnError(reason => {})

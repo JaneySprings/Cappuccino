@@ -30,4 +30,22 @@ public static class TableViewExtensions {
         tableView.InsertRows(new[] { targetRowIndexPath }, UITableViewRowAnimation.Automatic);
         tableView.ScrollDown();
     }
+
+    public static void ReloadRow(this UITableView tableView, int index) {
+        if (tableView.NumberOfSections() == IntPtr.Zero)
+            return;
+        
+        var lastSectionIndex = tableView.NumberOfSections() - 1;
+        var targetRowIndexPath = NSIndexPath.FromRowSection(index, new IntPtr(0));
+        tableView.ReloadRows(new[] { targetRowIndexPath }, UITableViewRowAnimation.Automatic);
+    }
+
+    public static void DeleteRow(this UITableView tableView, int index) {
+        if (tableView.NumberOfSections() == IntPtr.Zero)
+            return;
+        
+        var lastSectionIndex = tableView.NumberOfSections() - 1;
+        var targetRowIndexPath = NSIndexPath.FromRowSection(index, new IntPtr(0));
+        tableView.DeleteRows(new[] { targetRowIndexPath }, UITableViewRowAnimation.Automatic);
+    }
 }

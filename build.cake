@@ -1,11 +1,10 @@
 #addin nuget:?package=Cake.FileHelpers&version=5.0.0
 #load "env.cake"
 
-string target           =  Argument("target"        , "clean");
-string configuration    =  Argument("configuration" , "debug");
-string version          =  Argument("up-version"    , "1.0");
-string signkey          =  Argument("signkey"       , "null");
-string apikey           =  Argument("apikey"        , "null");
+string configuration = Argument("configuration", "debug");
+string version = Argument("up-version", "1.0");
+string target = Argument("target", "build");
+string key = Argument("sign-key", "null");
 
 
 //////////////////////////////////////////////////////////////////////
@@ -15,17 +14,26 @@ string apikey           =  Argument("apikey"        , "null");
 Task("clean").Does(() => {
     CleanDirectories("./**/bin");
     CleanDirectories("./**/obj");
-    CleanDirectory($"{ArtifactsDirectory}/iOS");
-    CleanDirectory($"{ArtifactsDirectory}/Android");
-    CleanDirectory(PublishDirectory);
+    CleanDirectory($"{ArtifactsDirectory}");
 });
+
+Task("archive").Does(() => {
+    EnsureDirectoryExists(ArtifactsDirectory);
+    Zip(RootDirectory, $"{ArtifactsDirectory}/source-code.{version}.zip");
+});
+
+Task("build")
+    .IsDependentOn("clean")
+    .IsDependentOn("archive")
+    .IsDependentOn("network-build")
+    .IsDependentOn("ios-build");
 
 //////////////////////////////////////////////////////////////////////
 // NETWORK
 //////////////////////////////////////////////////////////////////////
 
 Task("network-build")
-    .IsDependentOn("clean")
+    .Does(() => CleanDirectory($"{ArtifactsCoreDirectory}"))
     .Does(() => {
         var options = System.Text.RegularExpressions.RegexOptions.None;
         var pattern = "\\<[Vv]ersion\\>[^,]*?\\</[Vv]ersion\\>";
@@ -36,24 +44,19 @@ Task("network-build")
             ReplaceTextInFiles(NuSpecPath, match, $"<version>{version}</version>");
     })
     .Does(() => {
-        DotNetPublish(ProjectCorePath, DotNetPublishSettings($"{ArtifactsDirectory}/Common", signkey));
-        NuGetPack(NuSpecPath, new NuGetPackSettings { OutputDirectory = PublishDirectory });
+        DotNetPublish(ProjectCorePath, DotNetPublishSettings(ArtifactsCoreDirectory, key));
+        NuGetPack(NuSpecPath, new NuGetPackSettings { OutputDirectory = ArtifactsCoreDirectory });
     })
     .Does(() => MoveFile(
-        $"{ArtifactsDirectory}/Common/msbuild.binlog", 
-        $"{PublishDirectory}/Cappuccino.Core.Network.{version}.binlog"
+        $"{ArtifactsCoreDirectory}/msbuild.binlog", 
+        $"{ArtifactsCoreDirectory}/{BundleCoreName}.{version}.binlog"
     ));
 
 Task("network-test").Does(() => DotNetTest(ProjectCoreTestsPath, new DotNetTestSettings {  
     Configuration = configuration,
     Verbosity = DotNetVerbosity.Quiet,
-    ResultsDirectory = ArtifactsDirectory,
+    ResultsDirectory = ArtifactsCoreDirectory,
     Loggers = new[] { "trx" }
-}));
-
-Task("network-publish").Does(() => NuGetPush(NuGetPackagePath, new NuGetPushSettings { 
-    Source = "https://api.nuget.org/v3/index.json",
-    ApiKey = apikey
 }));
 
 //////////////////////////////////////////////////////////////////////
@@ -61,11 +64,11 @@ Task("network-publish").Does(() => NuGetPush(NuGetPackagePath, new NuGetPushSett
 //////////////////////////////////////////////////////////////////////
 
 Task("ios-build")
-    .IsDependentOn("clean")
+    .Does(() => CleanDirectory($"{ArtifactsAppleDirectory}"))
     .Does(() => {
         var options = System.Text.RegularExpressions.RegexOptions.None;
         var pattern = "\\<key\\>CFBundle(Short)?Version(String)?\\</key\\>[^,]*?\\<string\\>[^,]*?\\</string\\>";
-        var plist = $"{RootiOSDirectory}/Info.plist";
+        var plist = $"{RootAppleDirectory}/Info.plist";
         var replace = $"\t<string>{version}</string>";
 
         foreach (var match in FindRegexMatchesInFile(plist, pattern, options)) {
@@ -74,13 +77,16 @@ Task("ios-build")
             ReplaceTextInFiles(plist, match, patch);
         }
     })
-    .Does(() => DotNetPublish(ProjectiOSPath, DotNetPublishSettings($"{ArtifactsDirectory}/iOS", signkey, "ios-arm64")))
+    .Does(() => DotNetPublish(ProjectApplePath, DotNetPublishSettings(ArtifactsAppleDirectory, key, "ios-arm64")))
     .Does(() => {
-        Zip($"{BundleiOSPath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
-        MoveFile(BundleiOSPath, $"{PublishDirectory}/Cappuccino.App.iOS.{version}.ipa");
+        // Zip($"{BundleApplePath}.dSYM", $"{PublishDirectory}/Cappuccino.App.iOS.dSYM.zip");
         MoveFile(
-            $"{ArtifactsDirectory}/iOS/msbuild.binlog",
-            $"{PublishDirectory}/Cappuccino.App.iOS.{version}.binlog"
+            $"{ArtifactsAppleDirectory}/msbuild.binlog", 
+            $"{ArtifactsAppleDirectory}/{BundleAppleName}.{version}.binlog"
+        );
+        MoveFile(
+            $"{ArtifactsAppleDirectory}/{BundleAppleName}.ipa", 
+            $"{ArtifactsAppleDirectory}/{BundleAppleName}.{version}.ipa"
         );
     });
 

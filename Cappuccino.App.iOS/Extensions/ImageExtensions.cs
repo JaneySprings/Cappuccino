@@ -1,4 +1,4 @@
-using SDWebImageLib;
+using SDWebImage;
 
 namespace Cappuccino.App.iOS.Extensions;
 

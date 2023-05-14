@@ -1,21 +1,26 @@
 public string RootDirectory => MakeAbsolute(Directory("./")).ToString();
 
-public string ArtifactsDirectory => $"{RootDirectory}/Artifacts";
-public string PublishDirectory => $"{ArtifactsDirectory}/Publish";
-
-public string BundleAndroidPath => $"{ArtifactsDirectory}/Android/Cappuccino.App.Android.apk";
-public string BundleiOSPath => $"{ArtifactsDirectory}/iOS/Cappuccino.App.iOS.ipa";
-
+public string RootCoreDirectory => $"{RootDirectory}/Cappuccino.Core.Network";
+public string RootCoreTestsDirectory => $"{RootDirectory}/Cappuccino.Core.Network";
 public string RootAndroidDirectory => $"{RootDirectory}/Cappuccino.App.Android";
-public string RootiOSDirectory => $"{RootDirectory}/Cappuccino.App.iOS";
+public string RootAppleDirectory => $"{RootDirectory}/Cappuccino.App.iOS";
 
-public string ProjectCorePath => $"{RootDirectory}/Cappuccino.Core.Network/Cappuccino.Core.Network.csproj";
-public string ProjectCoreTestsPath => $"{RootDirectory}/Cappuccino.Core.Network.Tests/Cappuccino.Core.Network.Tests.csproj";
+public string ProjectCorePath => $"{RootCoreDirectory}/Cappuccino.Core.Network.csproj";
+public string ProjectCoreTestsPath => $"{RootCoreTestsDirectory}/Cappuccino.Core.Network.Tests.csproj";
 public string ProjectAndroidPath => $"{RootAndroidDirectory}/Cappuccino.App.Android.csproj";
-public string ProjectiOSPath => $"{RootiOSDirectory}/Cappuccino.App.iOS.csproj";
+public string ProjectApplePath => $"{RootAppleDirectory}/Cappuccino.App.iOS.csproj";
 
-public string NuSpecPath => $"{RootDirectory}/Cappuccino.Core.Network/Nuget/Cappuccino.Core.Network.nuspec";
-public string NuGetPackagePath => $"{ArtifactsDirectory}/Cappuccino.Core.Network.*.nupkg";
+public string ArtifactsDirectory => $"{RootDirectory}/Artifacts";
+
+public string ArtifactsCoreDirectory => $"{ArtifactsDirectory}/Common";
+public string ArtifactsAndroidDirectory => $"{ArtifactsDirectory}/Android";
+public string ArtifactsAppleDirectory => $"{ArtifactsDirectory}/Apple";
+
+public string BundleCoreName => "Cappuccino.Core.Network";
+public string BundleAndroidName => "Cappuccino.App.Android";
+public string BundleAppleName => "Cappuccino.App.iOS";
+
+public string NuSpecPath => $"{RootCoreDirectory}/Nuget/Cappuccino.Core.Network.nuspec";
 
 
 public DotNetPublishSettings DotNetPublishSettings(string output, string key, string runtimeIdentifier = null) {

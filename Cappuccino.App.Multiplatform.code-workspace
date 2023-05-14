@@ -1,0 +1,45 @@
+{
+	"folders": [
+		{
+			"path": "Cappuccino.App.iOS"
+		},
+		{
+			"path": "Cappuccino.App.Android"
+		},
+		{
+			"path": "Cappuccino.Core.Network"
+		},
+		{
+			"path": "Cappuccino.Core.Network.Tests"
+		}
+	],
+	"settings": {},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": ".NET Meteor Debugger",
+				"type": "dotnet-meteor.debugger",
+				"request": "launch",
+				"preLaunchTask": "dotnet-meteor: Build"
+			}
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+                "type": "dotnet-meteor.task",
+                "target": "Build",
+                "problemMatcher": [
+                    "$dotnet-meteor.problemMatcher"
+                ],
+                "label": "dotnet-meteor: Build",
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                }
+            }
+		]
+	}
+}

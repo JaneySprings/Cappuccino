@@ -29,7 +29,11 @@ public class AppDelegate : UIResponder, IUIApplicationDelegate {
             .WithApiVersion("5.131")
             .WithLongPollVersion(12)
             .WithTokenStorageHandler(new KeychainProvider())
+#if DEBUG
             .WithPermissions(new[] { Scope.Friends, Scope.Messages })
+#else
+            .WithPermissions(new[] { Scope.Friends, Scope.Messages, Scope.Offline })
+#endif
             .Build();
 
         CredentialsManager.ApplyConfiguration(config);

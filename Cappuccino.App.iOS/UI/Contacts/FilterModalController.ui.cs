@@ -75,7 +75,7 @@ public partial class FilterModalController {
         this.location!.Frame = new CGRect(16, this.locationTitle.Frame.Bottom + labelSpacing, this.View.Bounds.Width - 32, Dimensions.EditorsHeight);
         
 
-        this.show!.Frame = new CGRect(16, this.location.Frame.Bottom + 2*sectionSpacing, this.View.Bounds.Width - 32, Dimensions.EditorsHeight);
+        this.show!.Frame = new CGRect(16, this.View.Bounds.Height - Dimensions.EditorsHeight - this.View.SafeAreaInsets.Bottom - 16, this.View.Bounds.Width - 32, Dimensions.EditorsHeight);
         this.show.SetTitle(Localization.Instance.GetString("common_action_show_results"), UIControlState.Normal);
         this.show.ApplyActionAppearance();
     }

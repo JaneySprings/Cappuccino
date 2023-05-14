@@ -1,36 +1,45 @@
 ﻿using Cappuccino.Core.Network.Models.Users;
 using Cappuccino.Core.Network.Models.Groups;
 using Cappuccino.Core.Network.Models.Messages;
-using Models = Cappuccino.Core.Network.Models;
+using Cappuccino.Core.Network.Methods.Messages;
 
-namespace Cappuccino.App.iOS.UI.Messages {
+namespace Cappuccino.App.iOS.UI.Messages;
 
-    public static class MessageItemMapper {
-        public static List<MessageItem> ToMessageItems(this Models.Messages.GetHistoryResponse.Response response) {
-            var result = response.Items!.Select(it => new MessageItem(it, response.Profiles, response.Groups)).ToList();
-            result.Reverse();
-            return result;
-        }
-        public static List<MessageItem> ToMessageItems(this Models.Messages.GetLongPollHistoryResponse.Response response) {
-            return response.Messages!.Items!.Select(it => new MessageItem(it, response.Profiles, response.Groups)).ToList();
-        }
-        public static MessageItem ToMessageItem(this Message response, List<User>? profiles, List<Group>? groups) {
-            return new MessageItem(response, profiles, groups);
-        }
+
+public static class MessageItemMapper {
+    public static List<MessageItem> ToMessageItems(this GetHistory.Response.InnerResponse response) {
+        return response.Items!.ConvertAll(it => it.ToMessageItem(response.Profiles, response.Groups));
     }
-
-    public class MessageItem {
-        public readonly Message InnerResponse;
-        public readonly object? RelativeItem;
-
-        public MessageItem(Message message, List<User>? profiles, List<Group>? groups) {
-            this.InnerResponse = message;
-
-            switch (message?.FromId < 0 ? "group" : "user") {
-                case "user": this.RelativeItem = profiles?.Find(it => it.Id == message?.FromId); break;
-                case "group": this.RelativeItem = groups?.Find(it => it.Id == -message?.FromId); break;
-            }
-        }
+    public static List<MessageItem> ToMessageItems(this GetLongPollHistory.Response.InnerResponse response) {
+        return response.Messages!.Items!.ConvertAll(it => it.ToMessageItem(response.Profiles, response.Groups));
+    }
+    public static MessageItem ToMessageItem(this Message response, List<User>? profiles, List<Group>? groups) {
+        return new MessageItem(response, profiles, groups);
     }
 }
 
+public class MessageItemComparer : IComparer<MessageItem> {
+    public int Compare(MessageItem? x, MessageItem? y) {
+        return x!.InnerResponse.Date.CompareTo(y!.InnerResponse.Date);
+    }
+}
+
+public class MessageItem {
+    public const string TypeUser = "user";
+    public const string TypeGroup = "group";
+
+    public int MessageId { get; }
+    public Message InnerResponse { get; }
+    public object? RelativeItem { get; }
+
+    public MessageItem(Message message, List<User>? profiles, List<Group>? groups) {
+        this.MessageId = message.Id;
+        this.InnerResponse = message;
+
+        if (message?.FromId < 0) {
+            this.RelativeItem = groups?.Find(it => it.Id == -message?.FromId);
+        } else {
+            this.RelativeItem = profiles?.Find(it => it.Id == message?.FromId);
+        }
+    }
+}

@@ -8,26 +8,26 @@ public partial class ChatsAdapterDelegate : TableViewAdapterBase<ChatItem, ChatV
 
     public void InsertItems(IEnumerable<ChatItem> items) {
         foreach(var item in items) {
-            var finded = this.items.Find(it => it.ChatId == item.ChatId);
+            var finded = Items.Find(it => it.Id == item.Id);
 
             if (finded == null) {
-                base.AddItem(item);
+                Items.Add(item);
                 continue;
             }
 
-            base.RemoveItem(finded);
-            base.AddItem(item);
+            Items.Remove(finded);
+            Items.Add(item);
         }
 
-        this.items.Sort(comparer);
+        Items.Sort(comparer);
     }
 
     public void RemoveItemsById(IEnumerable<int> ids) {
         foreach(var id in ids) {
-            var finded = this.items.Find(it => it.ChatId == id);
+            var finded = Items.Find(it => it.Id == id);
 
             if (finded != null)
-                base.RemoveItem(finded);
+                Items.Remove(finded);
         }
     }
 }

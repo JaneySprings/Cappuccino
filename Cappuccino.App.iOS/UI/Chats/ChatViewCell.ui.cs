@@ -10,7 +10,7 @@ public partial class ChatViewCell {
     private UIImageView? read;
 
 
-    public ChatViewCell(IntPtr handle) : base(handle) { }
+    public ChatViewCell(ObjCRuntime.NativeHandle handle) : base(handle) { }
     public ChatViewCell(): base() { }
 
     protected override void Initialize() {

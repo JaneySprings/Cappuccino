@@ -19,7 +19,7 @@ public partial class ChatsViewController : UIViewController {
 
         this.adapter.LastItemBind = RequestConversations;
         this.adapter.ItemClicked = (item) => {
-            var vc = new Messages.MessagesViewController(item.ChatId);
+            var vc = new Messages.MessagesViewController(item);
             NavigationController?.PushViewController(vc, true);
         };
 
@@ -62,7 +62,7 @@ public partial class ChatsViewController : UIViewController {
         }, new ApiCallback<_Messages.GetConversations.Response>()
             .OnSuccess(result => {
                 this.adapter.ItemLimit = result.Inner?.Count ?? 0;
-                this.adapter.AddItems(result.Inner?.ToChatItems()!);
+                this.adapter.Items.AddRange(result.Inner?.ToChatItems()!);
                 tableView!.ReloadData();
             })
             .OnError(reason => {})

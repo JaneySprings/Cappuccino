@@ -50,30 +50,9 @@ stages:
             value: $[ replace(variables['Build.SourceBranch'], 'refs/tags/cappuccino_', '') ] 
           - group: Tokens
         steps:
-          - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
-            displayName: 'Install .NET 7.0.1xx Preview'
-          - script: dotnet tool restore
-            displayName: 'DotNet Restore'
 #//////////////////////////////////////////////////////////////////////
-#// CORE
+#// Prepare
 #//////////////////////////////////////////////////////////////////////
-          - task: DownloadSecureFile@1
-            name: strongKey
-            displayName: 'Download Strong Key'
-            inputs:
-              secureFile: 'key.snk'
-          - script: dotnet cake --target=network-build --up-version=$(version) --signkey=$(strongKey.secureFilePath)
-            displayName: 'Network Build'
-          - publish: 'Artifacts/Publish'
-            displayName: 'Publish Artifacts'
-            artifact: Core
-          # - script: dotnet cake --target=network-publish --apikey=$(NUGET_API_KEY)
-          #   displayName: 'Network Publish'
-#//////////////////////////////////////////////////////////////////////
-#// iOS
-#//////////////////////////////////////////////////////////////////////
-          - script: dotnet workload install ios
-            displayName: 'Install iOS Workload'
           - task: InstallAppleCertificate@2
             displayName: 'Install Apple certificate'
             inputs:
@@ -83,12 +62,23 @@ stages:
             displayName: 'Install Apple provisioning profile'
             inputs:
               provProfileSecureFile: 'profile.mobileprovision'
-          - script: dotnet cake --target=ios-build --up-version=$(version) --signkey=$(strongKey.secureFilePath)
-            displayName: 'iOS Build'
-          - publish: 'Artifacts/Publish'
+          - task: DownloadSecureFile@1
+            name: strongKey
+            displayName: 'Download Strong Key'
+            inputs:
+              secureFile: 'key.snk'
+          - script: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 7.0.1xx -Quality preview
+            displayName: 'Install .NET 7.0.1xx Preview'
+          - script: dotnet workload install ios
+            displayName: 'Install Workloads'
+          - script: dotnet tool restore
+            displayName: 'DotNet Restore'
+#//////////////////////////////////////////////////////////////////////
+#// Build
+#//////////////////////////////////////////////////////////////////////
+          - script: dotnet cake --up-version=$(version) --sign-key=$(strongKey.secureFilePath)
+            displayName: 'Build All'
+          - publish: 'Artifacts'
             displayName: 'Publish Artifacts'
-            artifact: iOS
-#//////////////////////////////////////////////////////////////////////
-#// Android
-#//////////////////////////////////////////////////////////////////////
+            artifact: Artifacts
 
