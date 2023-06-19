@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Cappuccino.App.Multiplatform.RootPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Cappuccino.App.Multiplatform"
+    BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource ForegroundLight}, Dark={StaticResource ForegroundDark}}"
+    Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource AccentLight}, Dark={StaticResource AccentDark}}"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+       <Tab Title="Contacts" Icon="users_3_outline_32">
+           <ShellContent ContentTemplate="{DataTemplate local:ContactsPage}" />
+       </Tab>
+       <Tab Title="Chats" Icon="message_outline_32">
+           <ShellContent ContentTemplate="{DataTemplate local:ChatsPage}" />
+       </Tab>
+       <Tab Title="Profile" Icon="settings_outline_32">
+           <ShellContent ContentTemplate="{DataTemplate local:ProfilePage}" />
+       </Tab>
+    </TabBar>
+
+</Shell>
