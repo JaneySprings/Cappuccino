@@ -3,20 +3,18 @@ using Cappuccino.Core.Network.Config;
 using Cappuccino.Core.Network.Models;
 using Cappuccino.Core.Network.Handlers;
 using System.Text.Json;
+using System.Threading;
 
 namespace Cappuccino.Core.Network {
-
     public abstract class ApiRequest<TResult> {
-
-        public async Task<TResult> Execute() {
-            if (!CredentialsManager.IsInternalTokenValid()) 
+        public async Task<TResult> ExecuteAsync(CancellationToken cancellationToken) {
+            if (!CredentialsManager.IsInternalTokenValid())
                 throw new ApiException("Access token incorrect");
-            
-            return await OnExecute();
-        } 
 
-        protected abstract Task<TResult> OnExecute();
+            return await OnExecuteAsync(cancellationToken);
+        }
 
+        protected abstract Task<TResult> OnExecuteAsync(CancellationToken cancellationToken);
 
         /* Dirty response, may contain error from server */
         protected internal TResult OnServerResponseReceived(string response) {

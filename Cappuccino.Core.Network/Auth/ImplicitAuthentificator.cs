@@ -38,9 +38,12 @@ namespace Cappuccino.Core.Network.Auth {
 
             AccessToken token = new AccessToken(
                 keys["access_token"],
-                Int64.Parse(keys["expires_in"]) + DateTimeOffset.Now.ToUnixTimeSeconds(),
+                Int64.Parse(keys["expires_in"]),
                 Int32.Parse(keys["user_id"])
             );
+
+            if (token.ExpiresIn > 0)
+                token.ApplyCurrentTime();
 
             if (!CredentialsManager.ApplyAccessToken(token, callback))
                 return;

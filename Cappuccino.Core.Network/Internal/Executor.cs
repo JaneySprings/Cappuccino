@@ -1,27 +1,26 @@
 using System;
-using System.IO;
-using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cappuccino.Core.Network.Internal {
+    internal sealed class Executor : IDisposable {
+        private readonly HttpClient client;
 
-    internal class Executor : IDisposable {
-
-        public async Task<string?> GetAsync(string uri) {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            request.Timeout = 30000;
-
-            using HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync();
-            await using Stream? stream = response.GetResponseStream();
-
-            if (stream == null)
-                return null;
-
-            using StreamReader reader = new StreamReader(stream);
-            return await reader.ReadToEndAsync();
+        public Executor(string baseUrl) {
+            this.client = new HttpClient() {
+                BaseAddress = new Uri(baseUrl)
+            };
         }
 
-        public void Dispose() { }
+        public async Task<string?> GetAsync(string request, CancellationToken cancellationToken) {
+            using var response = await this.client.GetAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public void Dispose() {
+            this.client.Dispose();
+        }
     }
 }

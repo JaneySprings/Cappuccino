@@ -34,7 +34,7 @@ public class RequestTests: TestFixture {
     [Fact]
     public void NoTokenInRequestTest() {
         SetupEmptyCredentials();
-        Assert.ThrowsAsync<ApiException>(() => new TestRequest<int>().Execute()).Wait();
+        Assert.ThrowsAsync<ApiException>(() => new TestRequest<int>().ExecuteAsync()).Wait();
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class RequestTests: TestFixture {
             var request = new TestRequest<int>();
             request.AddRequestParam("param1", "value1");
             request.AddRequestParam("param1", "value2");
-            return request.Execute();
+            return request.ExecuteAsync();
         }).Wait();
     }
 

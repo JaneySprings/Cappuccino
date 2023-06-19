@@ -1,14 +1,16 @@
-﻿using Cappuccino.Core.Network.Handlers;
+﻿using System;
+using System.Threading;
+using Cappuccino.Core.Network.Handlers;
 
 namespace Cappuccino.Core.Network {
-
+    [Obsolete("Use ApiMethod.GetAsync instead")]
     public static class Api {
         public static async void Get<TResult>(ApiRequest<TResult> request, IRequestCallback<TResult>? callback = null, int retryCount = 3) {
             TResult? response = default;
             
             do {
                 try {
-                    response = await request.Execute();
+                    response = await request.ExecuteAsync(CancellationToken.None);
                     break;
                 } catch (ApiException e) {
                     callback?.OnError(e);

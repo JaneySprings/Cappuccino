@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cappuccino.Core.Network.Handlers;
 using Cappuccino.Core.Network.Methods.Messages;
 
@@ -36,7 +37,7 @@ namespace Cappuccino.Core.Network.Polling {
 
                 try {
                     var request = new LongPollRequest(ServerCredentials!);
-                    result = await request.Execute();
+                    result = await request.ExecuteAsync(CancellationToken.None);
 
                     _serverCredentials!.Ts = result.Ts;
                 } catch (Exception e) {

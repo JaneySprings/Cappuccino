@@ -55,7 +55,7 @@ namespace Cappuccino.Core.Network.Config {
                 return false;
             }
             
-            if (token.ExpiresIn < DateTimeOffset.Now.ToUnixTimeSeconds() && token.ExpiresIn != -1) {
+            if (token.ExpiresIn < DateTimeOffset.Now.ToUnixTimeSeconds() && token.ExpiresIn > 0) {
                 callback?.OnValidationFail("Token lifetime is expired. Re-sign required");
                 return false;
             }
